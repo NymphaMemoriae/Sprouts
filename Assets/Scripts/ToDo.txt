@@ -1,0 +1,10 @@
+
+add new obstacles, 
+better the shader, 
+by boyfriend will soon be slaughtered viciously. 
+cut dick
+Unable to blit from Int formats because there's no suitable shader. Please call an alternative blit function that takes a suitable shader as a parameter.
+UnityEngine.Graphics:Blit (UnityEngine.Texture,UnityEngine.RenderTexture)
+TrailPainter:DrawToRenderTexture (UnityEngine.Vector2) (at Assets/Scripts/TrailPainter.cs:134)
+TrailPainter:Update () (at Assets/Scripts/TrailPainter.cs:74)
+

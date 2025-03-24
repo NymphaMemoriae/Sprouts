@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81ad8271272fb06488f06dce98df8b79, type: 3}
+  m_Name: Soil
+  m_EditorClassIdentifier: 
+  biomeName: Default Biome
+  minHeight: -500
+  maxHeight: -400
+  backgroundMaterial: {fileID: 2100000, guid: d5dfc0b8c1fa6754496037678557dc6d, type: 2}
+  tilePrefab: {fileID: 4015334938415637551, guid: 669e3d40b3490db43b12b31f263446c1, type: 3}
+  biomeObstacles:
+  - {fileID: 11400000, guid: f33cac7d4fb36a64abf0615061ab4cc9, type: 2}
+  - {fileID: 11400000, guid: cc71b7cf7b91a754b821ed2bb087dc12, type: 2}
+  obstacleSpawnRateMultiplier: 1
+  description: 
