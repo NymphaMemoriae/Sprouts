@@ -1772,7 +1772,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 114713469c3a68e4db2be60f80eb65ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  biomes: []
+  biomes:
+  - {fileID: 11400000, guid: 2cfdbc0691e10f34482bb54709411c74, type: 2}
+  - {fileID: 11400000, guid: 80db725388d0fe6498750d76e663d118, type: 2}
   defaultBiome: {fileID: 11400000, guid: 2cfdbc0691e10f34482bb54709411c74, type: 2}
   plantController: {fileID: 1468978192}
   backgroundTileManager: {fileID: 557054657}

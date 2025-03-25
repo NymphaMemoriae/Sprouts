@@ -19,13 +19,13 @@ public class BiomeManager : MonoBehaviour
     {
         // Find references if not assigned
         if (plantController == null)
-            plantController = FindObjectOfType<PlantController>();
+            plantController = Object.FindAnyObjectByType<PlantController>();
             
         if (backgroundTileManager == null)
-            backgroundTileManager = FindObjectOfType<BackgroundTileManager>();
+            backgroundTileManager = Object.FindAnyObjectByType<BackgroundTileManager>();
             
         if (obstacleSpawner == null)
-            obstacleSpawner = FindObjectOfType<ObstacleSpawner>();
+            obstacleSpawner = Object.FindAnyObjectByType<ObstacleSpawner>();
             
         // Initialize with default biome
         if (defaultBiome != null)
