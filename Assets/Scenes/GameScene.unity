@@ -2049,13 +2049,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3535e7d45d51bc41beac6d15834e395, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  obstacleDataList:
-  - {fileID: 11400000, guid: cc71b7cf7b91a754b821ed2bb087dc12, type: 2}
-  - {fileID: 11400000, guid: f33cac7d4fb36a64abf0615061ab4cc9, type: 2}
-  poolSize: 30
+  regularObstaclePrefabs:
+  - {fileID: 7912456262882816852, guid: 318a9d5d4ec8cc34aa22dd225dbdda5d, type: 3}
+  - {fileID: 1314626108447392289, guid: 770d156dc518a454a9bc40bc879c3200, type: 3}
+  sideObstaclePrefabs:
+  - {fileID: 8473705300848159720, guid: 6f0c8018a07295b4cb229edd9072ddca, type: 3}
+  - {fileID: 8473705300848159720, guid: ad9bfac652e22de4499d910d41617c51, type: 3}
+  - {fileID: 8473705300848159720, guid: 704d7926d2b5d9240aad2870fb86e4ad, type: 3}
+  poolSize: 10
   spawnXRange: 2.5
-  spawnYIncrement: 10
+  spawnYIncrement: 5
   startYPosition: 3
+  leftSideX: -3
+  rightSideX: 3
+  sideObstacleChance: 100
 --- !u!4 &1245832017
 Transform:
   m_ObjectHideFlags: 0
@@ -2269,7 +2276,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 0
+  m_PresetInfoIsWorld: 1
 --- !u!223 &1348792022
 Canvas:
   m_ObjectHideFlags: 0
@@ -2493,10 +2500,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26020a279db4b8d42a03b006594fdd49, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  initialGrowthSpeed: 1
-  maxGrowthSpeed: 5
-  accelerationRate: 0.6
-  decelerationRate: 1
+  initialGrowthSpeed: 2
+  maxGrowthSpeed: 8
+  accelerationRate: 1.2
+  decelerationRate: 0
   horizontalSpeed: 4
   rotationSmoothTime: 0.2
   plantHead: {fileID: 188981458}
@@ -2508,6 +2515,7 @@ MonoBehaviour:
   speedBuffMultiplier: 1.5
   speedBuffDuration: 5
   heightOffset: -500
+  recoveryTimeAfterCollision: 0.1
   plantLife: {fileID: 1370011431}
 --- !u!1 &1490208202
 GameObject:

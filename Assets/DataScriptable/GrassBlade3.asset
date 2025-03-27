@@ -10,21 +10,21 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 933f43b246fc08643b5172552bd2a33b, type: 3}
-  m_Name: Damage1
+  m_Name: GrassBlade3
   m_EditorClassIdentifier: 
-  obstacleName: DamageObstacle
-  prefab: {fileID: 7912456262882816852, guid: 318a9d5d4ec8cc34aa22dd225dbdda5d, type: 3}
+  obstacleName: GrassBlade
+  prefab: {fileID: 8473705300848159720, guid: 704d7926d2b5d9240aad2870fb86e4ad, type: 3}
   isPhysical: 1
-  isSideObstacle: 0
-  maxRotationAngle: 20
-  damage: 1
+  isSideObstacle: 1
+  maxRotationAngle: 45
+  damage: 0
   causeBounce: 0
   bounceForce: 1
   bounceRecoveryTime: 0.5
   collisionEffectPrefab: {fileID: 0}
   effectDuration: 1
   changeColorOnCollision: 0
-  collisionColor: {r: 0.29559743, g: 0, b: 0, a: 1}
+  collisionColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   collisionSound: {fileID: 0}
   volume: 0.7
   spawnWeight: 1

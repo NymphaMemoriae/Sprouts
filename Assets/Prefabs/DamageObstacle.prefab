@@ -9,9 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2132698688281790330}
+  - component: {fileID: 9088447807016802172}
   - component: {fileID: 6279382755819256763}
   - component: {fileID: 1324925972880773510}
-  - component: {fileID: 9088447807016802172}
   - component: {fileID: 4533751419523697067}
   m_Layer: 10
   m_Name: DamageObstacle
@@ -35,6 +35,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &9088447807016802172
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7912456262882816852}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71c8de1cded4b704ba679001b13c5e97, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  obstacleData: {fileID: 11400000, guid: f33cac7d4fb36a64abf0615061ab4cc9, type: 2}
 --- !u!212 &6279382755819256763
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -136,18 +149,6 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 4.9721527, y: 4.8543344}
   m_EdgeRadius: 0
---- !u!114 &9088447807016802172
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7912456262882816852}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 71c8de1cded4b704ba679001b13c5e97, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!58 &4533751419523697067
 CircleCollider2D:
   m_ObjectHideFlags: 0

@@ -10,6 +10,14 @@ public class ObstacleData : ScriptableObject
     [Header("Obstacle Type")]
     [Tooltip("If true, this obstacle behaves as a solid physical object that blocks the plant. If false, the plant can pass through it.")]
     public bool isPhysical;
+    
+    [Tooltip("If true, this obstacle will only spawn on the sides of the screen.")]
+    public bool isSideObstacle;
+
+    [Header("Side Obstacle Settings (Only used if isSideObstacle = true)")]
+    [Range(0f, 45f)]
+    [Tooltip("Maximum angle (in degrees) the obstacle can be rotated when spawning.")]
+    public float maxRotationAngle = 20f;
 
     [Header("Damage Settings")]
     [Tooltip("How many lives this obstacle removes from the plant upon collision/intersection.")]

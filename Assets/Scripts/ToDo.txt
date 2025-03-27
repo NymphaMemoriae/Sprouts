@@ -1,10 +1,8 @@
 
-add new obstacles, 
+add new obstacles, done, but*
 better the shader, 
-by boyfriend will soon be slaughtered viciously. 
+my boyfriend will soon be slaughtered viciously. 
 cut dick
-Unable to blit from Int formats because there's no suitable shader. Please call an alternative blit function that takes a suitable shader as a parameter.
-UnityEngine.Graphics:Blit (UnityEngine.Texture,UnityEngine.RenderTexture)
-TrailPainter:DrawToRenderTexture (UnityEngine.Vector2) (at Assets/Scripts/TrailPainter.cs:134)
-TrailPainter:Update () (at Assets/Scripts/TrailPainter.cs:74)
+* side obstacles, fix obstacle biome spawning. ( currently it keeps spawning damageObstacle and PHYObstacle, not Grassblade in grassland.)
 
+Biome manager should take the prefab and the prefab contains the scriptable object data, Biome should not assign the scriptable object to each prefab, obstacle do have scriptableobject within them and thant makes them accesible to  the biome manager, if biome manager wants to find what a prefab is it has to reference the scriptbleobject in the prefab.

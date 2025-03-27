@@ -77,6 +77,8 @@ public class BiomeManager : MonoBehaviour
     
     private void SetCurrentBiome(BiomeData biome)
     {
+        if (biome == null) return;
+        
         currentBiome = biome;
         Debug.Log($"Transitioning to biome: {biome.biomeName} at height {displayHeight}m");
         
@@ -89,7 +91,21 @@ public class BiomeManager : MonoBehaviour
         // Update obstacle spawner with the new biome's obstacles
         if (obstacleSpawner != null)
         {
+            // Pass the obstacle data to the spawner
             obstacleSpawner.SetBiomeObstacles(biome.biomeObstacles, biome.obstacleSpawnRateMultiplier);
+            
+            // Log what we're sending to the spawner
+            if (biome.biomeObstacles != null)
+            {
+                Debug.Log($"Sending {biome.biomeObstacles.Count} obstacles to spawner:");
+                foreach (var obstacleData in biome.biomeObstacles)
+                {
+                    if (obstacleData != null)
+                    {
+                        Debug.Log($"  - {obstacleData.name} (prefab: {(obstacleData.prefab ? obstacleData.prefab.name : "null")})");
+                    }
+                }
+            }
         }
     }
 }

@@ -13,12 +13,13 @@ MonoBehaviour:
   m_Name: Grassland
   m_EditorClassIdentifier: 
   biomeName: GrassLand
-  minHeight: -400
+  minHeight: -470
   maxHeight: 200
   backgroundMaterial: {fileID: 2100000, guid: 28b6b2fe25c476b4ba1a6e8637d79d93, type: 2}
   tilePrefab: {fileID: 4015334938415637551, guid: 5622f39b3e762a842987bba1062606e9, type: 3}
   biomeObstacles:
-  - {fileID: 11400000, guid: f33cac7d4fb36a64abf0615061ab4cc9, type: 2}
-  - {fileID: 11400000, guid: cc71b7cf7b91a754b821ed2bb087dc12, type: 2}
+  - {fileID: 11400000, guid: 536cd4d229dddc24a8b250fe6fa31a74, type: 2}
+  - {fileID: 11400000, guid: 68ef469568763db4f957d9026600f3f9, type: 2}
+  - {fileID: 11400000, guid: 696c1703170841944bb5ec30144bd89d, type: 2}
   obstacleSpawnRateMultiplier: 1
   description: 
