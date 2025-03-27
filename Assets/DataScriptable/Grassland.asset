@@ -21,5 +21,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 536cd4d229dddc24a8b250fe6fa31a74, type: 2}
   - {fileID: 11400000, guid: 68ef469568763db4f957d9026600f3f9, type: 2}
   - {fileID: 11400000, guid: 696c1703170841944bb5ec30144bd89d, type: 2}
+  - {fileID: 11400000, guid: d8f2bfc1e50d7214b9355a3d488d16a5, type: 2}
   obstacleSpawnRateMultiplier: 1
   description: 

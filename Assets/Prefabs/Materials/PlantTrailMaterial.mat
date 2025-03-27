@@ -101,7 +101,7 @@ Material:
     - _Color: {r: 0.46333528, g: 0.55345905, b: 0.18970756, a: 1}
     - _Flip: {r: 1, g: 1, b: 1, a: 1}
     - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
-    - _StemColor: {r: 0.26415092, g: 0.14263149, b: 0.03904115, a: 1}
+    - _StemColor: {r: 0.7295747, g: 0.39937097, b: 1, a: 1}
     - _Tiling: {r: 1, g: 1, b: 0, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

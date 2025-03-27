@@ -453,7 +453,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 2100000, guid: 81280519ebe96f54c8d138d1fa78b966, type: 2}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.36477977, g: 0.042442862, b: 0.3000865, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -2056,6 +2056,7 @@ MonoBehaviour:
   - {fileID: 8473705300848159720, guid: 6f0c8018a07295b4cb229edd9072ddca, type: 3}
   - {fileID: 8473705300848159720, guid: ad9bfac652e22de4499d910d41617c51, type: 3}
   - {fileID: 8473705300848159720, guid: 704d7926d2b5d9240aad2870fb86e4ad, type: 3}
+  - {fileID: 8473705300848159720, guid: 3bc5ceb3d8dc62248a507b2898f3e4db, type: 3}
   poolSize: 10
   spawnXRange: 2.5
   spawnYIncrement: 5
