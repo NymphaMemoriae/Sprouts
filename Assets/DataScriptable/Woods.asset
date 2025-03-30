@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 81ad8271272fb06488f06dce98df8b79, type: 3}
-  m_Name: Grassland
+  m_Name: Woods
   m_EditorClassIdentifier: 
   biomeName: GrassLand
   minHeight: -470

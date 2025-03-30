@@ -2057,13 +2057,15 @@ MonoBehaviour:
   - {fileID: 8473705300848159720, guid: ad9bfac652e22de4499d910d41617c51, type: 3}
   - {fileID: 8473705300848159720, guid: 704d7926d2b5d9240aad2870fb86e4ad, type: 3}
   - {fileID: 8473705300848159720, guid: 3bc5ceb3d8dc62248a507b2898f3e4db, type: 3}
+  - {fileID: 1314626108447392289, guid: 50e3672b615112846a322de4003380b5, type: 3}
   poolSize: 10
   spawnXRange: 2.5
   spawnYIncrement: 5
   startYPosition: 3
-  leftSideX: -3
-  rightSideX: 3
+  leftSideX: -3.2
+  rightSideX: 3.2
   sideObstacleChance: 100
+  sideObstacleYSpacing: 2
 --- !u!4 &1245832017
 Transform:
   m_ObjectHideFlags: 0
