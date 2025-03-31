@@ -12,10 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ff74b0c529be2648a124d33adc0588c, type: 3}
   m_Name: SideTrunk1
   m_EditorClassIdentifier: 
-  segmentName: 
-  trunkPrefab: {fileID: 0}
-  capPrefab: {fileID: 0}
-  minTrunks: 2
-  maxTrunks: 4
-  leftX: -5.5
-  rightX: 5.5
+  segmentName: TrunkDefault
+  trunkPrefab: {fileID: 1314626108447392289, guid: 1ae67c908730f6845bbe7c2c2b94f520, type: 3}
+  capPrefab: {fileID: 1314626108447392289, guid: 9bfbd2e7c542bbc4eb86705bd2d97baf, type: 3}
+  minTrunks: 3
+  maxTrunks: 5
+  leftX: -3.5
+  rightX: 3.5
+  verticalSpacing: 15.36
+  capInterval: 0

@@ -61,6 +61,13 @@ public class PlantController : MonoBehaviour
     {
         UpdateBuffs();
         UpdateGrowth();
+
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            Vector3 teleportPosition = transform.position + Vector3.up * 100f;
+            transform.position = teleportPosition;
+            Debug.Log("Plant teleported 100 meters up!");
+        }
     }
 
     public void SetGrowing(bool growing)

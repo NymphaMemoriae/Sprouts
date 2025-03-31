@@ -1775,6 +1775,7 @@ MonoBehaviour:
   biomes:
   - {fileID: 11400000, guid: 2cfdbc0691e10f34482bb54709411c74, type: 2}
   - {fileID: 11400000, guid: 80db725388d0fe6498750d76e663d118, type: 2}
+  - {fileID: 11400000, guid: 63781d5cb20fbf943b78539dd285c7cc, type: 2}
   defaultBiome: {fileID: 11400000, guid: 2cfdbc0691e10f34482bb54709411c74, type: 2}
   plantController: {fileID: 1468978192}
   backgroundTileManager: {fileID: 557054657}
@@ -2058,6 +2059,7 @@ MonoBehaviour:
   - {fileID: 8473705300848159720, guid: 704d7926d2b5d9240aad2870fb86e4ad, type: 3}
   - {fileID: 8473705300848159720, guid: 3bc5ceb3d8dc62248a507b2898f3e4db, type: 3}
   - {fileID: 1314626108447392289, guid: 50e3672b615112846a322de4003380b5, type: 3}
+  - {fileID: 1314626108447392289, guid: 1ae67c908730f6845bbe7c2c2b94f520, type: 3}
   poolSize: 10
   spawnXRange: 2.5
   spawnYIncrement: 5
@@ -2066,6 +2068,7 @@ MonoBehaviour:
   rightSideX: 3.2
   sideObstacleChance: 100
   sideObstacleYSpacing: 2
+  segmentSpawnBuffer: 8
 --- !u!4 &1245832017
 Transform:
   m_ObjectHideFlags: 0

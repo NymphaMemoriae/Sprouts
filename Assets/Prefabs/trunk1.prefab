@@ -11,9 +11,9 @@ GameObject:
   - component: {fileID: 509844768182342369}
   - component: {fileID: 8797817881003073924}
   - component: {fileID: 7723105416561072955}
-  - component: {fileID: 4720961323589969922}
+  - component: {fileID: 2626844288259282854}
   m_Layer: 9
-  m_Name: PhysicalObstacle
+  m_Name: trunk1
   m_TagString: Obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -41,12 +41,12 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1314626108447392289}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 71c8de1cded4b704ba679001b13c5e97, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  obstacleData: {fileID: 11400000, guid: cc71b7cf7b91a754b821ed2bb087dc12, type: 2}
+  obstacleData: {fileID: 11400000, guid: 128822b4815afb34ea448c678687acbe, type: 2}
 --- !u!212 &7723105416561072955
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -91,7 +91,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -1200198060928577155, guid: 15c3fde774679a24aa3fd39694ca4a44, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 4bfd4c21b05c58e4daeca2112f0e6bb2, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -102,8 +102,8 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!70 &4720961323589969922
-CapsuleCollider2D:
+--- !u!60 &2626844288259282854
+PolygonCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -136,6 +136,84 @@ CapsuleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0.017119288, y: 0.6419699}
-  m_Size: {x: 2.348808, y: 3.3560605}
-  m_Direction: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 5.12, y: 15.36}
+    newSize: {x: 0.8828125, y: 1}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Points:
+    m_Paths:
+    - - {x: 1.99, y: -6.54}
+      - {x: 1.99, y: -5.73}
+      - {x: 1.9499999, y: -5.38}
+      - {x: 1.9599999, y: -4.52}
+      - {x: 1.99, y: -3.6899998}
+      - {x: 1.99, y: -3.1499999}
+      - {x: 1.9799999, y: -2.54}
+      - {x: 1.9599999, y: -2.45}
+      - {x: 1.9599999, y: -1.41}
+      - {x: 1.9799999, y: -1.41}
+      - {x: 1.9699999, y: -1}
+      - {x: 1.9599999, y: -0.71}
+      - {x: 1.99, y: -0.29}
+      - {x: 1.99, y: -0.08}
+      - {x: 1.9699999, y: 0.53999996}
+      - {x: 1.9599999, y: 0.71}
+      - {x: 1.9599999, y: 1.5899999}
+      - {x: 1.99, y: 1.75}
+      - {x: 1.99, y: 1.88}
+      - {x: 1.9799999, y: 2.07}
+      - {x: 1.9699999, y: 3.56}
+      - {x: 1.9799999, y: 4.1}
+      - {x: 1.9699999, y: 4.58}
+      - {x: 1.9499999, y: 4.58}
+      - {x: 1.9599999, y: 5.47}
+      - {x: 1.99, y: 5.8199997}
+      - {x: 1.9799999, y: 6.25}
+      - {x: 1.9699999, y: 6.7599998}
+      - {x: 1.9499999, y: 7.68}
+      - {x: -1.99, y: 7.68}
+      - {x: -1.99, y: 7.24}
+      - {x: -1.9799999, y: 6.81}
+      - {x: -1.9699999, y: 6.25}
+      - {x: -2, y: 6.1}
+      - {x: -2, y: 6.02}
+      - {x: -1.9499999, y: 5.6299996}
+      - {x: -1.9599999, y: 5.21}
+      - {x: -1.9799999, y: 4.29}
+      - {x: -1.9599999, y: 3.6499999}
+      - {x: -1.9699999, y: 3.1399999}
+      - {x: -1.9699999, y: 2.3899999}
+      - {x: -2, y: 2.24}
+      - {x: -2, y: 2.1599998}
+      - {x: -1.9499999, y: 1.77}
+      - {x: -1.9599999, y: 1.35}
+      - {x: -1.99, y: 0.48999998}
+      - {x: -2, y: 0.44}
+      - {x: -2, y: 0.17999999}
+      - {x: -1.99, y: 0.07}
+      - {x: -1.99, y: -0.48999998}
+      - {x: -2, y: -0.65999997}
+      - {x: -2, y: -1.16}
+      - {x: -1.9799999, y: -1.41}
+      - {x: -1.99, y: -1.56}
+      - {x: -2, y: -1.81}
+      - {x: -2, y: -2.8799999}
+      - {x: -1.9799999, y: -2.98}
+      - {x: -1.9699999, y: -3.61}
+      - {x: -1.9599999, y: -5.22}
+      - {x: -1.9499999, y: -5.6299996}
+      - {x: -1.9799999, y: -6.3999996}
+      - {x: -1.9499999, y: -6.77}
+      - {x: -1.9599999, y: -7.3799996}
+      - {x: -1.9799999, y: -7.66}
+      - {x: -1.9599999, y: -7.68}
+      - {x: 1.9399999, y: -7.68}
+      - {x: 1.9699999, y: -7.41}
+      - {x: 1.9699999, y: -6.6499996}
+  m_UseDelaunayMesh: 0

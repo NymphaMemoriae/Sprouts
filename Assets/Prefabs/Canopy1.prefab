@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 7723105416561072955}
   - component: {fileID: 4720961323589969922}
   m_Layer: 9
-  m_Name: PhysicalObstacle
+  m_Name: Canopy1
   m_TagString: Obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -41,7 +41,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1314626108447392289}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 71c8de1cded4b704ba679001b13c5e97, type: 3}
   m_Name: 
@@ -90,8 +90,8 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_Sprite: {fileID: -1200198060928577155, guid: 15c3fde774679a24aa3fd39694ca4a44, type: 3}
+  m_SortingOrder: 1
+  m_Sprite: {fileID: 1317516732289929814, guid: 9c2457688ba4b754db54a5f6f35876b1, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -136,6 +136,6 @@ CapsuleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0.017119288, y: 0.6419699}
-  m_Size: {x: 2.348808, y: 3.3560605}
+  m_Offset: {x: -0.014374495, y: -0.07188368}
+  m_Size: {x: 4.637339, y: 4.657794}
   m_Direction: 0

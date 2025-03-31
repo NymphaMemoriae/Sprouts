@@ -11,10 +11,10 @@ public class SideObstacleSegment : ScriptableObject
     public GameObject capPrefab;
 
     [Header("Trunk Stack Settings")]
-    [Tooltip("Minimum number of trunk tiles to spawn before cap.")]
+    [Tooltip("Minimum number of trunk tiles to spawn before segment switches.")]
     public int minTrunks = 2;
 
-    [Tooltip("Maximum number of trunk tiles to spawn before cap.")]
+    [Tooltip("Maximum number of trunk tiles to spawn before segment switches.")]
     public int maxTrunks = 4;
 
     [Header("Spawn Position")]
@@ -23,4 +23,12 @@ public class SideObstacleSegment : ScriptableObject
 
     [Tooltip("X coordinate for right-side spawn.")]
     public float rightX = 5.5f;
+
+    [Header("Tiling Settings")]
+    [Tooltip("Vertical spacing between trunk tiles. Should match the visual height of the trunk sprite.")]
+    public float verticalSpacing = 15.36f;
+
+    [Header("Cap Spawn Settings")]
+    [Tooltip("How often to overlay a cap visually (in trunk count). 0 = never.")]
+    public int capInterval = 0;
 }

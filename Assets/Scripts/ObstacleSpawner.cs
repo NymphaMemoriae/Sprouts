@@ -31,23 +31,28 @@ public class ObstacleSpawner : MonoBehaviour
     [Tooltip("Vertical spacing to apply when spawning a side obstacle.")]
     [SerializeField] private float sideObstacleYSpacing = 5f;
 
-    [Header("Segment Tiling Settings")]
-    [Tooltip("Chance (percentage) to spawn a tiling trunk-cap segment instead of normal side obstacle.")]
-    [Range(0f, 100f)]
-    [SerializeField] private float segmentTilingChance = 30f;
+    [Tooltip("How far above the camera top to begin spawning side segment tiles.")]
+    [SerializeField] private float segmentSpawnBuffer = 6f;
+
 
     private Dictionary<GameObject, List<GameObject>> obstaclePools = new Dictionary<GameObject, List<GameObject>>();
     private List<GameObject> activeObstacles = new List<GameObject>();
     private List<SideObstacleSegment> activeSegments = new List<SideObstacleSegment>();
 
     private float currentSpawnY;
-    private SideObstacleSegment currentSegment;
-    private int remainingTrunks = 0;
-    private bool nextIsCap = false;
+
+    // New tiling system state (left/right)
+    private SideSegmentState leftTiling = new SideSegmentState();
+    private SideSegmentState rightTiling = new SideSegmentState();
+    private float leftTilingY;
+    private float rightTilingY;
 
     private void Start()
     {
         currentSpawnY = startYPosition;
+        leftTilingY = startYPosition;
+        rightTilingY = startYPosition;
+
         InitializeObstaclePools();
 
         for (int i = 0; i < poolSize; i++)
@@ -61,20 +66,133 @@ public class ObstacleSpawner : MonoBehaviour
         for (int i = activeObstacles.Count - 1; i >= 0; i--)
         {
             GameObject obstacle = activeObstacles[i];
-            if (obstacle == null)
-            {
-                activeObstacles.RemoveAt(i);
-                continue;
-            }
-
-            if (obstacle.transform.position.y < (Camera.main.transform.position.y - 30f))
+            if (obstacle == null || obstacle.transform.position.y < (Camera.main.transform.position.y - 30f))
             {
                 ReturnToPool(obstacle);
                 activeObstacles.RemoveAt(i);
                 SpawnObstacle();
             }
         }
+
+       float cameraTop = Camera.main.transform.position.y + Camera.main.orthographicSize + segmentSpawnBuffer;
+
+        const int maxTilesPerFrame = 20;
+
+        for (int i = 0; i < maxTilesPerFrame && leftTilingY < cameraTop; i++)
+            SpawnSegmentTile(ref leftTiling, ref leftTilingY, true);
+
+        for (int i = 0; i < maxTilesPerFrame && rightTilingY < cameraTop; i++)
+            SpawnSegmentTile(ref rightTiling, ref rightTilingY, false);
     }
+
+    private void SpawnObstacle()
+    {
+        float roll = Random.Range(0f, 100f);
+
+        if (roll < sideObstacleChance && sideObstaclePrefabs.Count > 0)
+        {
+            GameObject sidePrefab = GetRandomPrefab(sideObstaclePrefabs);
+            if (sidePrefab == null)
+            {
+                Debug.LogWarning("No side obstacle prefabs available");
+                return;
+            }
+
+            GameObject obstacle = GetFromPool(sidePrefab);
+            PositionAsSideObstacle(obstacle);
+            obstacle.SetActive(true);
+            activeObstacles.Add(obstacle);
+
+            Debug.Log($"Spawned side obstacle {obstacle.name} from prefab {sidePrefab.name}");
+        }
+        else
+        {
+            GameObject regularPrefab = GetRandomPrefab(regularObstaclePrefabs);
+            if (regularPrefab == null)
+            {
+                Debug.LogWarning("No regular obstacle prefabs available");
+                return;
+            }
+
+            GameObject obstacle = GetFromPool(regularPrefab);
+            PositionAsRegularObstacle(obstacle);
+            obstacle.SetActive(true);
+            activeObstacles.Add(obstacle);
+
+            Debug.Log($"Spawned regular obstacle {obstacle.name} from prefab {regularPrefab.name}");
+        }
+    }
+
+   private void SpawnSegmentTile(ref SideSegmentState state, ref float yPos, bool isLeft)
+    {
+        // Ensure a current segment is assigned
+        if (state.current == null && activeSegments.Count > 0)
+            state.current = activeSegments[Random.Range(0, activeSegments.Count)];
+        if (state.current == null) return;
+
+        // Spawn trunk
+        GameObject trunkPrefab = state.current.trunkPrefab;
+        if (trunkPrefab == null) return;
+
+        GameObject trunk = GetFromPool(trunkPrefab);
+        float x = isLeft ? state.current.leftX : state.current.rightX;
+        trunk.transform.position = new Vector3(x, yPos, 0f);
+        trunk.transform.rotation = Quaternion.identity;
+        trunk.SetActive(true);
+        activeObstacles.Add(trunk);
+
+        // Increment cap counter
+        state.trunksSinceLastCap++;
+        int interval = state.current.capInterval;
+
+        // Spawn cap visually if interval reached
+        if (interval > 0 && state.trunksSinceLastCap >= interval)
+        {
+            GameObject capPrefab = state.current.capPrefab;
+            if (capPrefab != null)
+            {
+                GameObject cap = GetFromPool(capPrefab);
+                cap.transform.position = new Vector3(x, yPos, 0f); // same Y as trunk
+                cap.transform.rotation = Quaternion.identity;
+                cap.SetActive(true);
+                activeObstacles.Add(cap);
+
+                if (cap.TryGetComponent(out SpriteRenderer sr))
+                    sr.sortingOrder = 5;
+            }
+
+            state.trunksSinceLastCap = 0;
+        }
+
+        // Advance Y position for next trunk
+        yPos += state.current.verticalSpacing;
+
+        // Count down trunks left for this segment
+        state.remainingTrunks--;
+        if (state.remainingTrunks <= 0)
+        {
+            // Pick a new segment
+            if (activeSegments.Count > 0)
+            {
+                SideObstacleSegment newSegment = activeSegments[Random.Range(0, activeSegments.Count)];
+                if (newSegment != null)
+                    state.current = newSegment;
+            }
+
+            // Choose new trunk count
+            state.remainingTrunks = Random.Range(state.current.minTrunks, state.current.maxTrunks + 1);
+            state.trunksSinceLastCap = 0;
+        }
+    }
+
+
+    private class SideSegmentState
+    {
+        public SideObstacleSegment current;
+        public int remainingTrunks;
+        public int trunksSinceLastCap;
+    }
+
 
     private void InitializeObstaclePools()
     {
@@ -138,92 +256,6 @@ public class ObstacleSpawner : MonoBehaviour
         obstacle.transform.position = Vector3.zero;
     }
 
-    private void SpawnObstacle()
-    {
-        float randomValue = Random.Range(0f, 100f);
-
-        if (randomValue < segmentTilingChance && activeSegments.Count > 0)
-        {
-            SpawnSegmentedSideObstacle();
-            return;
-        }
-
-        if (randomValue < sideObstacleChance + segmentTilingChance && sideObstaclePrefabs.Count > 0)
-        {
-            GameObject sidePrefab = GetRandomPrefab(sideObstaclePrefabs);
-            if (sidePrefab == null)
-            {
-                Debug.LogWarning("No side obstacle prefabs available");
-                return;
-            }
-
-            GameObject obstacle = GetFromPool(sidePrefab);
-            PositionAsSideObstacle(obstacle);
-            obstacle.SetActive(true);
-            activeObstacles.Add(obstacle);
-
-            Debug.Log($"Spawned side obstacle {obstacle.name} from prefab {sidePrefab.name}");
-        }
-        else
-        {
-            GameObject regularPrefab = GetRandomPrefab(regularObstaclePrefabs);
-            if (regularPrefab == null)
-            {
-                Debug.LogWarning("No regular obstacle prefabs available");
-                return;
-            }
-
-            GameObject obstacle = GetFromPool(regularPrefab);
-            PositionAsRegularObstacle(obstacle);
-            obstacle.SetActive(true);
-            activeObstacles.Add(obstacle);
-
-            Debug.Log($"Spawned regular obstacle {obstacle.name} from prefab {regularPrefab.name}");
-        }
-    }
-
-    private void SpawnSegmentedSideObstacle()
-    {
-        if (remainingTrunks <= 0 && !nextIsCap)
-        {
-            currentSegment = activeSegments[Random.Range(0, activeSegments.Count)];
-            remainingTrunks = Random.Range(currentSegment.minTrunks, currentSegment.maxTrunks + 1);
-            nextIsCap = false;
-        }
-
-        GameObject prefabToUse = null;
-
-        if (remainingTrunks > 0)
-        {
-            prefabToUse = currentSegment.trunkPrefab;
-            remainingTrunks--;
-            if (remainingTrunks == 0)
-                nextIsCap = true;
-        }
-        else if (nextIsCap)
-        {
-            prefabToUse = currentSegment.capPrefab;
-            nextIsCap = false;
-        }
-
-        if (prefabToUse == null) return;
-
-        GameObject obstacle = GetFromPool(prefabToUse);
-        bool spawnLeft = Random.value < 0.5f;
-        float xPos = spawnLeft ? currentSegment.leftX : currentSegment.rightX;
-
-        float cameraTopY = Camera.main.transform.position.y + Camera.main.orthographicSize;
-        float spawnY = Mathf.Max(currentSpawnY, cameraTopY + 2f);
-
-        obstacle.transform.position = new Vector3(xPos, spawnY, 0);
-        obstacle.transform.rotation = Quaternion.identity;
-        obstacle.SetActive(true);
-        activeObstacles.Add(obstacle);
-        currentSpawnY = spawnY + sideObstacleYSpacing;
-
-        Debug.Log($"[Segment] Spawned {(nextIsCap ? "cap" : "trunk")} from segment {currentSegment.name}");
-    }
-
     private void PositionAsRegularObstacle(GameObject obstacle)
     {
         float xPos = Random.Range(-spawnXRange, spawnXRange);
@@ -254,12 +286,10 @@ public class ObstacleSpawner : MonoBehaviour
         currentSpawnY = spawnY + sideObstacleYSpacing;
 
         float randomAngle = spawnOnLeft
-            ? Random.Range(-maxAngle, -minAngle)
-            : Random.Range(minAngle, maxAngle);
+            ? Random.Range(-maxAngle, -20f)
+            : Random.Range(20f, maxAngle);
 
         obstacle.transform.rotation = Quaternion.Euler(0f, 0f, randomAngle);
-
-        Debug.Log($"[Side] Positioned side obstacle {obstacle.name} at ({xPos}, {spawnY}) with rotation {randomAngle}");
     }
 
     private GameObject GetRandomPrefab(List<GameObject> prefabs)
@@ -290,5 +320,9 @@ public class ObstacleSpawner : MonoBehaviour
         }
 
         InitializeObstaclePools();
+
+        leftTilingY = rightTilingY = startYPosition;
+        leftTiling = new SideSegmentState();
+        rightTiling = new SideSegmentState();
     }
 }
