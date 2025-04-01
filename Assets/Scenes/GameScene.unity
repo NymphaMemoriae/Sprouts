@@ -347,9 +347,9 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 188981457}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 30}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 1
+  m_LocalPosition: {x: 0, y: 0, z: -5}
+  m_LocalScale: {x: 0.72, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1468978191}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -454,14 +454,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 2100000, guid: 81280519ebe96f54c8d138d1fa78b966, type: 2}
-  m_Color: {r: 0.36477977, g: 0.042442862, b: 0.3000865, a: 1}
+  m_Color: {r: 0.8238993, g: 0.8238993, b: 0.8238993, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 5824834579684591244, guid: febc7cc33c6c25f4193965d2867ff35e, type: 3}
+  m_Sprite: {fileID: 8302960601557194349, guid: 93bcb842258c27a4cb2bd8d70ac747f8, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2057,7 +2057,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   groundAnchor: {fileID: 586876028}
   plantHead: {fileID: 188981458}
-  topOffset: 0.1
+  topOffset: 0
   stemWidth: 1.25
   framesPerSegment: 30
   minMovementThreshold: 0.05
@@ -2138,7 +2138,7 @@ Transform:
   m_GameObject: {fileID: 951681110}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -2}
   m_LocalScale: {x: 0.3, y: 0.3, z: 0.3}
   m_ConstrainProportionsScale: 0
   m_Children: []
