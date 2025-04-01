@@ -8,6 +8,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI scoreText;
     [SerializeField] private TextMeshProUGUI livesText;
     [SerializeField] private TextMeshProUGUI heightText;
+    [SerializeField] private TextMeshProUGUI velocityText;
+
     
     [Header("Game State Panels")]
     [SerializeField] private GameObject gameOverPanel;
@@ -146,6 +148,14 @@ public class UIManager : MonoBehaviour
         heightText.text = $"Height: {height:F1}m";
     }
     
+    public void UpdateVelocity(float velocity)
+    {
+        if (velocityText != null)
+        {
+            velocityText.text = $"Velocity: {velocity:F2} u/s";
+        }
+    }
+
     public void UpdateBuffIndicators(bool hasGhostBuff, bool hasSpeedBuff, bool hasExtraLife)
     {
         ghostBuffIndicator.SetActive(hasGhostBuff);
@@ -179,16 +189,14 @@ public class UIManager : MonoBehaviour
         GameManager.Instance.StartGame();
     }
     
-    private void Update()
+   private void Update()
     {
         if (plantController != null)
         {
-            // Use DisplayHeight instead of CurrentHeight for the UI
             UpdateHeight(plantController.DisplayHeight);
-            
-            // Still use actual height for score calculation
-            // You could also use DisplayHeight here if you want scoring to start at -500
             UpdateScore(plantController.CurrentHeight);
+            UpdateVelocity(plantController.CurrentVelocity); // 👈 Add this line
         }
     }
+
 }

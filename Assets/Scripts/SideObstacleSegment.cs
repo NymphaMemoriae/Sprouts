@@ -29,6 +29,10 @@ public class SideObstacleSegment : ScriptableObject
     public float verticalSpacing = 15.36f;
 
     [Header("Cap Spawn Settings")]
-    [Tooltip("How often to overlay a cap visually (in trunk count). 0 = never.")]
-    public int capInterval = 0;
+    [Tooltip("Minimum number of trunks between caps. Set both to 0 to disable caps.")]
+    public int minCapInterval = 0;
+
+    [Tooltip("Maximum number of trunks between caps.")]
+    public int maxCapInterval = 0;
+
 }

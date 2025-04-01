@@ -123,7 +123,7 @@ public class ObstacleSpawner : MonoBehaviour
         }
     }
 
-   private void SpawnSegmentTile(ref SideSegmentState state, ref float yPos, bool isLeft)
+  private void SpawnSegmentTile(ref SideSegmentState state, ref float yPos, bool isLeft)
     {
         // Ensure a current segment is assigned
         if (state.current == null && activeSegments.Count > 0)
@@ -141,27 +141,29 @@ public class ObstacleSpawner : MonoBehaviour
         trunk.SetActive(true);
         activeObstacles.Add(trunk);
 
-        // Increment cap counter
+        // Cap spawning logic
         state.trunksSinceLastCap++;
-        int interval = state.current.capInterval;
 
-        // Spawn cap visually if interval reached
-        if (interval > 0 && state.trunksSinceLastCap >= interval)
+        if (state.current.minCapInterval > 0 && state.current.maxCapInterval >= state.current.minCapInterval)
         {
-            GameObject capPrefab = state.current.capPrefab;
-            if (capPrefab != null)
+            if (state.trunksSinceLastCap >= state.nextCapInterval)
             {
-                GameObject cap = GetFromPool(capPrefab);
-                cap.transform.position = new Vector3(x, yPos, 0f); // same Y as trunk
-                cap.transform.rotation = Quaternion.identity;
-                cap.SetActive(true);
-                activeObstacles.Add(cap);
+                GameObject capPrefab = state.current.capPrefab;
+                if (capPrefab != null)
+                {
+                    GameObject cap = GetFromPool(capPrefab);
+                    cap.transform.position = new Vector3(x, yPos, 0f);
+                    cap.transform.rotation = Quaternion.identity;
+                    cap.SetActive(true);
+                    activeObstacles.Add(cap);
 
-                if (cap.TryGetComponent(out SpriteRenderer sr))
-                    sr.sortingOrder = 5;
+                    if (cap.TryGetComponent(out SpriteRenderer sr))
+                        sr.sortingOrder = 5;
+                }
+
+                state.trunksSinceLastCap = 0;
+                state.nextCapInterval = Random.Range(state.current.minCapInterval, state.current.maxCapInterval + 1);
             }
-
-            state.trunksSinceLastCap = 0;
         }
 
         // Advance Y position for next trunk
@@ -171,7 +173,6 @@ public class ObstacleSpawner : MonoBehaviour
         state.remainingTrunks--;
         if (state.remainingTrunks <= 0)
         {
-            // Pick a new segment
             if (activeSegments.Count > 0)
             {
                 SideObstacleSegment newSegment = activeSegments[Random.Range(0, activeSegments.Count)];
@@ -179,11 +180,12 @@ public class ObstacleSpawner : MonoBehaviour
                     state.current = newSegment;
             }
 
-            // Choose new trunk count
             state.remainingTrunks = Random.Range(state.current.minTrunks, state.current.maxTrunks + 1);
             state.trunksSinceLastCap = 0;
+            state.nextCapInterval = Random.Range(state.current.minCapInterval, state.current.maxCapInterval + 1);
         }
     }
+
 
 
     private class SideSegmentState
@@ -191,7 +193,9 @@ public class ObstacleSpawner : MonoBehaviour
         public SideObstacleSegment current;
         public int remainingTrunks;
         public int trunksSinceLastCap;
+        public int nextCapInterval;
     }
+
 
 
     private void InitializeObstaclePools()
@@ -269,7 +273,6 @@ public class ObstacleSpawner : MonoBehaviour
     {
         DamageObstacle damageObstacle = obstacle.GetComponent<DamageObstacle>();
 
-        float minAngle = 20f;
         float maxAngle = 60f;
 
         if (damageObstacle != null && damageObstacle.obstacleData != null)

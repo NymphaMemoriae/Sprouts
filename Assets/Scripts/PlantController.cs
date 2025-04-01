@@ -4,11 +4,22 @@ using System.Collections.Generic;
 public class PlantController : MonoBehaviour
 {
     [Header("Movement Settings")]
+    [Tooltip("Speed when growth begins or resets")]
     [SerializeField] private float initialGrowthSpeed = 2f;
+
+    [Tooltip("Maximum vertical speed the plant can reach")]
     [SerializeField] private float maxGrowthSpeed = 7f;
+
+    [Tooltip("How fast the plant accelerates upward")]
     [SerializeField] private float accelerationRate = 0.6f;
+
+    [Tooltip("How fast the plant decelerates after a collision")]
     [SerializeField] private float decelerationRate = 0.5f;
+
+    [Tooltip("Speed for left/right swiping")]
     [SerializeField] private float horizontalSpeed = 4f;
+
+    [Tooltip("Smooth time for rotation of the plant head")]
     [SerializeField] private float rotationSmoothTime = 0.2f;
 
     [Header("Collision Settings")]
@@ -25,41 +36,41 @@ public class PlantController : MonoBehaviour
     [SerializeField] private float heightOffset = -500f;
 
     [Header("Collision Recovery")]
-    [SerializeField] private float recoveryTimeAfterCollision = 0.5f;
+    [Tooltip("Time the plant decelerates after hitting a horizontal obstacle")]
+    [SerializeField] private float sideBumpRecoveryTime = 0.2f;
 
     [Header("References")]
     [SerializeField] public PlantLife plantLife;
 
     private float currentGrowthSpeed;
-    private float targetGrowthSpeed;
-    private float storedPreCollisionSpeed;
-    private float recoveryTimer = 0f;
-
     private bool isGrowing = false;
-    private bool isStuck = false;
     private bool isGameOver = false;
     private Vector3 lastPosition;
     private float targetRotation = 0f;
     private float currentRotationVelocity;
+    private bool isVerticallyBlocked = false;
+    private float sideBumpTimer = 0f;
 
     private Dictionary<BuffType, float> activeBuffs = new Dictionary<BuffType, float>();
 
+    // Exposed Properties
     public bool IsGrowing => isGrowing;
-    public bool IsStuck => isStuck;
+    public bool IsStuck => isVerticallyBlocked;
     public float CurrentHeight => plantHead.position.y;
     public float DisplayHeight => plantHead.position.y + heightOffset;
     public Transform PlantHead => plantHead;
+    public float CurrentVelocity => currentGrowthSpeed;
 
     private void Start()
     {
         currentGrowthSpeed = initialGrowthSpeed;
-        targetGrowthSpeed = initialGrowthSpeed;
         lastPosition = transform.position;
     }
 
     private void Update()
     {
         UpdateBuffs();
+        CheckVerticalCollision();
         UpdateGrowth();
 
         if (Input.GetKeyDown(KeyCode.L))
@@ -74,111 +85,113 @@ public class PlantController : MonoBehaviour
     {
         if (isGameOver) return;
         isGrowing = growing;
-        targetGrowthSpeed = growing ? maxGrowthSpeed : initialGrowthSpeed;
     }
 
     public void SetHorizontalMovement(float direction)
     {
         if (isGameOver) return;
 
-        bool canMoveHorizontally = !Physics2D.CircleCast(
+        if (Mathf.Approximately(direction, 0f)) return;
+
+        bool blocked = Physics2D.CircleCast(
             plantHead.position,
             collisionCheckRadius,
             new Vector2(direction, 0),
-            0.1f,
+            0.05f,
             obstacleLayer
         );
 
-        if (canMoveHorizontally)
+        if (!blocked)
         {
             Vector3 movement = new Vector3(direction * horizontalSpeed * Time.deltaTime, 0, 0);
             transform.Translate(movement);
-
-            targetRotation = Mathf.Abs(direction) > 0.01f ? Mathf.Clamp(-direction * 45f, -45f, 45f) : 0f;
-
-            if (isStuck)
-            {
-                Collider2D hitCollider = Physics2D.OverlapCircle(
-                    plantHead.position + Vector3.up * 0.1f,
-                    collisionCheckRadius,
-                    obstacleLayer
-                );
-
-                if (hitCollider == null)
-                {
-                    isStuck = false;
-                    Debug.Log("Plant is no longer stuck");
-                }
-            }
         }
+        else
+        {
+            // Apply minor upward slowdown on side bump
+            sideBumpTimer = sideBumpRecoveryTime;
+        }
+
+        targetRotation = Mathf.Abs(direction) > 0.01f ? Mathf.Clamp(-direction * 45f, -45f, 45f) : 0f;
     }
 
     private void UpdateGrowth()
     {
         if (isGameOver) return;
 
-        if (recoveryTimer > 0f)
+        // Handle acceleration
+        if (isGrowing && !isVerticallyBlocked)
         {
-            recoveryTimer -= Time.deltaTime;
+            currentGrowthSpeed = Mathf.MoveTowards(currentGrowthSpeed, maxGrowthSpeed, accelerationRate * Time.deltaTime);
+        }
+
+        // Side bump deceleration
+        if (sideBumpTimer > 0f)
+        {
+            sideBumpTimer -= Time.deltaTime;
             currentGrowthSpeed = Mathf.MoveTowards(currentGrowthSpeed, initialGrowthSpeed, decelerationRate * Time.deltaTime);
         }
-        else if (storedPreCollisionSpeed > 0f)
-        {
-            // Resume previous speed after recovery
-            currentGrowthSpeed = storedPreCollisionSpeed;
-            storedPreCollisionSpeed = 0f;
-        }
-        else if (isGrowing && !isStuck)
-        {
-            currentGrowthSpeed = Mathf.MoveTowards(
-                currentGrowthSpeed,
-                targetGrowthSpeed,
-                accelerationRate * Time.deltaTime
-            );
-        }
-        else
-        {
-            currentGrowthSpeed = Mathf.Max(
-                Mathf.MoveTowards(currentGrowthSpeed, initialGrowthSpeed, decelerationRate * Time.deltaTime),
-                initialGrowthSpeed
-            );
-        }
 
+        float finalSpeed = currentGrowthSpeed;
         if (HasActiveBuff(BuffType.Speed))
         {
-            currentGrowthSpeed *= speedBuffMultiplier;
+            finalSpeed *= speedBuffMultiplier;
         }
 
-        if (!isStuck)
+        // Don't move vertically if blocked above
+        if (!isVerticallyBlocked)
         {
-            transform.Translate(Vector3.up * currentGrowthSpeed * Time.deltaTime);
+            transform.Translate(Vector3.up * finalSpeed * Time.deltaTime);
         }
 
         UpdatePlantHeadRotation();
         lastPosition = transform.position;
     }
 
+    private void CheckVerticalCollision()
+    {
+        if (HasActiveBuff(BuffType.Ghost))
+        {
+            isVerticallyBlocked = false;
+            return;
+        }
+
+        RaycastHit2D hit = Physics2D.CircleCast(
+            plantHead.position,
+            collisionCheckRadius,
+            Vector2.up,
+            0.05f,
+            obstacleLayer
+        );
+
+        if (hit.collider != null)
+        {
+            isVerticallyBlocked = true;
+
+            if (currentGrowthSpeed > initialGrowthSpeed)
+            {
+                currentGrowthSpeed = initialGrowthSpeed;
+            }
+        }
+
+        else
+        {
+            isVerticallyBlocked = false;
+        }
+    }
+
     public void HandlePhysicalCollision()
     {
-        isStuck = true;
-
-        // Save current speed for recovery
-        storedPreCollisionSpeed = currentGrowthSpeed;
-
-        // Start recovery timer
-        recoveryTimer = recoveryTimeAfterCollision;
-
-        currentGrowthSpeed = initialGrowthSpeed;
-        targetGrowthSpeed = initialGrowthSpeed;
+        currentGrowthSpeed = initialGrowthSpeed; // typically 2f
+        isVerticallyBlocked = true;
     }
+
 
     public void StopPlant()
     {
         isGameOver = true;
         isGrowing = false;
         currentGrowthSpeed = 0f;
-        targetGrowthSpeed = 0f;
-        isStuck = true;
     }
 
     private void UpdateBuffs()
@@ -222,14 +235,6 @@ public class PlantController : MonoBehaviour
     private bool HasActiveBuff(BuffType buffType)
     {
         return activeBuffs.ContainsKey(buffType);
-    }
-
-    private void RemoveBuff(BuffType buffType)
-    {
-        if (activeBuffs.ContainsKey(buffType))
-        {
-            activeBuffs.Remove(buffType);
-        }
     }
 
     private void UpdatePlantHeadRotation()

@@ -17,7 +17,8 @@ MonoBehaviour:
   capPrefab: {fileID: 1314626108447392289, guid: 9bfbd2e7c542bbc4eb86705bd2d97baf, type: 3}
   minTrunks: 3
   maxTrunks: 5
-  leftX: -3.5
-  rightX: 3.5
+  leftX: -4
+  rightX: 4
   verticalSpacing: 15.36
-  capInterval: 0
+  minCapInterval: 1
+  maxCapInterval: 3
