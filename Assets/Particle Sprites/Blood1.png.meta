@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 17adfba0675c1654ebec5b16a2f9360c
+guid: 2d3297f168a5f714d998dac954a43f18
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -293538302529557063
-    second: thorns and spikes_0
+      213: 1003376004645096373
+    second: Blood1_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -113,13 +113,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: thorns and spikes_0
+      name: Blood1_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 2
-        width: 512
-        height: 508
+        x: 12
+        y: 0
+        width: 40
+        height: 64
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 9bd21c518742debf0800000000000000
-      internalID: -293538302529557063
+      spriteID: 5bb850df825bced00800000000000000
+      internalID: 1003376004645096373
       vertices: []
       indices: 
       edges: []
