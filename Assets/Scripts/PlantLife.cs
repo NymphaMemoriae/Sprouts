@@ -1,34 +1,29 @@
 using UnityEngine;
-using UnityEngine.Events;
 
 public class PlantLife : MonoBehaviour
 {
     [Header("Life Settings")]
     [SerializeField] private int maxLives = 3;
     public int CurrentLives { get; private set; }
-    
-    [Header("Events")]
-    public UnityEvent<int> onLivesChanged;
-    public UnityEvent onPlantDeath;
-    
+
     [Header("References")]
     [SerializeField] private Transform plantHead;
-    
+
     [Header("Collision Detection")]
     [SerializeField] private float invulnerabilityDuration = 1f;
     private bool isInvulnerable = false;
     private float invulnerabilityTimer = 0f;
     private PlantController plantController;
-    
+
     private void Awake()
     {
         ResetLives();
     }
-    
+
     private void Start()
     {
         plantController = GetComponentInParent<PlantController>();
-        
+
         // Add collision detector to PlantHead
         var collisionDetector = plantHead.gameObject.AddComponent<PlantCollisionDetector>();
         collisionDetector.Initialize(this);
@@ -53,8 +48,6 @@ public class PlantLife : MonoBehaviour
         if (obstacle.obstacleData != null && obstacle.obstacleData.damage > 0)
         {
             TakeDamage(obstacle.obstacleData.damage);
-            
-            // Apply invulnerability
             isInvulnerable = true;
             invulnerabilityTimer = invulnerabilityDuration;
         }
@@ -63,9 +56,8 @@ public class PlantLife : MonoBehaviour
     public void ResetLives()
     {
         CurrentLives = maxLives;
-        onLivesChanged?.Invoke(CurrentLives);
     }
-    
+
     public void TakeDamage(int damage)
     {
         if (damage <= 0) return;
@@ -73,22 +65,40 @@ public class PlantLife : MonoBehaviour
         CurrentLives -= damage;
         if (CurrentLives < 0)
             CurrentLives = 0;
-        
-        onLivesChanged?.Invoke(CurrentLives);
 
         if (CurrentLives <= 0)
         {
-            onPlantDeath?.Invoke();
+            plantController?.StopPlant();
+            Invoke(nameof(TriggerGameOver), 0.01f); // slight delay to ensure event listeners are active
         }
     }
-    
+
+    private void TriggerGameOver()
+    {
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.SetGameState(GameState.GameOver);
+
+            // Manually ensure UI updates
+            UIManager ui = FindFirstObjectByType<UIManager>();
+
+            if (ui != null)
+            {
+                Debug.Log("PlantLife: Forcing UIManager to update GameOver panel.");
+                ui.SendMessage("UpdateUI");
+            }
+        }
+        else
+        {
+            Debug.LogError("GameManager.Instance was null when trying to trigger GameOver.");
+        }
+    }
+
     public void AddLife(int extra = 1)
     {
         CurrentLives += extra;
         if (CurrentLives > maxLives)
             CurrentLives = maxLives;
-        
-        onLivesChanged?.Invoke(CurrentLives);
     }
 }
 

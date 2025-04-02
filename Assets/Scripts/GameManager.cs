@@ -4,20 +4,16 @@ using System;
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
-    
+
     [Header("References")]
     [SerializeField] public PlantController plantController;
-    [SerializeField] public PlantLife plantLife;  // Reference to the PlantLife component
+    [SerializeField] public PlantLife plantLife;
 
-    // Events
     public event Action<GameState> OnGameStateChanged;
-    
-    // Properties
     public GameState CurrentGameState { get; private set; } = GameState.MainMenu;
-    
+
     private void Awake()
     {
-        // Singleton pattern
         if (Instance == null)
         {
             Instance = this;
@@ -26,49 +22,30 @@ public class GameManager : MonoBehaviour
         else
         {
             Destroy(gameObject);
-            return;
         }
     }
-    
+
     private void Start()
     {
         SetGameState(GameState.MainMenu);
     }
 
-    private void OnEnable()
-    {
-
-    }
-
-    private void OnDisable()
-    {
-
-    }
-
-    
     private void Update()
     {
-        if (CurrentGameState == GameState.Playing)
+#if UNITY_EDITOR
+        if (CurrentGameState == GameState.Playing && Input.GetKeyDown(KeyCode.Escape))
         {
-            // Check for pause input
-            if (Input.GetKeyDown(KeyCode.Escape))
-            {
-                PauseGame();
-            }
+            PauseGame();
         }
-        else if (CurrentGameState == GameState.Paused)
+        else if (CurrentGameState == GameState.Paused && Input.GetKeyDown(KeyCode.Escape))
         {
-            // Check for resume input
-            if (Input.GetKeyDown(KeyCode.Escape))
-            {
-                ResumeGame();
-            }
+            ResumeGame();
         }
+#endif
     }
-    
+
     public void StartGame()
     {
-        // Reset the plant's lives at the start of each game
         if (plantLife != null)
         {
             plantLife.ResetLives();
@@ -76,7 +53,7 @@ public class GameManager : MonoBehaviour
 
         SetGameState(GameState.Playing);
     }
-    
+
     public void PauseGame()
     {
         if (CurrentGameState == GameState.Playing)
@@ -85,7 +62,7 @@ public class GameManager : MonoBehaviour
             SetGameState(GameState.Paused);
         }
     }
-    
+
     public void ResumeGame()
     {
         if (CurrentGameState == GameState.Paused)
@@ -94,29 +71,29 @@ public class GameManager : MonoBehaviour
             SetGameState(GameState.Playing);
         }
     }
-    
+
     public void RestartGame()
     {
         Time.timeScale = 1f;
         StartGame();
     }
-    
+
     public void ReturnToMainMenu()
     {
         Time.timeScale = 1f;
         SetGameState(GameState.MainMenu);
     }
-    
+
     public void QuitGame()
     {
-    #if UNITY_EDITOR
+#if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
-    #else
+#else
         Application.Quit();
-    #endif
+#endif
     }
- 
-    private void SetGameState(GameState newState)
+
+    public void SetGameState(GameState newState)
     {
         CurrentGameState = newState;
         OnGameStateChanged?.Invoke(newState);
