@@ -9,6 +9,12 @@ public class PlantLife : MonoBehaviour
     [Header("References")]
     [SerializeField] private Transform plantHead;
 
+    [Tooltip("Optional: Particle burst for damage (e.g. bleeding)")]
+    [SerializeField] private ParticleSystem bleedParticles;
+
+    [Tooltip("Optional: Animator for hurt animation")]
+    [SerializeField] private Animator animator;
+
     [Header("Collision Detection")]
     [SerializeField] private float invulnerabilityDuration = 1f;
     private bool isInvulnerable = false;
@@ -65,6 +71,18 @@ public class PlantLife : MonoBehaviour
         CurrentLives -= damage;
         if (CurrentLives < 0)
             CurrentLives = 0;
+
+        // 🔴 Bleed particle effect
+        if (bleedParticles != null)
+        {
+            bleedParticles.Play();
+        }
+
+        // 💢 Trigger hurt animation
+        if (animator != null)
+        {
+            animator.SetTrigger("Hurt");
+        }
 
         if (CurrentLives <= 0)
         {
