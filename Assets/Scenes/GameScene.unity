@@ -11951,8 +11951,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   groundAnchor: {fileID: 586876028}
   plantHead: {fileID: 188981458}
-  topOffset: 0
-  stemWidth: 1.25
+  topOffset: -0.05
+  stemWidth: 1.23
   framesPerSegment: 30
   minMovementThreshold: 0.05
   useSegmentDelay: 1
