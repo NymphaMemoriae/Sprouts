@@ -17,8 +17,12 @@ MonoBehaviour:
   maxHeight: -470
   backgroundMaterial: {fileID: 2100000, guid: d5dfc0b8c1fa6754496037678557dc6d, type: 2}
   tilePrefab: {fileID: 4015334938415637551, guid: 669e3d40b3490db43b12b31f263446c1, type: 3}
-  biomeObstacles:
-  - {fileID: 11400000, guid: f33cac7d4fb36a64abf0615061ab4cc9, type: 2}
-  - {fileID: 11400000, guid: cc71b7cf7b91a754b821ed2bb087dc12, type: 2}
+  biomeSideSegments: []
+  startingClusters:
+  - {fileID: 4355422624127572823, guid: a23cf065d55d88a469f7257829673187, type: 3}
+  middleClusters:
+  - {fileID: 4355422624127572823, guid: a23cf065d55d88a469f7257829673187, type: 3}
+  endingClusters:
+  - {fileID: 4355422624127572823, guid: a23cf065d55d88a469f7257829673187, type: 3}
   obstacleSpawnRateMultiplier: 1
   description: 

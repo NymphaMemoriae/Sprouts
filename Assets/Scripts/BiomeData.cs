@@ -14,8 +14,13 @@ public class BiomeData : ScriptableObject
     public GameObject tilePrefab;
 
     [Header("Obstacles")]
-    public List<ObstacleData> biomeObstacles = new List<ObstacleData>();
+    //public List<ObstacleData> biomeObstacles = new List<ObstacleData>();
     public List<SideObstacleSegment> biomeSideSegments = new List<SideObstacleSegment>(); // NEW
+    
+    [Header("Obstacle Clusters")]
+    public List<GameObject> startingClusters;
+    public List<GameObject> middleClusters;
+    public List<GameObject> endingClusters;
 
     [Header("Difficulty Settings")]
     [Range(0.5f, 2f)]

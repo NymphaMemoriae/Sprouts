@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 158c020d7156bf34f9c934cd90f8ac8b
+guid: 5a2964362f75a814e9445d4b60b85690
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -3590501240244372067
-    second: Leaf1_0
+      213: 2178669605527748797
+    second: Maggot1_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -113,23 +113,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Leaf1_0
+      name: Maggot1_0
       rect:
         serializedVersion: 2
-        x: 2
-        y: 23
-        width: 252
-        height: 211
-      alignment: 9
-      pivot: {x: 0.065349765, y: 0.08347277}
+        x: 0
+        y: 27
+        width: 256
+        height: 203
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: d9d72a1352afb2ec0800000000000000
-      internalID: -3590501240244372067
+      spriteID: db00c6096703c3e10800000000000000
+      internalID: 2178669605527748797
       vertices: []
       indices: 
       edges: []
@@ -138,7 +138,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 0319c9a523591a544b426f7467521de2
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -147,8 +147,7 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable:
-      Leaf1_0: -3590501240244372067
+    nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

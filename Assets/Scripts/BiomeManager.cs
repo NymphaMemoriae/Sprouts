@@ -91,23 +91,14 @@ public class BiomeManager : MonoBehaviour
         // Update obstacle spawner with the new biome's obstacles and segments
         if (obstacleSpawner != null)
         {
-            obstacleSpawner.SetBiomeObstacles(
-                biome.biomeObstacles,
+            obstacleSpawner.SetBiomeClusters(
+                biome.startingClusters,
+                biome.middleClusters,
+                biome.endingClusters,
                 biome.biomeSideSegments,
                 biome.obstacleSpawnRateMultiplier
             );
 
-            if (biome.biomeObstacles != null)
-            {
-                Debug.Log($"Sending {biome.biomeObstacles.Count} obstacles to spawner:");
-                foreach (var obstacleData in biome.biomeObstacles)
-                {
-                    if (obstacleData != null)
-                    {
-                        Debug.Log($"  - {obstacleData.name} (prefab: {(obstacleData.prefab ? obstacleData.prefab.name : "null")})");
-                    }
-                }
-            }
 
             if (biome.biomeSideSegments != null)
             {

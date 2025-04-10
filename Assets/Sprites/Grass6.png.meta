@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 158c020d7156bf34f9c934cd90f8ac8b
+guid: 13404504c34181d4890c5cf6315e8931
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -3590501240244372067
-    second: Leaf1_0
+      213: 7567742408923864133
+    second: Grass6_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -113,23 +113,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Leaf1_0
+      name: Grass6_0
       rect:
         serializedVersion: 2
-        x: 2
-        y: 23
-        width: 252
-        height: 211
-      alignment: 9
-      pivot: {x: 0.065349765, y: 0.08347277}
+        x: 36
+        y: 0
+        width: 183
+        height: 256
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: d9d72a1352afb2ec0800000000000000
-      internalID: -3590501240244372067
+      spriteID: 54cd09310a5060960800000000000000
+      internalID: 7567742408923864133
       vertices: []
       indices: 
       edges: []
@@ -138,7 +138,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 0319c9a523591a544b426f7467521de2
+    spriteID: 1b3abb6ab682ce942897bc15ca7ec1e3
     internalID: 0
     vertices: []
     indices: 
@@ -148,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Leaf1_0: -3590501240244372067
+      Grass6_0: 7567742408923864133
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
