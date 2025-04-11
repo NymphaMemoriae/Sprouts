@@ -21,7 +21,7 @@ MonoBehaviour:
   startingClusters:
   - {fileID: 4355422624127572823, guid: a23cf065d55d88a469f7257829673187, type: 3}
   middleClusters:
-  - {fileID: 4355422624127572823, guid: a23cf065d55d88a469f7257829673187, type: 3}
+  - {fileID: 5283057158756367813, guid: fcac981a3a6aab745951fac76eca25d2, type: 3}
   endingClusters:
   - {fileID: 4355422624127572823, guid: a23cf065d55d88a469f7257829673187, type: 3}
   obstacleSpawnRateMultiplier: 1
