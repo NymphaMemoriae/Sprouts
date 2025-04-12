@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 8727704895145777373}
   - component: {fileID: 4878734843811307460}
   - component: {fileID: 381279199426593890}
+  - component: {fileID: 5426475670709497533}
   m_Layer: 9
   m_Name: EvilWorm1
   m_TagString: DamageObstacle
@@ -28,10 +29,10 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 299749494078428471}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -1.5104235, y: 1.1203575, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 764374826633559026}
   - {fileID: 6833763674679729785}
@@ -253,6 +254,20 @@ PolygonCollider2D:
       - {x: 0.52, y: -0.96999997}
       - {x: 0.48, y: -0.87}
   m_UseDelaunayMesh: 0
+--- !u!114 &5426475670709497533
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 299749494078428471}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71c8de1cded4b704ba679001b13c5e97, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  obstacleData: {fileID: 11400000, guid: f33cac7d4fb36a64abf0615061ab4cc9, type: 2}
+  collisionParticles: {fileID: 0}
 --- !u!1 &424794606683685526
 GameObject:
   m_ObjectHideFlags: 0

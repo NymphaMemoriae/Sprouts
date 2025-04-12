@@ -35,6 +35,14 @@ public class ObstacleSpawner : MonoBehaviour
     private List<GameObject> activeClusters = new List<GameObject>();
     private Dictionary<GameObject, List<GameObject>> clusterPool = new Dictionary<GameObject, List<GameObject>>();
 
+    private Dictionary<List<GameObject>, ClusterRotation> clusterRotationIndices = new Dictionary<List<GameObject>, ClusterRotation>();
+
+    private class ClusterRotation
+    {
+        public List<GameObject> shuffledList = new List<GameObject>();
+        public int currentIndex = 0;
+    }
+
     private void Start()
     {
         currentSpawnY = startYPosition;
@@ -107,12 +115,17 @@ public class ObstacleSpawner : MonoBehaviour
 
         hasSpawnedStart = false;
         hasSpawnedEnd = false;
+
+        clusterRotationIndices.Clear(); // Reset rotations when switching biomes
     }
 
     private void SpawnClusterFromList(List<GameObject> list)
     {
         if (list == null || list.Count == 0) return;
-        GameObject prefab = list[Random.Range(0, list.Count)];
+
+        GameObject prefab = GetNextClusterInRotation(list);
+        if (prefab == null) return;
+
         GameObject cluster = GetClusterFromPool(prefab);
 
         float x = 0f;
@@ -126,6 +139,42 @@ public class ObstacleSpawner : MonoBehaviour
 
         currentSpawnY = spawnY + spawnYIncrement;
         activeClusters.Add(cluster);
+    }
+
+    private GameObject GetNextClusterInRotation(List<GameObject> originalList)
+    {
+        if (!clusterRotationIndices.ContainsKey(originalList))
+        {
+            clusterRotationIndices[originalList] = new ClusterRotation();
+        }
+
+        ClusterRotation rotation = clusterRotationIndices[originalList];
+
+        if (rotation.shuffledList.Count != originalList.Count)
+        {
+            rotation.shuffledList = new List<GameObject>(originalList);
+            Shuffle(rotation.shuffledList);
+            rotation.currentIndex = 0;
+        }
+
+        if (rotation.currentIndex >= rotation.shuffledList.Count)
+        {
+            Shuffle(rotation.shuffledList);
+            rotation.currentIndex = 0;
+        }
+
+        return rotation.shuffledList[rotation.currentIndex++];
+    }
+
+    private void Shuffle(List<GameObject> list)
+    {
+        for (int i = 0; i < list.Count; i++)
+        {
+            int randomIndex = Random.Range(i, list.Count);
+            GameObject temp = list[i];
+            list[i] = list[randomIndex];
+            list[randomIndex] = temp;
+        }
     }
 
     private GameObject GetClusterFromPool(GameObject prefab)

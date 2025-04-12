@@ -14,15 +14,26 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   biomeName: Default Biome
   minHeight: -500
-  maxHeight: -470
+  maxHeight: 0
   backgroundMaterial: {fileID: 2100000, guid: d5dfc0b8c1fa6754496037678557dc6d, type: 2}
   tilePrefab: {fileID: 4015334938415637551, guid: 669e3d40b3490db43b12b31f263446c1, type: 3}
   biomeSideSegments: []
   startingClusters:
-  - {fileID: 4355422624127572823, guid: a23cf065d55d88a469f7257829673187, type: 3}
+  - {fileID: 5283057158756367813, guid: 4512be9222c45ed49bb830df5ca133c1, type: 3}
   middleClusters:
   - {fileID: 5283057158756367813, guid: fcac981a3a6aab745951fac76eca25d2, type: 3}
-  endingClusters:
-  - {fileID: 4355422624127572823, guid: a23cf065d55d88a469f7257829673187, type: 3}
+  - {fileID: 5283057158756367813, guid: 1ecaf7b24c5be66439593892f3ac7223, type: 3}
+  - {fileID: 5283057158756367813, guid: 4512be9222c45ed49bb830df5ca133c1, type: 3}
+  - {fileID: 5283057158756367813, guid: e04948aff2c2bf444a7fa2f59dfee6e9, type: 3}
+  - {fileID: 5283057158756367813, guid: daca9032966bc994fae44423b149f605, type: 3}
+  - {fileID: 5283057158756367813, guid: fc4b54f2b2059ab428a3e7923ad9f3a2, type: 3}
+  - {fileID: 5283057158756367813, guid: 8beb9df43f039fd4a899be15531ace10, type: 3}
+  - {fileID: 5283057158756367813, guid: e558749e087d43345a0dcbc823a429f3, type: 3}
+  - {fileID: 5283057158756367813, guid: 177d855bf995dd1408921bc9e05c4180, type: 3}
+  - {fileID: 5283057158756367813, guid: 31a89d76febb8a244965d0b01b9d8342, type: 3}
+  - {fileID: 5283057158756367813, guid: d76a1de80386c314d858c7439fdbe30e, type: 3}
+  - {fileID: 5283057158756367813, guid: 155f2c1a91471c24195ab45ad9d81c17, type: 3}
+  - {fileID: 5283057158756367813, guid: 60bc1d4e5364bfe43af9a59a8bfeb111, type: 3}
+  endingClusters: []
   obstacleSpawnRateMultiplier: 1
   description: 
