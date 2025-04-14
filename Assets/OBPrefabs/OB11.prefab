@@ -88,6 +88,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Sassino2
       objectReference: {fileID: 0}
+    - target: {fileID: 7723105416561072955, guid: d1674c486d64d9c4aac54a9a3a08a1d8, type: 3}
+      propertyPath: m_Color.b
+      value: 0.83962256
+      objectReference: {fileID: 0}
+    - target: {fileID: 7723105416561072955, guid: d1674c486d64d9c4aac54a9a3a08a1d8, type: 3}
+      propertyPath: m_Color.g
+      value: 0.9332974
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -149,6 +157,14 @@ PrefabInstance:
     - target: {fileID: 1314626108447392289, guid: 2b0d25a864cc92548ae6e769f010aefc, type: 3}
       propertyPath: m_Name
       value: Sassino3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7723105416561072955, guid: 2b0d25a864cc92548ae6e769f010aefc, type: 3}
+      propertyPath: m_Color.g
+      value: 0.7310515
+      objectReference: {fileID: 0}
+    - target: {fileID: 7723105416561072955, guid: 2b0d25a864cc92548ae6e769f010aefc, type: 3}
+      propertyPath: m_Color.r
+      value: 0.6761006
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -224,6 +240,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: Nail
       objectReference: {fileID: 0}
+    - target: {fileID: 7723105416561072955, guid: 451ad20f4e2724d44a1c21868b1663d5, type: 3}
+      propertyPath: m_Color.b
+      value: 0.63322246
+      objectReference: {fileID: 0}
+    - target: {fileID: 7723105416561072955, guid: 451ad20f4e2724d44a1c21868b1663d5, type: 3}
+      propertyPath: m_Color.g
+      value: 0.63322246
+      objectReference: {fileID: 0}
+    - target: {fileID: 7723105416561072955, guid: 451ad20f4e2724d44a1c21868b1663d5, type: 3}
+      propertyPath: m_Color.r
+      value: 0.63522005
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -297,6 +325,18 @@ PrefabInstance:
     - target: {fileID: 3470885689563508995, guid: c45dbc61275aa3c448902ffc23438177, type: 3}
       propertyPath: m_ConstrainProportionsScale
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4331609701421849807, guid: c45dbc61275aa3c448902ffc23438177, type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4331609701421849807, guid: c45dbc61275aa3c448902ffc23438177, type: 3}
+      propertyPath: m_Color.g
+      value: 0.9464048
+      objectReference: {fileID: 0}
+    - target: {fileID: 4331609701421849807, guid: c45dbc61275aa3c448902ffc23438177, type: 3}
+      propertyPath: m_Color.r
+      value: 0.81446534
       objectReference: {fileID: 0}
     - target: {fileID: 8821426030023360297, guid: c45dbc61275aa3c448902ffc23438177, type: 3}
       propertyPath: m_Name
@@ -375,6 +415,18 @@ PrefabInstance:
     - target: {fileID: 1314626108447392289, guid: 4bed4279dcadce848af0b7987a7d083f, type: 3}
       propertyPath: m_Name
       value: Screw
+      objectReference: {fileID: 0}
+    - target: {fileID: 7723105416561072955, guid: 4bed4279dcadce848af0b7987a7d083f, type: 3}
+      propertyPath: m_Color.b
+      value: 0.69775707
+      objectReference: {fileID: 0}
+    - target: {fileID: 7723105416561072955, guid: 4bed4279dcadce848af0b7987a7d083f, type: 3}
+      propertyPath: m_Color.g
+      value: 0.69775707
+      objectReference: {fileID: 0}
+    - target: {fileID: 7723105416561072955, guid: 4bed4279dcadce848af0b7987a7d083f, type: 3}
+      propertyPath: m_Color.r
+      value: 0.70440245
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

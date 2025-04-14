@@ -18,8 +18,7 @@ MonoBehaviour:
   backgroundMaterial: {fileID: 2100000, guid: d5dfc0b8c1fa6754496037678557dc6d, type: 2}
   tilePrefab: {fileID: 4015334938415637551, guid: 669e3d40b3490db43b12b31f263446c1, type: 3}
   biomeSideSegments: []
-  startingClusters:
-  - {fileID: 5283057158756367813, guid: 4512be9222c45ed49bb830df5ca133c1, type: 3}
+  startingClusters: []
   middleClusters:
   - {fileID: 5283057158756367813, guid: fcac981a3a6aab745951fac76eca25d2, type: 3}
   - {fileID: 5283057158756367813, guid: 1ecaf7b24c5be66439593892f3ac7223, type: 3}
@@ -34,6 +33,10 @@ MonoBehaviour:
   - {fileID: 5283057158756367813, guid: d76a1de80386c314d858c7439fdbe30e, type: 3}
   - {fileID: 5283057158756367813, guid: 155f2c1a91471c24195ab45ad9d81c17, type: 3}
   - {fileID: 5283057158756367813, guid: 60bc1d4e5364bfe43af9a59a8bfeb111, type: 3}
+  - {fileID: 5283057158756367813, guid: 07f631ff870ee104c8993a4acee82549, type: 3}
+  - {fileID: 5283057158756367813, guid: 307aba2d2eca77d4a9a95df4edc03c02, type: 3}
+  - {fileID: 5283057158756367813, guid: 4849cf2e57646cb41a835dbed10739b8, type: 3}
+  - {fileID: 5283057158756367813, guid: 51b8004630304f740b37a36983dad4d7, type: 3}
   endingClusters: []
   obstacleSpawnRateMultiplier: 1
   description: 

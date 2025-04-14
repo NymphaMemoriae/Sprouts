@@ -36,15 +36,9 @@ public class UIManager : MonoBehaviour
     [SerializeField] private PlantLife plantLife;
     [SerializeField] private PlantController plantController;
 
-    [Header("Hearts UI")]
-    [SerializeField] private Image[] heartImages;
-    [SerializeField] private Sprite fullHeartSprite;
-    [SerializeField] private Sprite emptyHeartSprite;
-
     private float lastHeight = -999f;
     private float lastVelocity = -999f;
     private float lastScore = -999f;
-    private int lastLives = -1;
 
     private void Start()
     {
@@ -88,11 +82,6 @@ public class UIManager : MonoBehaviour
         pausePanel.SetActive(state == GameState.Paused);
         startPanel.SetActive(state == GameState.MainMenu);
 
-        if (plantLife != null)
-        {
-            UpdateLives(plantLife.CurrentLives);
-        }
-
         if (state == GameState.GameOver && plantController != null)
         {
             finalScoreText.text = $"Final Height: {plantController.DisplayHeight:F1}m";
@@ -127,23 +116,6 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    public void UpdateLives(int lives)
-    {
-        for (int i = 0; i < heartImages.Length; i++)
-        {
-            if (i < lives)
-            {
-                heartImages[i].sprite = fullHeartSprite;
-                heartImages[i].enabled = true;
-            }
-            else
-            {
-                heartImages[i].sprite = emptyHeartSprite;
-                heartImages[i].enabled = true; // or false if you want to hide them
-            }
-        }
-    }
-
     public void UpdateBuffIndicators(bool hasGhostBuff, bool hasSpeedBuff, bool hasExtraLife)
     {
         ghostBuffIndicator.SetActive(hasGhostBuff);
@@ -164,12 +136,6 @@ public class UIManager : MonoBehaviour
             UpdateHeight(plantController.DisplayHeight);
             UpdateScore(plantController.CurrentHeight);
             UpdateVelocity(plantController.CurrentVelocity);
-        }
-
-        if (plantLife != null && plantLife.CurrentLives != lastLives)
-        {
-            UpdateLives(plantLife.CurrentLives);
-            lastLives = plantLife.CurrentLives;
         }
     }
 }

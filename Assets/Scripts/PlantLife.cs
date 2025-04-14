@@ -6,6 +6,8 @@ public class PlantLife : MonoBehaviour
     [SerializeField] private int maxLives = 3;
     public int CurrentLives { get; private set; }
 
+    public event System.Action<int> OnLivesChanged;
+
     [Header("References")]
     [SerializeField] private Transform plantHead;
 
@@ -62,6 +64,7 @@ public class PlantLife : MonoBehaviour
     public void ResetLives()
     {
         CurrentLives = maxLives;
+        OnLivesChanged?.Invoke(CurrentLives);
     }
 
     public void TakeDamage(int damage)
@@ -72,13 +75,13 @@ public class PlantLife : MonoBehaviour
         if (CurrentLives < 0)
             CurrentLives = 0;
 
-        // 🔴 Bleed particle effect
+        OnLivesChanged?.Invoke(CurrentLives);
+
         if (bleedParticles != null)
         {
             bleedParticles.Play();
         }
 
-        // 💢 Trigger hurt animation
         if (animator != null)
         {
             animator.SetTrigger("Hurt");
@@ -87,8 +90,14 @@ public class PlantLife : MonoBehaviour
         if (CurrentLives <= 0)
         {
             plantController?.StopPlant();
-            Invoke(nameof(TriggerGameOver), 0.01f); // slight delay to ensure event listeners are active
+            Invoke(nameof(TriggerGameOver), 0.01f);
         }
+    }
+
+    public void AddLife(int extra = 1)
+    {
+        CurrentLives += extra;
+        OnLivesChanged?.Invoke(CurrentLives);
     }
 
     private void TriggerGameOver()
@@ -96,27 +105,11 @@ public class PlantLife : MonoBehaviour
         if (GameManager.Instance != null)
         {
             GameManager.Instance.SetGameState(GameState.GameOver);
-
-            // Manually ensure UI updates
-            UIManager ui = FindFirstObjectByType<UIManager>();
-
-            if (ui != null)
-            {
-                Debug.Log("PlantLife: Forcing UIManager to update GameOver panel.");
-                ui.SendMessage("UpdateUI");
-            }
         }
         else
         {
             Debug.LogError("GameManager.Instance was null when trying to trigger GameOver.");
         }
-    }
-
-    public void AddLife(int extra = 1)
-    {
-        CurrentLives += extra;
-        if (CurrentLives > maxLives)
-            CurrentLives = maxLives;
     }
 }
 
