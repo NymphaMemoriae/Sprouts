@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Events;
 
 public class PlantLife : MonoBehaviour
 {
@@ -22,6 +23,13 @@ public class PlantLife : MonoBehaviour
     private bool isInvulnerable = false;
     private float invulnerabilityTimer = 0f;
     private PlantController plantController;
+
+    [Header("Events")]
+    [Tooltip("Called every time damage is taken.")]
+    public UnityEvent onDamageTaken;
+
+    [Tooltip("Called once when lives reach zero.")]
+    public UnityEvent onDeath;
 
     private void Awake()
     {
@@ -77,6 +85,8 @@ public class PlantLife : MonoBehaviour
 
         OnLivesChanged?.Invoke(CurrentLives);
 
+        onDamageTaken?.Invoke();
+
         if (bleedParticles != null)
         {
             bleedParticles.Play();
@@ -89,6 +99,7 @@ public class PlantLife : MonoBehaviour
 
         if (CurrentLives <= 0)
         {
+            onDeath?.Invoke();
             plantController?.StopPlant();
             Invoke(nameof(TriggerGameOver), 0.01f);
         }

@@ -48,6 +48,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: EvilWorm1
       objectReference: {fileID: 0}
+    - target: {fileID: 1882595667753738455, guid: b9e27178b1a00fd4799eb9d48deb4415, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 3f81f39d83452964c9f578148aff3fbd, type: 3}
     - target: {fileID: 3714162872976105755, guid: b9e27178b1a00fd4799eb9d48deb4415, type: 3}
       propertyPath: m_LocalScale.x
       value: 1.6000001

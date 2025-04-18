@@ -85,7 +85,7 @@ public class UIManager : MonoBehaviour
         if (state == GameState.GameOver && plantController != null)
         {
             finalScoreText.text = $"Final Height: {plantController.DisplayHeight:F1}m";
-            highScoreText.text = "";
+            highScoreText.text = ""; // Add high score logic here later if needed
         }
     }
 

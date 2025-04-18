@@ -37,6 +37,10 @@ MonoBehaviour:
   - {fileID: 5283057158756367813, guid: 307aba2d2eca77d4a9a95df4edc03c02, type: 3}
   - {fileID: 5283057158756367813, guid: 4849cf2e57646cb41a835dbed10739b8, type: 3}
   - {fileID: 5283057158756367813, guid: 51b8004630304f740b37a36983dad4d7, type: 3}
+  - {fileID: 5283057158756367813, guid: 8e88a136848e3bf49b5bce3f47e43fb5, type: 3}
+  - {fileID: 5283057158756367813, guid: 782e2848671822d459a60c7792342857, type: 3}
+  - {fileID: 5283057158756367813, guid: 57ef463074fb14c46b33b8c7a729a60e, type: 3}
+  - {fileID: 5283057158756367813, guid: b8e42b5bbf7af0c4f81e3d7af71288de, type: 3}
   endingClusters: []
   obstacleSpawnRateMultiplier: 1
   description: 

@@ -93,7 +93,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: -39153198924157677, guid: ca8aa85a77f0fce4fad0cfa37ccc4bfa, type: 3}
-  m_Color: {r: 0.6006684, g: 0.65114987, b: 0.7610062, a: 1}
+  m_Color: {r: 0.6301887, g: 0.47018045, b: 0.21759346, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -110,7 +110,7 @@ PolygonCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1314626108447392289}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Density: 1
   m_Material: {fileID: 0}
