@@ -12,12 +12,14 @@ public class BiomeManager : MonoBehaviour
     [SerializeField] private BackgroundTileManager backgroundTileManager;
     [SerializeField] private ObstacleSpawner obstacleSpawner;
 
+    [Header("Transition Settings")]
+    [SerializeField] private float biomeTransitionBuffer = 10f; // preload biome early
+
     private BiomeData currentBiome;
     private float displayHeight = 0f;
 
     void Start()
     {
-        // Find references if not assigned
         if (plantController == null)
             plantController = Object.FindAnyObjectByType<PlantController>();
 
@@ -27,7 +29,6 @@ public class BiomeManager : MonoBehaviour
         if (obstacleSpawner == null)
             obstacleSpawner = Object.FindAnyObjectByType<ObstacleSpawner>();
 
-        // Initialize with default biome
         if (defaultBiome != null)
         {
             SetCurrentBiome(defaultBiome);
@@ -42,19 +43,16 @@ public class BiomeManager : MonoBehaviour
     {
         if (plantController == null) return;
 
-        // Get player's current height
         displayHeight = plantController.DisplayHeight;
-
-        // Check if we need to change biomes
         CheckBiomeTransition();
     }
 
     private void CheckBiomeTransition()
     {
-        // Find the appropriate biome for the current height
-        BiomeData targetBiome = FindBiomeForHeight(displayHeight);
+        float previewHeight = plantController.DisplayHeight + biomeTransitionBuffer;
 
-        // If different from current biome, switch to it
+        BiomeData targetBiome = FindBiomeForHeight(previewHeight);
+
         if (targetBiome != null && targetBiome != currentBiome)
         {
             SetCurrentBiome(targetBiome);
@@ -71,7 +69,6 @@ public class BiomeManager : MonoBehaviour
             }
         }
 
-        // If no matching biome is found, return default
         return defaultBiome;
     }
 
@@ -79,16 +76,21 @@ public class BiomeManager : MonoBehaviour
     {
         if (biome == null) return;
 
-        currentBiome = biome;
         Debug.Log($"Transitioning to biome: {biome.biomeName} at height {displayHeight}m");
 
-        // Update background tile manager with the new biome's tile prefab
+        // Insert transition tile if defined on current biome
+        if (currentBiome != null && currentBiome.transitionTilePrefab != null && backgroundTileManager != null)
+        {
+            backgroundTileManager.InsertTransitionTile(currentBiome.transitionTilePrefab);
+        }
+
+        currentBiome = biome;
+
         if (backgroundTileManager != null)
         {
             backgroundTileManager.SetBiomeTilePrefab(biome.tilePrefab);
         }
 
-        // Update obstacle spawner with the new biome's obstacles and segments
         if (obstacleSpawner != null)
         {
             obstacleSpawner.SetBiomeClusters(
@@ -98,7 +100,6 @@ public class BiomeManager : MonoBehaviour
                 biome.biomeSideSegments,
                 biome.obstacleSpawnRateMultiplier
             );
-
 
             if (biome.biomeSideSegments != null)
             {

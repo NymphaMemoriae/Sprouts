@@ -13,10 +13,13 @@ public class BiomeData : ScriptableObject
     public Material backgroundMaterial;
     public GameObject tilePrefab;
 
+    [Header("Optional Transition Tile")]
+    public GameObject transitionTilePrefab;
+
     [Header("Obstacles")]
-    //public List<ObstacleData> biomeObstacles = new List<ObstacleData>();
+    // public List<ObstacleData> biomeObstacles = new List<ObstacleData>();
     public List<SideObstacleSegment> biomeSideSegments = new List<SideObstacleSegment>(); // NEW
-    
+
     [Header("Obstacle Clusters")]
     public List<GameObject> startingClusters;
     public List<GameObject> middleClusters;

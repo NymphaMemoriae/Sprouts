@@ -12409,6 +12409,7 @@ MonoBehaviour:
   plantController: {fileID: 1468978192}
   backgroundTileManager: {fileID: 557054657}
   obstacleSpawner: {fileID: 1245832016}
+  biomeTransitionBuffer: 10
 --- !u!1 &874764016
 GameObject:
   m_ObjectHideFlags: 0
@@ -13272,6 +13273,24 @@ MonoBehaviour:
   bleedParticles: {fileID: 188981469}
   animator: {fileID: 188981470}
   invulnerabilityDuration: 1
+  onDamageTaken:
+    m_PersistentCalls:
+      m_Calls: []
+  onDeath:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1445869884}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
 --- !u!1 &1445869884
 GameObject:
   m_ObjectHideFlags: 0
