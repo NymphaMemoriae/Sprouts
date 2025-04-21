@@ -6,8 +6,11 @@ public class BiomeData : ScriptableObject
 {
     [Header("Biome Information")]
     public string biomeName = "Default Biome";
-    public float minHeight = 0f;
-    public float maxHeight = 100f;
+    
+    [Header("Biome Range (in tiles)")]
+    public int minTileIndex = 0;
+    public int maxTileIndex = 10; // inclusive
+
 
     [Header("Visual Settings")]
     public Material backgroundMaterial;

@@ -13,10 +13,11 @@ MonoBehaviour:
   m_Name: Woods
   m_EditorClassIdentifier: 
   biomeName: GrassLand
-  minHeight: 100
+  minHeight: 160
   maxHeight: 600
   backgroundMaterial: {fileID: 2100000, guid: 28b6b2fe25c476b4ba1a6e8637d79d93, type: 2}
   tilePrefab: {fileID: 4015334938415637551, guid: 5622f39b3e762a842987bba1062606e9, type: 3}
+  transitionTilePrefab: {fileID: 0}
   biomeSideSegments:
   - {fileID: 11400000, guid: b404a355c35524d4895ff3aab8af373a, type: 2}
   startingClusters: []

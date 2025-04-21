@@ -13,10 +13,13 @@ public class BiomeManager : MonoBehaviour
     [SerializeField] private ObstacleSpawner obstacleSpawner;
 
     [Header("Transition Settings")]
-    [SerializeField] private float biomeTransitionBuffer = 10f; // preload biome early
+    
 
     private BiomeData currentBiome;
     private float displayHeight = 0f;
+
+    // ✅ Public access to current biome
+    public BiomeData CurrentBiome => currentBiome;
 
     void Start()
     {
@@ -49,9 +52,9 @@ public class BiomeManager : MonoBehaviour
 
     private void CheckBiomeTransition()
     {
-        float previewHeight = plantController.DisplayHeight + biomeTransitionBuffer;
-
-        BiomeData targetBiome = FindBiomeForHeight(previewHeight);
+        // ✅ Calculate tile index from height (20m per tile)
+        int currentTileIndex = Mathf.FloorToInt(plantController.DisplayHeight / 20f);
+        BiomeData targetBiome = FindBiomeForTile(currentTileIndex);
 
         if (targetBiome != null && targetBiome != currentBiome)
         {
@@ -59,11 +62,12 @@ public class BiomeManager : MonoBehaviour
         }
     }
 
-    private BiomeData FindBiomeForHeight(float height)
+    // ✅ New tile-index-based biome logic
+    private BiomeData FindBiomeForTile(int tileIndex)
     {
         foreach (BiomeData biome in biomes)
         {
-            if (height >= biome.minHeight && height <= biome.maxHeight)
+            if (tileIndex >= biome.minTileIndex && tileIndex <= biome.maxTileIndex)
             {
                 return biome;
             }
@@ -78,17 +82,14 @@ public class BiomeManager : MonoBehaviour
 
         Debug.Log($"Transitioning to biome: {biome.biomeName} at height {displayHeight}m");
 
-        // Insert transition tile if defined on current biome
-        if (currentBiome != null && currentBiome.transitionTilePrefab != null && backgroundTileManager != null)
-        {
-            backgroundTileManager.InsertTransitionTile(currentBiome.transitionTilePrefab);
-        }
+        // Insert transition tile from previous biome if defined (not needed anymore if handled in tile manager)
 
         currentBiome = biome;
 
         if (backgroundTileManager != null)
         {
             backgroundTileManager.SetBiomeTilePrefab(biome.tilePrefab);
+            backgroundTileManager.ResetBiomeTileCount(); // ✅ Reset tile count on biome change
         }
 
         if (obstacleSpawner != null)
