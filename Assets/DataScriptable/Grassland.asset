@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Grassland
   m_EditorClassIdentifier: 
   biomeName: GrassLand
-  minHeight: 0
-  maxHeight: 160
+  minTileIndex: 25
+  maxTileIndex: 50
   backgroundMaterial: {fileID: 2100000, guid: 28b6b2fe25c476b4ba1a6e8637d79d93, type: 2}
   tilePrefab: {fileID: 4015334938415637551, guid: 5622f39b3e762a842987bba1062606e9, type: 3}
   transitionTilePrefab: {fileID: 0}

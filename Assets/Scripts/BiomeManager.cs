@@ -53,7 +53,7 @@ public class BiomeManager : MonoBehaviour
     private void CheckBiomeTransition()
     {
         // ✅ Calculate tile index from height (20m per tile)
-        int currentTileIndex = Mathf.FloorToInt(plantController.DisplayHeight / 20f);
+       int currentTileIndex = Mathf.FloorToInt((plantController.DisplayHeight + 500f) / 20f);
         BiomeData targetBiome = FindBiomeForTile(currentTileIndex);
 
         if (targetBiome != null && targetBiome != currentBiome)
