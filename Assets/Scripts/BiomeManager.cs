@@ -12,9 +12,6 @@ public class BiomeManager : MonoBehaviour
     [SerializeField] private BackgroundTileManager backgroundTileManager;
     [SerializeField] private ObstacleSpawner obstacleSpawner;
 
-    [Header("Transition Settings")]
-    
-
     private BiomeData currentBiome;
     private float displayHeight = 0f;
 
@@ -53,7 +50,7 @@ public class BiomeManager : MonoBehaviour
     private void CheckBiomeTransition()
     {
         // ✅ Calculate tile index from height (20m per tile)
-       int currentTileIndex = Mathf.FloorToInt((plantController.DisplayHeight + 500f) / 20f);
+        int currentTileIndex = Mathf.FloorToInt((plantController.DisplayHeight + 500f) / 20f);
         BiomeData targetBiome = FindBiomeForTile(currentTileIndex);
 
         if (targetBiome != null && targetBiome != currentBiome)
@@ -62,7 +59,6 @@ public class BiomeManager : MonoBehaviour
         }
     }
 
-    // ✅ New tile-index-based biome logic
     private BiomeData FindBiomeForTile(int tileIndex)
     {
         foreach (BiomeData biome in biomes)
@@ -82,14 +78,13 @@ public class BiomeManager : MonoBehaviour
 
         Debug.Log($"Transitioning to biome: {biome.biomeName} at height {displayHeight}m");
 
-        // Insert transition tile from previous biome if defined (not needed anymore if handled in tile manager)
-
         currentBiome = biome;
 
         if (backgroundTileManager != null)
         {
-            backgroundTileManager.SetBiomeTilePrefab(biome.tilePrefab);
-            backgroundTileManager.ResetBiomeTileCount(); // ✅ Reset tile count on biome change
+            // ✅ Queue new prefab without replacing visible ones
+            backgroundTileManager.QueueNextBiomeTilePrefab(biome.tilePrefab);
+            backgroundTileManager.ResetBiomeTileCount();
         }
 
         if (obstacleSpawner != null)

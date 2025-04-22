@@ -8,8 +8,8 @@ public class ObstacleSpawner : MonoBehaviour
     [SerializeField] private List<GameObject> middleClusterPrefabs;
     [SerializeField] private List<GameObject> endingClusterPrefabs;
 
-    [Tooltip("Horizontal range for cluster spawn positions.")]
-    [SerializeField] private float spawnXRange = 5f;
+    // [Tooltip("Horizontal range for cluster spawn positions.")]
+    // [SerializeField] private float spawnXRange = 5f;
 
     [Tooltip("Vertical spacing between each spawned cluster.")]
     [SerializeField] private float spawnYIncrement = 10f;

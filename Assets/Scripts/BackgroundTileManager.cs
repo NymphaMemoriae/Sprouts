@@ -7,12 +7,12 @@ public class BackgroundTileManager : MonoBehaviour
     [Header("Tile Settings")]
     [SerializeField] private GameObject tilePrefab;
     [SerializeField] private int initialPoolSize = 3;
-    [SerializeField] private float bufferZone = 10f; // Extra space beyond camera view
+    [SerializeField] private float bufferZone = 10f;
 
     [Header("References")]
     [SerializeField] private Camera mainCamera;
     [SerializeField] private Transform playerHead;
-    [SerializeField] private BiomeManager biomeManager; // ✅ NEW
+    [SerializeField] private BiomeManager biomeManager;
 
     private Queue<GameObject> tilePool = new Queue<GameObject>();
     private List<GameObject> activeTiles = new List<GameObject>();
@@ -20,9 +20,9 @@ public class BackgroundTileManager : MonoBehaviour
     private float lastTileEndY = 0f;
     private TrailPainter trailPainter;
 
-    // ✅ NEW
     private int biomeTileCount = 0;
     private bool transitionTileQueued = false;
+    private GameObject queuedTilePrefab = null;
 
     void Start()
     {
@@ -60,7 +60,6 @@ public class BackgroundTileManager : MonoBehaviour
         if (rectTransform != null)
         {
             tileHeight = rectTransform.rect.height;
-            Debug.Log($"Tile height is: {tileHeight}");
         }
         else
         {
@@ -75,8 +74,8 @@ public class BackgroundTileManager : MonoBehaviour
         for (int i = 1; i < initialPoolSize; i++)
         {
             GameObject tile = Instantiate(tilePrefab, Vector3.zero, Quaternion.identity, transform);
-            tilePool.Enqueue(tile);
             tile.SetActive(false);
+            tilePool.Enqueue(tile);
         }
 
         foreach (GameObject tile in tilePool)
@@ -87,18 +86,13 @@ public class BackgroundTileManager : MonoBehaviour
                 image.material = new Material(image.material);
 
                 if (!tile.CompareTag("Ground"))
-                {
                     tile.tag = "Ground";
-                }
 
                 if (image.material.HasProperty("_AspectRatio"))
                 {
                     RectTransform rt = tile.GetComponent<RectTransform>();
-                    if (rt != null)
-                    {
-                        float aspectRatio = rt.rect.width / rt.rect.height;
-                        image.material.SetFloat("_AspectRatio", aspectRatio);
-                    }
+                    float aspectRatio = rt.rect.width / rt.rect.height;
+                    image.material.SetFloat("_AspectRatio", aspectRatio);
                 }
             }
         }
@@ -138,7 +132,6 @@ public class BackgroundTileManager : MonoBehaviour
             {
                 RecycleTile(activeTiles[i]);
                 activeTiles.RemoveAt(i);
-                Debug.Log("Recycled a tile that went below camera view");
             }
         }
 
@@ -154,13 +147,11 @@ public class BackgroundTileManager : MonoBehaviour
             {
                 lastTileEndY = topTileEndY;
                 SpawnNextTile();
-                Debug.Log("Spawned a new tile at the top");
             }
         }
         else
         {
             SetupInitialTiles();
-            Debug.LogWarning("No active tiles found, resetting initial tiles");
         }
     }
 
@@ -168,34 +159,15 @@ public class BackgroundTileManager : MonoBehaviour
     {
         GameObject tile;
 
-        // ✅ Check if transition tile should be spawned
-        if (transitionTileQueued && biomeManager.CurrentBiome.transitionTilePrefab != null)
+        GameObject prefabToUse = (transitionTileQueued && biomeManager.CurrentBiome.transitionTilePrefab != null)
+            ? biomeManager.CurrentBiome.transitionTilePrefab
+            : queuedTilePrefab ?? tilePrefab;
+
+        tile = Instantiate(prefabToUse, Vector3.zero, Quaternion.identity, transform);
+
+        if (transitionTileQueued)
         {
-            tile = Instantiate(biomeManager.CurrentBiome.transitionTilePrefab, Vector3.zero, Quaternion.identity, transform);
             transitionTileQueued = false;
-            Debug.Log("[Biome] Inserted transition tile.");
-        }
-        else
-        {
-            if (tilePool.Count > 0)
-            {
-                tile = tilePool.Dequeue();
-            }
-            else
-            {
-                tile = Instantiate(tilePrefab, Vector3.zero, Quaternion.identity, transform);
-
-                Image image = tile.GetComponent<Image>();
-                if (image != null && image.material != null)
-                {
-                    image.material = new Material(image.material);
-                }
-
-                if (!tile.CompareTag("Ground"))
-                {
-                    tile.tag = "Ground";
-                }
-            }
         }
 
         tile.SetActive(true);
@@ -214,24 +186,23 @@ public class BackgroundTileManager : MonoBehaviour
         Vector3 localPos = transform.InverseTransformPoint(worldPos);
         rectTransform.localPosition = localPos;
 
-        float tileWorldHeight = rectTransform.TransformVector(Vector3.up * rectTransform.rect.height).y;
-        Debug.Log($"[Tile Debug] Spawned tile world height: {tileWorldHeight} meters");
-
         lastTileEndY += tileHeight;
         activeTiles.Add(tile);
-
         biomeTileCount++;
 
-        // ✅ Queue transition tile if next tile is the biome's last one
+        if (queuedTilePrefab != null && !transitionTileQueued)
+        {
+            tilePrefab = queuedTilePrefab;
+            queuedTilePrefab = null;
+            ResetBiomeTileCount();
+        }
+
         int max = biomeManager.CurrentBiome.maxTileIndex;
         int min = biomeManager.CurrentBiome.minTileIndex;
         if (biomeTileCount == (max - min))
         {
             transitionTileQueued = true;
-            Debug.Log("[Biome] Queued transition tile for next spawn.");
         }
-
-        Debug.Log($"Spawned tile at y={localPos.y}, new lastTileEndY={lastTileEndY}");
     }
 
     private void RecycleTile(GameObject tile)
@@ -249,68 +220,12 @@ public class BackgroundTileManager : MonoBehaviour
         tilePool.Enqueue(tile);
     }
 
-    public void SetBiomeTilePrefab(GameObject newTilePrefab)
+    public void QueueNextBiomeTilePrefab(GameObject newTilePrefab)
     {
-        if (newTilePrefab == null)
-        {
-            Debug.LogError("Attempted to set null tile prefab");
-            return;
-        }
-
-        if (tilePrefab == newTilePrefab)
-            return;
-
-        Debug.Log($"Changing tile prefab to {newTilePrefab.name}");
-
-        tilePrefab = newTilePrefab;
-        tilePool.Clear();
-
-        for (int i = 0; i < activeTiles.Count; i++)
-        {
-            GameObject oldTile = activeTiles[i];
-            RectTransform oldRect = oldTile.GetComponent<RectTransform>();
-
-            GameObject newTile = Instantiate(newTilePrefab, oldRect.position, Quaternion.identity, transform);
-            RectTransform newRect = newTile.GetComponent<RectTransform>();
-
-            newRect.anchorMin = oldRect.anchorMin;
-            newRect.anchorMax = oldRect.anchorMax;
-            newRect.pivot = oldRect.pivot;
-            newRect.localPosition = oldRect.localPosition;
-            newRect.sizeDelta = oldRect.sizeDelta;
-
-            Image image = newTile.GetComponent<Image>();
-            if (image != null && image.material != null)
-            {
-                image.material = new Material(image.material);
-            }
-
-            activeTiles[i] = newTile;
-            Destroy(oldTile);
-        }
-
-        RectTransform rectTransform = newTilePrefab.GetComponent<RectTransform>();
-        if (rectTransform != null)
-        {
-            tileHeight = rectTransform.rect.height;
-            Debug.Log($"New tile height: {tileHeight}");
-        }
-
-        for (int i = 0; i < initialPoolSize; i++)
-        {
-            GameObject tile = Instantiate(newTilePrefab, Vector3.zero, Quaternion.identity, transform);
-            Image image = tile.GetComponent<Image>();
-            if (image != null && image.material != null)
-            {
-                image.material = new Material(image.material);
-            }
-
-            tile.SetActive(false);
-            tilePool.Enqueue(tile);
-        }
+        if (newTilePrefab == null) return;
+        queuedTilePrefab = newTilePrefab;
     }
 
-    // ✅ Used by BiomeManager to reset on biome change
     public void ResetBiomeTileCount()
     {
         biomeTileCount = 0;
@@ -328,14 +243,14 @@ public class BackgroundTileManager : MonoBehaviour
         {
             float cameraHeight = 2f * mainCamera.orthographicSize;
             float cameraWidth = cameraHeight * mainCamera.aspect;
-
             Vector3 cameraPos = mainCamera.transform.position;
 
             float bottomY = cameraPos.y - mainCamera.orthographicSize - bufferZone;
+            float topY = cameraPos.y + mainCamera.orthographicSize + bufferZone;
+
             Gizmos.color = Color.red;
             Gizmos.DrawLine(new Vector3(-cameraWidth / 2, bottomY, 0), new Vector3(cameraWidth / 2, bottomY, 0));
 
-            float topY = cameraPos.y + mainCamera.orthographicSize + bufferZone;
             Gizmos.color = Color.blue;
             Gizmos.DrawLine(new Vector3(-cameraWidth / 2, topY, 0), new Vector3(cameraWidth / 2, topY, 0));
         }
