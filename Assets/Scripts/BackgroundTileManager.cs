@@ -163,19 +163,29 @@ public class BackgroundTileManager : MonoBehaviour
             ? biomeManager.CurrentBiome.transitionTilePrefab
             : queuedTilePrefab ?? tilePrefab;
 
-        tile = Instantiate(prefabToUse, Vector3.zero, Quaternion.identity, transform);
-
-        if (transitionTileQueued)
+        // ✅ Pool reuse logic only for regular tiles
+        if (prefabToUse == tilePrefab && tilePool.Count > 0)
         {
-            transitionTileQueued = false;
+            tile = tilePool.Dequeue();
+            tile.SetActive(true);
+        }
+        else
+        {
+            tile = Instantiate(prefabToUse, Vector3.zero, Quaternion.identity, transform);
+            tile.SetActive(true);
         }
 
-        tile.SetActive(true);
-
-        if (trailPainter != null)
+       if (trailPainter != null)
         {
-            trailPainter.AssignTextureToTile(tile);
+            RectTransform rt = tile.GetComponent<RectTransform>();
+            if (rt != null)
+            {
+                trailPainter.ClearTrailTexture(rt); // ✅ clear any old trail first
+            }
+
+            trailPainter.AssignTextureToTile(tile); // ✅ then assign fresh texture
         }
+
 
         RectTransform rectTransform = tile.GetComponent<RectTransform>();
         rectTransform.anchorMin = new Vector2(0, 0);
@@ -207,15 +217,7 @@ public class BackgroundTileManager : MonoBehaviour
 
     private void RecycleTile(GameObject tile)
     {
-        if (trailPainter != null)
-        {
-            RectTransform rectTransform = tile.GetComponent<RectTransform>();
-            if (rectTransform != null)
-            {
-                trailPainter.ClearTrailTexture(rectTransform);
-            }
-        }
-
+        // ✅ DO NOT clear trail — just disable and return to pool
         tile.SetActive(false);
         tilePool.Enqueue(tile);
     }
