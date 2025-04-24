@@ -2,150 +2,163 @@ using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.UI;
 
+/// <summary>
+/// Spawns and recycles vertical background tiles.  
+/// Each prefab gets its own object‑pool queue, keyed by the prefab itself, so tiles from
+/// one biome can never be reused in another biome.
+/// </summary>
 public class BackgroundTileManager : MonoBehaviour
 {
+    #region Inspector
     [Header("Tile Settings")]
-    [SerializeField] private GameObject tilePrefab;
-    [SerializeField] private int initialPoolSize = 3;
-    [SerializeField] private float bufferZone = 10f;
+    [SerializeField] private GameObject tilePrefab;        // initial / default prefab
+    [SerializeField] private int       initialPoolSize = 3;
+    [SerializeField] private float     bufferZone      = 10f;
 
     [Header("References")]
-    [SerializeField] private Camera mainCamera;
-    [SerializeField] private Transform playerHead;
-    [SerializeField] private BiomeManager biomeManager;
+    [SerializeField] private Camera         mainCamera;
+    [SerializeField] private Transform      playerHead;
+    [SerializeField] private BiomeManager   biomeManager;
+    #endregion
 
-    private Queue<GameObject> tilePool = new Queue<GameObject>();
-    private List<GameObject> activeTiles = new List<GameObject>();
+    #region Runtime fields
+    private readonly Dictionary<GameObject, Queue<GameObject>> pools =
+        new Dictionary<GameObject, Queue<GameObject>>();      // 👈 one queue per prefab
+
+    private readonly List<GameObject> activeTiles = new();
+
     private float tileHeight;
-    private float lastTileEndY = 0f;
+    private float lastTileEndY;
     private TrailPainter trailPainter;
 
-    private int biomeTileCount = 0;
-    private bool transitionTileQueued = false;
-    private GameObject queuedTilePrefab = null;
+    private int  biomeTileCount;
+    private bool transitionTileQueued;
+    private GameObject queuedTilePrefab;
+    #endregion
 
-    void Start()
+    #region Unity lifecycle
+    private void Start()
     {
-        if (mainCamera == null)
-            mainCamera = Camera.main;
+        mainCamera   ??= Camera.main;
+        playerHead   ??= Object.FindAnyObjectByType<PlantController>()?.PlantHead;
+        biomeManager ??= Object.FindAnyObjectByType<BiomeManager>();
+        trailPainter  =  Object.FindAnyObjectByType<TrailPainter>();
 
-        if (playerHead == null && Object.FindAnyObjectByType<PlantController>() != null)
-            playerHead = Object.FindAnyObjectByType<PlantController>().PlantHead;
-
-        if (biomeManager == null)
-            biomeManager = Object.FindAnyObjectByType<BiomeManager>();
-
-        trailPainter = Object.FindAnyObjectByType<TrailPainter>();
-
-        InitializeTilePool();
+        // Measure tile height via one temporary instance
+        MeasureTileHeight();
+        PreWarmPool(tilePrefab, initialPoolSize);
         SetupInitialTiles();
     }
 
-    void Update()
+    private void Update() => ManageTiles();
+    #endregion
+
+    #region Pool helpers
+    /// <summary> Returns (or creates) the queue for a given prefab. </summary>
+    private Queue<GameObject> GetPool(GameObject prefab)
     {
-        ManageTiles();
+        if (!pools.TryGetValue(prefab, out var q))
+        {
+            q = new Queue<GameObject>();
+            pools[prefab] = q;
+        }
+        return q;
     }
 
-    private void InitializeTilePool()
+    /// <summary>Instantiate <paramref name="count"/> disabled objects and enqueue them.</summary>
+    private void PreWarmPool(GameObject prefab, int count)
     {
-        if (tilePrefab == null)
+        var pool = GetPool(prefab);
+        for (int i = 0; i < count; ++i)
         {
-            Debug.LogError("Tile prefab is not assigned!");
-            return;
+            var go = CreateTile(prefab);
+            go.SetActive(false);
+            pool.Enqueue(go);
         }
+    }
+    #endregion
 
-        GameObject firstTile = Instantiate(tilePrefab, Vector3.zero, Quaternion.identity, transform);
-        RectTransform rectTransform = firstTile.GetComponent<RectTransform>();
+    #region Tile creation & recycling
+    /// <summary>Wraps Object.Instantiate and stamps the tile with its prefab of origin.</summary>
+    private GameObject CreateTile(GameObject prefab)
+    {
+        var tile = Instantiate(prefab, Vector3.zero, Quaternion.identity, transform);
 
-        if (rectTransform != null)
+        // Stamp once, so we know where to return it later.
+        var stamp = tile.GetComponent<TileStamp>() ?? tile.AddComponent<TileStamp>();
+        stamp.SourcePrefab = prefab;
+
+        // One‑time material clone & aspect‑ratio setup
+        if (tile.TryGetComponent(out Image img) && img.material != null)
         {
-            tileHeight = rectTransform.rect.height;
-        }
-        else
-        {
-            Debug.LogError("Tile prefab must have a RectTransform component!");
-            Destroy(firstTile);
-            return;
-        }
-
-        tilePool.Enqueue(firstTile);
-        firstTile.SetActive(false);
-
-        for (int i = 1; i < initialPoolSize; i++)
-        {
-            GameObject tile = Instantiate(tilePrefab, Vector3.zero, Quaternion.identity, transform);
-            tile.SetActive(false);
-            tilePool.Enqueue(tile);
-        }
-
-        foreach (GameObject tile in tilePool)
-        {
-            Image image = tile.GetComponent<Image>();
-            if (image != null && image.material != null)
+            img.material = new Material(img.material);
+            if (img.material.HasProperty("_AspectRatio") && tile.TryGetComponent(out RectTransform rt))
             {
-                image.material = new Material(image.material);
-
-                if (!tile.CompareTag("Ground"))
-                    tile.tag = "Ground";
-
-                if (image.material.HasProperty("_AspectRatio"))
-                {
-                    RectTransform rt = tile.GetComponent<RectTransform>();
-                    float aspectRatio = rt.rect.width / rt.rect.height;
-                    image.material.SetFloat("_AspectRatio", aspectRatio);
-                }
+                img.material.SetFloat("_AspectRatio", rt.rect.width / rt.rect.height);
             }
         }
+        if (!tile.CompareTag("Ground")) tile.tag = "Ground";
+
+        return tile;
+    }
+    #endregion
+
+    #region Initialisation helpers
+    private void MeasureTileHeight()
+    {
+        var temp = Instantiate(tilePrefab);
+        if (!temp.TryGetComponent(out RectTransform rt))
+        {
+            Debug.LogError("Tile prefab must contain a RectTransform");
+            Destroy(temp);
+            return;
+        }
+        tileHeight = rt.rect.height;
+        Destroy(temp);
     }
 
     private void SetupInitialTiles()
     {
         float cameraHeight = 2f * mainCamera.orthographicSize;
-        int tilesNeeded = Mathf.CeilToInt((cameraHeight + 2 * bufferZone) / tileHeight);
+        int   tilesNeeded  = Mathf.CeilToInt((cameraHeight + 2 * bufferZone) / tileHeight);
 
         float startY = mainCamera.transform.position.y - mainCamera.orthographicSize - bufferZone;
         lastTileEndY = startY;
 
-        for (int i = 0; i < tilesNeeded; i++)
-        {
+        for (int i = 0; i < tilesNeeded; ++i)
             SpawnNextTile();
-        }
     }
+    #endregion
 
+    #region Runtime tile management
     private void ManageTiles()
     {
-        if (playerHead == null)
-            return;
+        if (!playerHead) return;
 
-        float cameraBottomY = mainCamera.transform.position.y - mainCamera.orthographicSize - bufferZone;
-        float cameraTopY = mainCamera.transform.position.y + mainCamera.orthographicSize + bufferZone;
+        float camBottom = mainCamera.transform.position.y - mainCamera.orthographicSize - bufferZone;
+        float camTop    = mainCamera.transform.position.y + mainCamera.orthographicSize + bufferZone;
 
-        for (int i = activeTiles.Count - 1; i >= 0; i--)
+        // Recycle off‑screen tiles
+        for (int i = activeTiles.Count - 1; i >= 0; --i)
         {
-            RectTransform tileRect = activeTiles[i].GetComponent<RectTransform>();
-            Vector3[] corners = new Vector3[4];
-            tileRect.GetWorldCorners(corners);
-
-            float tileTopY = corners[1].y;
-
-            if (tileTopY < cameraBottomY)
+            var tileRect = activeTiles[i].GetComponent<RectTransform>();
+            tileRect.GetWorldCorners(s_corners);
+            float tileTopY = s_corners[1].y;
+            if (tileTopY < camBottom)
             {
                 RecycleTile(activeTiles[i]);
                 activeTiles.RemoveAt(i);
             }
         }
 
+        // Spawn new ones on top
         if (activeTiles.Count > 0)
         {
-            RectTransform topTileRect = activeTiles[activeTiles.Count - 1].GetComponent<RectTransform>();
-            Vector3[] corners = new Vector3[4];
-            topTileRect.GetWorldCorners(corners);
-
-            float topTileEndY = corners[1].y;
-
-            if (topTileEndY < cameraTopY)
+            var topRect = activeTiles[^1].GetComponent<RectTransform>();
+            topRect.GetWorldCorners(s_corners);
+            if (s_corners[1].y < camTop)
             {
-                lastTileEndY = topTileEndY;
+                lastTileEndY = s_corners[1].y;
                 SpawnNextTile();
             }
         }
@@ -157,104 +170,79 @@ public class BackgroundTileManager : MonoBehaviour
 
     private void SpawnNextTile()
     {
-        GameObject tile;
+        GameObject prefabToUse = (transitionTileQueued && biomeManager.CurrentBiome.transitionTilePrefab)
+                                 ? biomeManager.CurrentBiome.transitionTilePrefab
+                                 : queuedTilePrefab ?? tilePrefab;
 
-        GameObject prefabToUse = (transitionTileQueued && biomeManager.CurrentBiome.transitionTilePrefab != null)
-            ? biomeManager.CurrentBiome.transitionTilePrefab
-            : queuedTilePrefab ?? tilePrefab;
+        var pool = GetPool(prefabToUse);
+        GameObject tile = pool.Count > 0 ? pool.Dequeue() : CreateTile(prefabToUse);
+        tile.SetActive(true);
 
-        // ✅ Pool reuse logic only for regular tiles
-        if (prefabToUse == tilePrefab && tilePool.Count > 0)
+        // Trail handle
+        if (trailPainter)
         {
-            tile = tilePool.Dequeue();
-            tile.SetActive(true);
-        }
-        else
-        {
-            tile = Instantiate(prefabToUse, Vector3.zero, Quaternion.identity, transform);
-            tile.SetActive(true);
+            var rt = tile.GetComponent<RectTransform>();
+            trailPainter.ClearTrailTexture(rt);
+            trailPainter.AssignTextureToTile(tile);
         }
 
-       if (trailPainter != null)
-        {
-            RectTransform rt = tile.GetComponent<RectTransform>();
-            if (rt != null)
-            {
-                trailPainter.ClearTrailTexture(rt); // ✅ clear any old trail first
-            }
+        // Position & bookkeeping
+        var rect = tile.GetComponent<RectTransform>();
+        rect.anchorMin = new Vector2(0, 0);
+        rect.anchorMax = new Vector2(1, 0);
+        rect.pivot     = new Vector2(0.5f, 0);
 
-            trailPainter.AssignTextureToTile(tile); // ✅ then assign fresh texture
-        }
+        rect.localPosition = transform.InverseTransformPoint(new Vector3(0, lastTileEndY, 0));
+        lastTileEndY      += tileHeight;
 
-
-        RectTransform rectTransform = tile.GetComponent<RectTransform>();
-        rectTransform.anchorMin = new Vector2(0, 0);
-        rectTransform.anchorMax = new Vector2(1, 0);
-        rectTransform.pivot = new Vector2(0.5f, 0);
-
-        Vector3 worldPos = new Vector3(0, lastTileEndY, 0);
-        Vector3 localPos = transform.InverseTransformPoint(worldPos);
-        rectTransform.localPosition = localPos;
-
-        lastTileEndY += tileHeight;
         activeTiles.Add(tile);
-        biomeTileCount++;
+        ++biomeTileCount;
 
-        if (queuedTilePrefab != null && !transitionTileQueued)
+        // Handle queued biome swap once the first tile spawned
+        if (queuedTilePrefab && !transitionTileQueued)
         {
-            tilePrefab = queuedTilePrefab;
-            queuedTilePrefab = null;
+            tilePrefab        = queuedTilePrefab;
+            queuedTilePrefab  = null;
             ResetBiomeTileCount();
         }
 
-        int max = biomeManager.CurrentBiome.maxTileIndex;
-        int min = biomeManager.CurrentBiome.minTileIndex;
-        if (biomeTileCount == (max - min))
-        {
+        int span = biomeManager.CurrentBiome.maxTileIndex - biomeManager.CurrentBiome.minTileIndex + 1;
+        if (biomeTileCount >= span)
             transitionTileQueued = true;
-        }
     }
 
     private void RecycleTile(GameObject tile)
     {
-        // ✅ DO NOT clear trail — just disable and return to pool
+        var stamp = tile.GetComponent<TileStamp>();
+        if (stamp == null) { Destroy(tile); return; }    // should never happen
         tile.SetActive(false);
-        tilePool.Enqueue(tile);
+        GetPool(stamp.SourcePrefab).Enqueue(tile);
     }
+    #endregion
 
-    public void QueueNextBiomeTilePrefab(GameObject newTilePrefab)
-    {
-        if (newTilePrefab == null) return;
-        queuedTilePrefab = newTilePrefab;
-    }
+    public void QueueNextBiomeTilePrefab(GameObject newPrefab) => queuedTilePrefab = newPrefab;
 
     public void ResetBiomeTileCount()
     {
-        biomeTileCount = 0;
+        biomeTileCount       = 0;
         transitionTileQueued = false;
     }
 
+    #region Gizmos / util
+    private static readonly Vector3[] s_corners = new Vector3[4];
     private void OnDrawGizmos()
     {
         if (!Application.isPlaying) return;
-
         Gizmos.color = Color.green;
         Gizmos.DrawLine(new Vector3(-10, lastTileEndY, 0), new Vector3(10, lastTileEndY, 0));
-
-        if (mainCamera != null)
-        {
-            float cameraHeight = 2f * mainCamera.orthographicSize;
-            float cameraWidth = cameraHeight * mainCamera.aspect;
-            Vector3 cameraPos = mainCamera.transform.position;
-
-            float bottomY = cameraPos.y - mainCamera.orthographicSize - bufferZone;
-            float topY = cameraPos.y + mainCamera.orthographicSize + bufferZone;
-
-            Gizmos.color = Color.red;
-            Gizmos.DrawLine(new Vector3(-cameraWidth / 2, bottomY, 0), new Vector3(cameraWidth / 2, bottomY, 0));
-
-            Gizmos.color = Color.blue;
-            Gizmos.DrawLine(new Vector3(-cameraWidth / 2, topY, 0), new Vector3(cameraWidth / 2, topY, 0));
-        }
     }
+    #endregion
+}
+
+/// <summary>
+/// Lightweight component added to every spawned tile so we can return it to the correct pool.
+/// </summary>
+public class TileStamp : MonoBehaviour
+{
+    public GameObject SourcePrefab;
 }

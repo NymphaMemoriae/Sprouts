@@ -42,11 +42,11 @@ Material:
     m_Ints: []
     m_Floats:
     - _AspectRatio: 0.25
-    - _BrushSize: 0.02
+    - _BrushSize: 0.025
     - _EnableExternalAlpha: 0
     - _ZWrite: 0
     m_Colors:
-    - _BrushPosition: {r: 0.47445387, g: 0.72271335, b: 0, a: 0}
+    - _BrushPosition: {r: 0.47436675, g: 0.9078906, b: 0, a: 0}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []

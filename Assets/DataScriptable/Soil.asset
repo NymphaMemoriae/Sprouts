@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   biomeName: Default Biome
   minTileIndex: 0
-  maxTileIndex: 24
+  maxTileIndex: 23
   backgroundMaterial: {fileID: 2100000, guid: d5dfc0b8c1fa6754496037678557dc6d, type: 2}
   tilePrefab: {fileID: 4015334938415637551, guid: 669e3d40b3490db43b12b31f263446c1, type: 3}
   transitionTilePrefab: {fileID: 0}
