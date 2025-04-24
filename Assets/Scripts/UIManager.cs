@@ -111,7 +111,7 @@ public class UIManager : MonoBehaviour
         if (Mathf.Approximately(velocity, lastVelocity)) return;
         if (velocityText != null)
         {
-            velocityText.text = $"Velocity: {velocity:F2} u/s";
+            velocityText.text = $"Velocity: {velocity:F2} m/s";
             lastVelocity = velocity;
         }
     }
