@@ -16,6 +16,7 @@ public class TouchInputHandler : MonoBehaviour
     
     private void Update()
     {
+        Debug.Log($"[TouchInputHandler] Update Start | TimeScale: {Time.timeScale} | State: {GameManager.Instance?.CurrentGameState}");
         // Debug the game state
         if (GameManager.Instance == null)
         {

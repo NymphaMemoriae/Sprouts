@@ -24,6 +24,9 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Button resumeButton;
     [SerializeField] private Button quitButton;
 
+    [Header("Pause Button")] // Make sure this is assigned in the Inspector
+    [SerializeField] private Button pauseButton; // <-- ADD THIS LINE
+
     [Header("Start UI")]
     [SerializeField] private Button startButton;
 

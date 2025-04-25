@@ -58,7 +58,9 @@ public class GameManager : MonoBehaviour
     {
         if (CurrentGameState == GameState.Playing)
         {
+            Debug.Log($"[GameManager] PauseGame called. Current Time.timeScale = {Time.timeScale}"); // <-- ADD LOG
             Time.timeScale = 0f;
+            Debug.Log($"[GameManager] Set Time.timeScale = {Time.timeScale}"); // <-- ADD LOG
             SetGameState(GameState.Paused);
         }
     }
@@ -67,7 +69,9 @@ public class GameManager : MonoBehaviour
     {
         if (CurrentGameState == GameState.Paused)
         {
+            Debug.Log($"[GameManager] ResumeGame called. Current Time.timeScale = {Time.timeScale}"); // <-- ADD LOG
             Time.timeScale = 1f;
+            Debug.Log($"[GameManager] Set Time.timeScale = {Time.timeScale}"); // <-- ADD LOG
             SetGameState(GameState.Playing);
         }
     }
