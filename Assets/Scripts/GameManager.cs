@@ -56,8 +56,9 @@ public class GameManager : MonoBehaviour
 
         if (scene.name == "GameScene")
         {
-            plantController = FindObjectOfType<PlantController>();
-            plantLife = FindObjectOfType<PlantLife>();
+            plantController = FindAnyObjectByType<PlantController>();
+            plantLife = FindAnyObjectByType<PlantLife>();
+
 
             if (plantController == null) { Debug.LogError("[GameManager] OnSceneLoaded: Could not find PlantController in GameScene!"); }
             if (plantLife == null) { Debug.LogError("[GameManager] OnSceneLoaded: Could not find PlantLife in GameScene!"); }
@@ -159,7 +160,7 @@ public class GameManager : MonoBehaviour
         // but also keep it here for the initial StartGame call.
         if (newState == GameState.Playing)
         {
-             if (plantLife == null) { plantLife = FindObjectOfType<PlantLife>(); }
+             if (plantLife == null) { plantLife = FindAnyObjectByType<PlantLife>(); }
 
              if (plantLife != null)
              {

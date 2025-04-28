@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 509844768182342369}
   - component: {fileID: 8797817881003073924}
   - component: {fileID: 7723105416561072955}
-  - component: {fileID: 1337173242791930045}
+  - component: {fileID: 7380041752550790176}
   m_Layer: 9
   m_Name: Bone 9
   m_TagString: Obstacle
@@ -103,8 +103,8 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!60 &1337173242791930045
-PolygonCollider2D:
+--- !u!61 &7380041752550790176
+BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -137,7 +137,7 @@ PolygonCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0.18559921, y: -0.092799485}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -147,47 +147,5 @@ PolygonCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Points:
-    m_Paths:
-    - - {x: -0.24, y: -1.0749999}
-      - {x: 0.03, y: -0.935}
-      - {x: 0.12, y: -0.84499997}
-      - {x: 0.24, y: -0.685}
-      - {x: 0.35999998, y: -0.60499996}
-      - {x: 0.72999996, y: -0.42499998}
-      - {x: 0.82, y: -0.36499998}
-      - {x: 1.04, y: -0.205}
-      - {x: 1.15, y: -0.114999995}
-      - {x: 1.27, y: 0.044999998}
-      - {x: 1.28, y: 0.074999996}
-      - {x: 1.28, y: 0.835}
-      - {x: 1.26, y: 0.895}
-      - {x: 1.0699999, y: 1.105}
-      - {x: 0.84999996, y: 1.225}
-      - {x: 0.68, y: 1.265}
-      - {x: 0.29999998, y: 1.265}
-      - {x: 0.11, y: 1.2149999}
-      - {x: -0.13, y: 1.105}
-      - {x: -0.19999999, y: 1.0649999}
-      - {x: -0.38, y: 0.935}
-      - {x: -0.53999996, y: 0.765}
-      - {x: -0.62, y: 0.635}
-      - {x: -0.75, y: 0.45499998}
-      - {x: -0.83, y: 0.385}
-      - {x: -0.88, y: 0.255}
-      - {x: -0.87, y: 0.005}
-      - {x: -1, y: -0.295}
-      - {x: -1.05, y: -0.36499998}
-      - {x: -1.15, y: -0.555}
-      - {x: -1.18, y: -0.635}
-      - {x: -1.1999999, y: -0.705}
-      - {x: -1.28, y: -0.92499995}
-      - {x: -1.28, y: -1.165}
-      - {x: -1.16, y: -1.245}
-      - {x: -1.0699999, y: -1.265}
-      - {x: -0.87, y: -1.265}
-      - {x: -0.83, y: -1.255}
-      - {x: -0.65, y: -1.2149999}
-      - {x: -0.42, y: -1.125}
-      - {x: -0.35999998, y: -1.0849999}
-  m_UseDelaunayMesh: 0
+  m_Size: {x: 2.1888015, y: 2.3444014}
+  m_EdgeRadius: 0

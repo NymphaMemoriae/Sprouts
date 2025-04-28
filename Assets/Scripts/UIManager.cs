@@ -55,8 +55,8 @@ public class UIManager : MonoBehaviour
         {
              Debug.LogError("UIManager Start: GameManager.Instance is null!");
              // Fallback find if necessary, though GameManager should provide them
-             plantController = FindObjectOfType<PlantController>();
-             plantLife = FindObjectOfType<PlantLife>();
+             plantController = FindAnyObjectByType<PlantController>();
+             plantLife = FindAnyObjectByType<PlantLife>();
         }
 
 

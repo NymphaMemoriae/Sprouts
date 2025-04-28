@@ -34,6 +34,8 @@ public class BackgroundTileManager : MonoBehaviour
     private int  biomeTileCount;
     private bool transitionTileQueued;
     private GameObject queuedTilePrefab;
+    private float currentZOffset = 0f;
+    private const float ZIncrement = 0.1f;
     #endregion
 
     #region Unity lifecycle
@@ -41,8 +43,10 @@ public class BackgroundTileManager : MonoBehaviour
     {
         mainCamera   ??= Camera.main;
         playerHead   ??= Object.FindAnyObjectByType<PlantController>()?.PlantHead;
-        biomeManager ??= Object.FindAnyObjectByType<BiomeManager>();
+        // biomeManager ??= Object.FindAnyObjectByType<BiomeManager>();
         trailPainter  =  Object.FindAnyObjectByType<TrailPainter>();
+
+        currentZOffset = 0f; // Reset Z offset on start
 
         // Measure tile height via one temporary instance
         MeasureTileHeight();
@@ -175,25 +179,58 @@ public class BackgroundTileManager : MonoBehaviour
                                  : queuedTilePrefab ?? tilePrefab;
 
         var pool = GetPool(prefabToUse);
-        GameObject tile = pool.Count > 0 ? pool.Dequeue() : CreateTile(prefabToUse);
-        tile.SetActive(true);
+       GameObject tile = pool.Count > 0 ? pool.Dequeue() : CreateTile(prefabToUse);
 
-        // Trail handle
         if (trailPainter)
         {
             var rt = tile.GetComponent<RectTransform>();
-            trailPainter.ClearTrailTexture(rt);
-            trailPainter.AssignTextureToTile(tile);
+            if (rt != null)
+            {
+                trailPainter.ClearTrailTexture(rt);
+                trailPainter.AssignTextureToTile(tile);
+            }
         }
 
-        // Position & bookkeeping
+        tile.SetActive(true);
+
+        // create a random color to be assigned to the propert _Color of the Material of the tile
+        Color randomColor = new Color(Random.value, Random.value, Random.value, 1f);
+        if (tile.TryGetComponent<Image>(out var image) && image.material != null)
+        {
+             image.material.SetColor("_Color", randomColor);
+             Debug.Log($"Tile color set to {randomColor}");
+        }
+
+
         var rect = tile.GetComponent<RectTransform>();
-        rect.anchorMin = new Vector2(0, 0);
-        rect.anchorMax = new Vector2(1, 0);
+        rect.anchorMin = new Vector2(0.5f, 0);
+        rect.anchorMax = new Vector2(0.5f, 0);
         rect.pivot     = new Vector2(0.5f, 0);
 
-        rect.localPosition = transform.InverseTransformPoint(new Vector3(0, lastTileEndY, 0));
-        lastTileEndY      += tileHeight;
+        float spawnY;
+        bool isFirstTileBatch = activeTiles.Count == 0; // Check if this is part of the initial setup
+        if (activeTiles.Count > 0)
+        {
+             RectTransform lastTileRect = activeTiles[^1].GetComponent<RectTransform>();
+             lastTileRect.GetWorldCorners(s_corners);
+             spawnY = s_corners[1].y;
+        }
+        else
+        {
+             float startY = mainCamera.transform.position.y - mainCamera.orthographicSize - bufferZone;
+             spawnY = startY;
+        }
+
+        Vector3 spawnLocalPosition = transform.InverseTransformPoint(new Vector3(0, spawnY, 0));
+        spawnLocalPosition.z = currentZOffset;
+
+        rect.localPosition = spawnLocalPosition;
+        Debug.Log($"Spawned Tile: {tile.name} | " +
+                  $"Initial Batch: {isFirstTileBatch} | " +
+                  $"Calculated LocalPos: {spawnLocalPosition.ToString("F3")} | " +
+                  $"Resulting WorldPos: {tile.transform.position.ToString("F3")}");
+
+        currentZOffset += ZIncrement;
 
         activeTiles.Add(tile);
         ++biomeTileCount;
@@ -207,6 +244,8 @@ public class BackgroundTileManager : MonoBehaviour
         }
 
         int span = biomeManager.CurrentBiome.maxTileIndex - biomeManager.CurrentBiome.minTileIndex + 1;
+        Debug.Log($"Current Biome: {biomeManager.CurrentBiome} + SPAN : {span}");
+        Debug.Log($"ITS PRINTING");
         if (biomeTileCount >= span)
             transitionTileQueued = true;
     }
@@ -215,6 +254,15 @@ public class BackgroundTileManager : MonoBehaviour
     {
         var stamp = tile.GetComponent<TileStamp>();
         if (stamp == null) { Destroy(tile); return; }    // should never happen
+        // Clear the trail texture before putting it back in the pool
+        if (trailPainter != null)
+        {
+            RectTransform rt = tile.GetComponent<RectTransform>();
+            if (rt != null)
+            {
+                trailPainter.ClearTrailTexture(rt);
+            }
+        }
         tile.SetActive(false);
         GetPool(stamp.SourcePrefab).Enqueue(tile);
     }

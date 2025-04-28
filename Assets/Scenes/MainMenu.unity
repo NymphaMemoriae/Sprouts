@@ -334,10 +334,10 @@ RectTransform:
   - {fileID: 1990593506}
   m_Father: {fileID: 599734142}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 400, y: 300}
+  m_SizeDelta: {x: -100, y: -588}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &197622469
 MonoBehaviour:
@@ -806,6 +806,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2110641597}
   - component: {fileID: 2110641596}
+  - component: {fileID: 2110641598}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -836,12 +837,33 @@ Transform:
   m_GameObject: {fileID: 2110641595}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 337, y: 198, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2110641598
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2110641595}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 183e9045f08821c47a9b3ee8a500becf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxMessages: 200
+  consoleHeight: 700
+  startVisible: 1
+  toggleKey: 0
+  logColor: {r: 1, g: 1, b: 1, a: 1}
+  warningColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  errorColor: {r: 1, g: 0, b: 0, a: 1}
+  exceptionColor: {r: 1, g: 0, b: 1, a: 1}
+  fontSize: 14
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
