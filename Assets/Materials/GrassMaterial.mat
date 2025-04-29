@@ -94,7 +94,7 @@ Material:
     - _Offset: 0
     - _QueueControl: 1
     - _QueueOffset: 10
-    - _TrailStrenght: 1
+    - _TrailStrenght: 0
     - _ZWrite: 0
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}

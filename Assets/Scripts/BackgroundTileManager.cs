@@ -193,13 +193,13 @@ public class BackgroundTileManager : MonoBehaviour
 
         tile.SetActive(true);
 
-        // create a random color to be assigned to the propert _Color of the Material of the tile
-        Color randomColor = new Color(Random.value, Random.value, Random.value, 1f);
-        if (tile.TryGetComponent<Image>(out var image) && image.material != null)
-        {
-             image.material.SetColor("_Color", randomColor);
-             Debug.Log($"Tile color set to {randomColor}");
-        }
+        // // create a random color to be assigned to the propert _Color of the Material of the tile
+        // Color randomColor = new Color(Random.value, Random.value, Random.value, 1f);
+        // if (tile.TryGetComponent<Image>(out var image) && image.material != null)
+        // {
+        //      image.material.SetColor("_Color", randomColor);
+        //      Debug.Log($"Tile color set to {randomColor}");
+        // }
 
 
         var rect = tile.GetComponent<RectTransform>();
