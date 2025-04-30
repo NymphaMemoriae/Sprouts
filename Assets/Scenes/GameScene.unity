@@ -9692,7 +9692,6 @@ MonoBehaviour:
   heightOffset: -500
   sideBumpRecoveryTime: 0.1
   plantLife: {fileID: 1370011431}
-  surfaceReachedParticles: {fileID: 891047169371122584, guid: 11d060f50f9f9e244977e8307f79e4ed, type: 3}
 --- !u!1 &1490208202
 GameObject:
   m_ObjectHideFlags: 0
@@ -10278,6 +10277,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2132662731
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2132662732}
+  m_Layer: 0
+  m_Name: ChPointWoods
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2132662732
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2132662731}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 5.8286195, y: 2.2193913, z: 1947.0415}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -10295,3 +10325,4 @@ SceneRoots:
   - {fileID: 586876028}
   - {fileID: 1348792019}
   - {fileID: 934369860}
+  - {fileID: 2132662732}

@@ -1,3 +1,4 @@
+// In BiomeData.cs
 using UnityEngine;
 using System.Collections.Generic;
 
@@ -6,11 +7,10 @@ public class BiomeData : ScriptableObject
 {
     [Header("Biome Information")]
     public string biomeName = "Default Biome";
-    
+
     [Header("Biome Range (in tiles)")]
     public int minTileIndex = 0;
     public int maxTileIndex = 10; // inclusive
-
 
     [Header("Visual Settings")]
     public Material backgroundMaterial;
@@ -19,9 +19,11 @@ public class BiomeData : ScriptableObject
     [Header("Optional Transition Tile")]
     public GameObject transitionTilePrefab;
 
+    [Header("Checkpoint")] // <-- New Section
+    public GameObject checkpointPrefab; // <-- Add this line
+
     [Header("Obstacles")]
-    // public List<ObstacleData> biomeObstacles = new List<ObstacleData>();
-    public List<SideObstacleSegment> biomeSideSegments = new List<SideObstacleSegment>(); // NEW
+    public List<SideObstacleSegment> biomeSideSegments = new List<SideObstacleSegment>();
 
     [Header("Obstacle Clusters")]
     public List<GameObject> startingClusters;
