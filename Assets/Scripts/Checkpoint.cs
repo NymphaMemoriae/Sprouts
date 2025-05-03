@@ -3,36 +3,49 @@ using UnityEngine;
 [RequireComponent(typeof(Collider2D))] // Ensure there's a collider
 public class Checkpoint : MonoBehaviour
 {
-    public BiomeData Biome { get; set; } // To potentially know which biome this belongs to
-    public Vector3 SpawnPosition { get; private set; } // Store the precise position
-
     private bool triggered = false;
     private Collider2D _collider;
 
     void Awake()
     {
         _collider = GetComponent<Collider2D>();
-        _collider.isTrigger = true; // Make sure it's a trigger
-        SpawnPosition = transform.position; // Store position on awake
+
+        // Ensure the collider is set to be a trigger
+        if (!_collider.isTrigger)
+        {
+             Debug.LogWarning($"Checkpoint '{name}' collider was not set to Trigger. Forcing it.", gameObject);
+            _collider.isTrigger = true;
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        // Check if the player's head (or main body part) entered the trigger
-        // Adjust the tag "PlayerHead" if your player has a different tag.
-        if (!triggered && collision.CompareTag("PlayerHead")) // Assuming PlayerHead tag exists
+        // Check if the object entering the trigger has the correct tag (adjust "PlantHead" if needed)
+        if (!triggered && collision.CompareTag("PlantHead"))
         {
-            Debug.Log($"Checkpoint reached for Biome: {(Biome != null ? Biome.biomeName : "Unknown")} at {SpawnPosition}");
-            GameManager.Instance.SetCurrentCheckpoint(this);
-            triggered = true; // Prevent multiple triggers
+            // Call the static GameManager method to record the checkpoint position
+            GameManager.SetCurrentCheckpointPosition(transform.position);
+            triggered = true; // Prevent this checkpoint from triggering again
 
-            // Optional: Add visual/audio feedback here
+            // --- Optional Feedback & Cleanup ---
+            // Example: Log activation
+            Debug.Log($"Checkpoint '{name}' activated by {collision.name} at {transform.position}");
+
+            // Example: Change color to show it's activated
+            Renderer rend = GetComponent<Renderer>();
+            if (rend != null)
+            {
+                rend.material.color = Color.green; // Use SetColor if using URP/HDRP with specific shader properties
+            }
+
+            // Example: Disable the collider so it can't be triggered again
+             _collider.enabled = false;
+
+            // Example: Destroy the checkpoint object after a delay
+            // Destroy(gameObject, 2f);
+            // --- End of Optional ---
         }
     }
 
-    // Optional: Call this if you want to reuse checkpoints or reset their state
-    public void ResetTrigger()
-    {
-        triggered = false;
-    }
+    // The ResetTrigger method has been completely removed as per the previous instructions.
 }

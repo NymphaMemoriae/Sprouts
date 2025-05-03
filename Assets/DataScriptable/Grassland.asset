@@ -18,6 +18,7 @@ MonoBehaviour:
   backgroundMaterial: {fileID: 2100000, guid: 28b6b2fe25c476b4ba1a6e8637d79d93, type: 2}
   tilePrefab: {fileID: 4015334938415637551, guid: 5622f39b3e762a842987bba1062606e9, type: 3}
   transitionTilePrefab: {fileID: 0}
+  checkpointPrefab: {fileID: 269376935000323037, guid: c16537a5ed1dba840a6038a3c43a12f9, type: 3}
   biomeSideSegments: []
   startingClusters:
   - {fileID: 4355422624127572823, guid: a23cf065d55d88a469f7257829673187, type: 3}

@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System;
 
 public class BiomeManager : MonoBehaviour
 {
@@ -14,21 +15,22 @@ public class BiomeManager : MonoBehaviour
 
     private BiomeData currentBiome;
     private float displayHeight = 0f;
+    public event Action<BiomeData, bool> OnBiomeTransitionComplete; // Sends BiomeData and a flag indicating if it's the very first biome
+    
 
     // ✅ Public access to current biome
     public BiomeData CurrentBiome => currentBiome;
 
     void Start()
     {
-        if (plantController == null)
-            plantController = Object.FindAnyObjectByType<PlantController>();
+         if (plantController == null)
+        plantController = FindObjectOfType<PlantController>(); 
 
         if (backgroundTileManager == null)
-            backgroundTileManager = Object.FindAnyObjectByType<BackgroundTileManager>();
+            backgroundTileManager = FindObjectOfType<BackgroundTileManager>(); 
 
         if (obstacleSpawner == null)
-            obstacleSpawner = Object.FindAnyObjectByType<ObstacleSpawner>();
-
+            obstacleSpawner = FindObjectOfType<ObstacleSpawner>(); 
         if (defaultBiome != null)
         {
             SetCurrentBiome(defaultBiome);
@@ -74,9 +76,11 @@ public class BiomeManager : MonoBehaviour
 
     private void SetCurrentBiome(BiomeData biome)
     {
-        if (biome == null) return;
+        if (biome == null || biome == currentBiome) return; // Avoid redundant calls
 
         Debug.Log($"Transitioning to biome: {biome.biomeName} at height {displayHeight}m");
+        
+        BiomeData previousBiome = currentBiome; // Store previous biome before overwriting
 
         currentBiome = biome;
 
@@ -84,7 +88,7 @@ public class BiomeManager : MonoBehaviour
         {
             // ✅ Queue new prefab without replacing visible ones
             backgroundTileManager.QueueNextBiomeTilePrefab(biome.tilePrefab);
-            backgroundTileManager.ResetBiomeTileCount();
+            // backgroundTileManager.ResetBiomeTileCount();
         }
 
         if (obstacleSpawner != null)
@@ -109,5 +113,11 @@ public class BiomeManager : MonoBehaviour
                 }
             }
         }
+        // Determine if this is the very first biome being set
+        bool isFirstBiomeOverall = (previousBiome == null && (biome == defaultBiome || (biomes.Count > 0 && biome == biomes[0])));
+
+        // Invoke the event AFTER all other setup for the new biome is done
+        OnBiomeTransitionComplete?.Invoke(currentBiome, isFirstBiomeOverall);
+        Debug.Log($"[BiomeManager] OnBiomeTransitionComplete invoked for {biome.biomeName}. Is First Biome Overall: {isFirstBiomeOverall}");
     }
 }

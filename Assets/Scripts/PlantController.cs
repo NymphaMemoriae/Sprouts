@@ -193,6 +193,22 @@ public class PlantController : MonoBehaviour
         isGrowing = false;
         currentGrowthSpeed = 0f;
     }
+    public void ResetState(Vector3 spawnPosition)
+    {
+        transform.position = spawnPosition;
+        plantHead.rotation = Quaternion.identity; // Reset rotation
+        currentGrowthSpeed = initialGrowthSpeed; // Reset speed
+        isGrowing = false; // Or true, depending on desired start state
+        isGameOver = false;
+        isVerticallyBlocked = false;
+        sideBumpTimer = 0f;
+        targetRotation = 0f;
+        currentRotationVelocity = 0f;
+        // Optionally reset activeBuffs if they shouldn't persist after death
+        // activeBuffs.Clear();
+        lastPosition = spawnPosition;
+        Debug.Log($"[PlantController] State reset at position {spawnPosition}");
+    }
 
     private void UpdateBuffs()
     {

@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using System;
 
 /// <summary>
 /// Spawns and recycles vertical background tiles.  
@@ -36,22 +37,33 @@ public class BackgroundTileManager : MonoBehaviour
     private GameObject queuedTilePrefab;
     private float currentZOffset = 0f;
     private const float ZIncrement = 0.1f;
+    private BiomeData biomeForNextCheckpointSpawn = null;
+    private bool isFirstBiomeEver = true; // Flag to track if we are still in the initial biome
     #endregion
 
     #region Unity lifecycle
     private void Start()
     {
         mainCamera   ??= Camera.main;
-        playerHead   ??= Object.FindAnyObjectByType<PlantController>()?.PlantHead;
-        // biomeManager ??= Object.FindAnyObjectByType<BiomeManager>();
-        trailPainter  =  Object.FindAnyObjectByType<TrailPainter>();
-
+       playerHead   ??= FindObjectOfType<PlantController>()?.PlantHead; // Around Line 48
+        // biomeManager ??= FindObjectOfType<BiomeManager>(); 
+        trailPainter  =  FindObjectOfType<TrailPainter>(); 
+        if (biomeManager != null)
+        {
+            biomeManager.OnBiomeTransitionComplete += HandleBiomeTransitionComplete;
+            Debug.Log("[BackgroundTileManager] Subscribed to BiomeManager.OnBiomeTransitionComplete");
+        }
+        else
+        {
+            Debug.LogError("[BackgroundTileManager] BiomeManager reference is missing!");
+        }
         currentZOffset = 0f; // Reset Z offset on start
 
         // Measure tile height via one temporary instance
         MeasureTileHeight();
         PreWarmPool(tilePrefab, initialPoolSize);
         SetupInitialTiles();
+         isFirstBiomeEver = true;
     }
 
     private void Update() => ManageTiles();
@@ -234,6 +246,25 @@ public class BackgroundTileManager : MonoBehaviour
 
         activeTiles.Add(tile);
         ++biomeTileCount;
+         // Check if a checkpoint is queued *and* this is the very first tile placed for the new biome
+        if (biomeForNextCheckpointSpawn != null && biomeTileCount == 1)
+        {
+            Debug.Log($"[BackgroundTileManager] Attempting to spawn checkpoint for {biomeForNextCheckpointSpawn.biomeName} at tile {biomeTileCount}");
+            GameObject checkpointPrefab = biomeForNextCheckpointSpawn.checkpointPrefab;
+
+            // Calculate position at the bottom-center of the tile *just placed*
+            Vector3 checkpointPos = tile.transform.position - Vector3.up * (tileHeight * 0.5f * rect.lossyScale.y); // Center Y - half height
+            checkpointPos.z -= 0.1f; // Place slightly in front of the tile
+
+            // Instantiate the checkpoint
+            GameObject checkpointInstance = Instantiate(checkpointPrefab, checkpointPos, Quaternion.identity, transform); // Parent to this manager
+            checkpointInstance.name = $"Checkpoint_{biomeForNextCheckpointSpawn.biomeName}";
+
+            Debug.Log($"[BackgroundTileManager] Spawned checkpoint {checkpointInstance.name} at {checkpointPos}");
+
+            // IMPORTANT: Clear the flag so we don't spawn more checkpoints for this biome
+            biomeForNextCheckpointSpawn = null;
+        }
 
         // Handle queued biome swap once the first tile spawned
         if (queuedTilePrefab && !transitionTileQueued)
@@ -267,11 +298,30 @@ public class BackgroundTileManager : MonoBehaviour
         GetPool(stamp.SourcePrefab).Enqueue(tile);
     }
     #endregion
+    private void HandleBiomeTransitionComplete(BiomeData newBiome, bool isFirstBiomeOverall)
+    {
+        Debug.Log($"[BackgroundTileManager] Received Biome Transition Complete for: {newBiome.biomeName}. Is First Biome Overall: {isFirstBiomeOverall}");
+        ResetBiomeTileCount(); // Reset count *when* transition is confirmed
+
+        if (!isFirstBiomeOverall && newBiome.checkpointPrefab != null)
+        {
+            biomeForNextCheckpointSpawn = newBiome;
+            Debug.Log($"[BackgroundTileManager] Queued checkpoint spawn for biome: {newBiome.biomeName}");
+        }
+        else
+        {
+            biomeForNextCheckpointSpawn = null; // Ensure no checkpoint for the first biome or if prefab is missing
+            if(isFirstBiomeOverall) Debug.Log("[BackgroundTileManager] Not queuing checkpoint spawn - it's the first overall biome.");
+            else if(newBiome.checkpointPrefab == null) Debug.Log($"[BackgroundTileManager] Not queuing checkpoint spawn - {newBiome.biomeName} has no checkpoint prefab assigned.");
+        }
+        isFirstBiomeEver = false; // Any transition means we are past the first biome
+    }
 
     public void QueueNextBiomeTilePrefab(GameObject newPrefab) => queuedTilePrefab = newPrefab;
 
     public void ResetBiomeTileCount()
     {
+        Debug.Log($"[BackgroundTileManager] Resetting biome tile count from {biomeTileCount} to 0.");
         biomeTileCount       = 0;
         transitionTileQueued = false;
     }
@@ -285,6 +335,14 @@ public class BackgroundTileManager : MonoBehaviour
         Gizmos.DrawLine(new Vector3(-10, lastTileEndY, 0), new Vector3(10, lastTileEndY, 0));
     }
     #endregion
+    private void OnDestroy()
+    {
+        if (biomeManager != null)
+        {
+            biomeManager.OnBiomeTransitionComplete -= HandleBiomeTransitionComplete;
+            Debug.Log("[BackgroundTileManager] Unsubscribed from BiomeManager.OnBiomeTransitionComplete");
+        }
+    }
 }
 
 /// <summary>

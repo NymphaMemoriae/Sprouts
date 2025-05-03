@@ -14,6 +14,9 @@ public class GameManager : MonoBehaviour
     public event Action<GameState> OnGameStateChanged;
 
     public GameState CurrentGameState { get; private set; } = GameState.MainMenu;
+    public static Vector3? LastCheckpointPosition { get; private set; } = null;
+    public static Vector3 InitialSpawnPosition { get; private set; } = Vector3.zero; // Default, will be set
+    private static bool _initialSpawnPositionSet = false;
 
     private void Awake()
     {
@@ -23,6 +26,23 @@ public class GameManager : MonoBehaviour
             DontDestroyOnLoad(gameObject);
             // Explicitly use UnityEngine.SceneManagement.SceneManager here
             UnityEngine.SceneManagement.SceneManager.sceneLoaded += OnSceneLoaded;
+ // Find initial spawn point ONLY once when the GameManager is first created
+            if (!_initialSpawnPositionSet)
+            {
+                GameObject spawnPointObject = GameObject.FindGameObjectWithTag("InitialSpawn");
+                if (spawnPointObject != null)
+                {
+                    InitialSpawnPosition = spawnPointObject.transform.position;
+                    _initialSpawnPositionSet = true;
+                    Debug.Log($"[GameManager] Initial spawn position set to: {InitialSpawnPosition} from object {spawnPointObject.name}");
+                }
+                else
+                {
+                    Debug.LogWarning("[GameManager] Could not find GameObject with tag 'InitialSpawn'. Using default Vector3.zero.");
+                    InitialSpawnPosition = Vector3.zero; // Or a sensible default
+                        _initialSpawnPositionSet = true; // Mark as set even if not found to avoid repeated searches
+                }
+            }           
         }
         else
         {
@@ -56,11 +76,18 @@ public class GameManager : MonoBehaviour
 
         if (scene.name == "GameScene")
         {
-            plantController = FindAnyObjectByType<PlantController>();
-            plantLife = FindAnyObjectByType<PlantLife>();
+            plantController = FindObjectOfType<PlantController>(); // Around Line 64
+            plantLife = FindObjectOfType<PlantLife>(); 
 
 
             if (plantController == null) { Debug.LogError("[GameManager] OnSceneLoaded: Could not find PlantController in GameScene!"); }
+            else
+            {
+                // *** THIS IS THE KEY RESPAWN LOGIC ***
+                Vector3 respawnPos = GetRespawnPosition();
+                plantController.ResetState(respawnPos); // Reset position and state
+                Debug.Log($"[GameManager] Plant positioned at {respawnPos}");
+            }
             if (plantLife == null) { Debug.LogError("[GameManager] OnSceneLoaded: Could not find PlantLife in GameScene!"); }
 
              if(CurrentGameState != GameState.Playing)
@@ -75,6 +102,13 @@ public class GameManager : MonoBehaviour
              {
                  plantLife.ResetLives();
              }
+        }
+         else if (scene.name == "MainMenu") // Reset checkpoint when going back to MainMenu
+        {
+            ResetCheckpoint();
+            SetGameState(GameState.MainMenu); // Ensure state is MainMenu
+            plantController = null;
+            plantLife = null;
         }
         else
         {
@@ -93,6 +127,7 @@ public class GameManager : MonoBehaviour
 
     public void StartGame()
     {
+        ResetCheckpoint(); // Ensure a fresh start from the beginning
         SetGameState(GameState.Playing);
     }
 
@@ -127,12 +162,14 @@ public class GameManager : MonoBehaviour
              // Explicitly use UnityEngine.SceneManagement.SceneManager here
              UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex);
              // OnSceneLoaded will handle finding references and setting state correctly after reload.
+              SetGameState(GameState.Playing); // Ensure state is Playing after restart
         }
     }
 
     public void ReturnToMainMenu()
     {
         Time.timeScale = 1f;
+        ResetCheckpoint(); // Reset checkpoint when quitting to menu
         SetGameState(GameState.MainMenu);
         // Explicitly use UnityEngine.SceneManagement.SceneManager here
         UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenu");
@@ -145,6 +182,24 @@ public class GameManager : MonoBehaviour
         #else
         Application.Quit();
         #endif
+    }
+    public static void SetCurrentCheckpointPosition(Vector3 position)
+    {
+        LastCheckpointPosition = position;
+        Debug.Log($"[GameManager] Checkpoint set to: {position}");
+    }
+
+    // Add this method to get the correct respawn position
+    public static Vector3 GetRespawnPosition()
+    {
+        return LastCheckpointPosition ?? InitialSpawnPosition;
+    }
+
+    // Add this method to reset the checkpoint state
+    public static void ResetCheckpoint()
+    {
+        LastCheckpointPosition = null;
+        Debug.Log("[GameManager] Checkpoint reset.");
     }
 
     public void SetGameState(GameState newState)
