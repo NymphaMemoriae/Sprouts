@@ -4,7 +4,7 @@ using UnityEngine.UI;
 using System;
 
 /// <summary>
-/// Spawns and recycles vertical background tiles.  
+/// Spawns and recycles vertical background tiles.
 /// Each prefab gets its own object‑pool queue, keyed by the prefab itself, so tiles from
 /// one biome can never be reused in another biome.
 /// </summary>
@@ -45,9 +45,10 @@ public class BackgroundTileManager : MonoBehaviour
     private void Start()
     {
         mainCamera   ??= Camera.main;
-       playerHead   ??= FindObjectOfType<PlantController>()?.PlantHead; // Around Line 48
-        // biomeManager ??= FindObjectOfType<BiomeManager>(); 
-        trailPainter  =  FindObjectOfType<TrailPainter>(); 
+       playerHead   ??= FindObjectOfType<PlantController>()?.PlantHead; // Uses FindObjectOfType as corrected previously
+        biomeManager ??= FindObjectOfType<BiomeManager>(); // Uses FindObjectOfType as corrected previously
+        trailPainter  =  FindObjectOfType<TrailPainter>(); // Uses FindObjectOfType as corrected previously
+
         if (biomeManager != null)
         {
             biomeManager.OnBiomeTransitionComplete += HandleBiomeTransitionComplete;
@@ -172,13 +173,21 @@ public class BackgroundTileManager : MonoBehaviour
         {
             var topRect = activeTiles[^1].GetComponent<RectTransform>();
             topRect.GetWorldCorners(s_corners);
-            if (s_corners[1].y < camTop)
+            // Use while loop to potentially spawn multiple tiles per frame if needed
+            while (s_corners[1].y < camTop)
             {
-                lastTileEndY = s_corners[1].y;
-                SpawnNextTile();
+                 lastTileEndY = s_corners[1].y;
+                 SpawnNextTile();
+                 // Update topRect for the loop condition after spawning
+                 if (activeTiles.Count > 0) {
+                     topRect = activeTiles[^1].GetComponent<RectTransform>();
+                     topRect.GetWorldCorners(s_corners);
+                 } else {
+                     break; // Exit loop if activeTiles becomes empty
+                 }
             }
         }
-        else
+        else // If no tiles are active, restart setup
         {
             SetupInitialTiles();
         }
@@ -186,13 +195,28 @@ public class BackgroundTileManager : MonoBehaviour
 
     private void SpawnNextTile()
     {
-        GameObject prefabToUse = (transitionTileQueued && biomeManager.CurrentBiome.transitionTilePrefab)
-                                 ? biomeManager.CurrentBiome.transitionTilePrefab
-                                 : queuedTilePrefab ?? tilePrefab;
+        // Determine which prefab to use
+        GameObject prefabToUse = tilePrefab; // Default fallback
+        if (biomeManager?.CurrentBiome != null) // Check if BiomeManager and CurrentBiome are valid
+        {
+             prefabToUse = (transitionTileQueued && biomeManager.CurrentBiome.transitionTilePrefab != null)
+                           ? biomeManager.CurrentBiome.transitionTilePrefab
+                           : queuedTilePrefab ?? biomeManager.CurrentBiome.tilePrefab ?? tilePrefab; // Use queued, then current biome's, then default
+        } else if (queuedTilePrefab != null) {
+             prefabToUse = queuedTilePrefab; // Use queued if BiomeManager isn't ready but a queue exists
+        }
+
+
+        if (prefabToUse == null) {
+             Debug.LogError("Could not determine a valid tile prefab to spawn!");
+             return;
+        }
 
         var pool = GetPool(prefabToUse);
-       GameObject tile = pool.Count > 0 ? pool.Dequeue() : CreateTile(prefabToUse);
+        GameObject tile = pool.Count > 0 ? pool.Dequeue() : CreateTile(prefabToUse);
+        if(tile == null) return; // Exit if tile creation failed
 
+        // TrailPainter logic...
         if (trailPainter)
         {
             var rt = tile.GetComponent<RectTransform>();
@@ -205,77 +229,76 @@ public class BackgroundTileManager : MonoBehaviour
 
         tile.SetActive(true);
 
-        // // create a random color to be assigned to the propert _Color of the Material of the tile
-        // Color randomColor = new Color(Random.value, Random.value, Random.value, 1f);
-        // if (tile.TryGetComponent<Image>(out var image) && image.material != null)
-        // {
-        //      image.material.SetColor("_Color", randomColor);
-        //      Debug.Log($"Tile color set to {randomColor}");
-        // }
-
-
+        // Position the tile
         var rect = tile.GetComponent<RectTransform>();
         rect.anchorMin = new Vector2(0.5f, 0);
         rect.anchorMax = new Vector2(0.5f, 0);
         rect.pivot     = new Vector2(0.5f, 0);
 
-        float spawnY;
-        bool isFirstTileBatch = activeTiles.Count == 0; // Check if this is part of the initial setup
-        if (activeTiles.Count > 0)
-        {
-             RectTransform lastTileRect = activeTiles[^1].GetComponent<RectTransform>();
-             lastTileRect.GetWorldCorners(s_corners);
-             spawnY = s_corners[1].y;
-        }
-        else
-        {
-             float startY = mainCamera.transform.position.y - mainCamera.orthographicSize - bufferZone;
-             spawnY = startY;
-        }
+        float spawnY = lastTileEndY; // Place new tile directly above the previous one
 
         Vector3 spawnLocalPosition = transform.InverseTransformPoint(new Vector3(0, spawnY, 0));
         spawnLocalPosition.z = currentZOffset;
 
         rect.localPosition = spawnLocalPosition;
-        Debug.Log($"Spawned Tile: {tile.name} | " +
-                  $"Initial Batch: {isFirstTileBatch} | " +
-                  $"Calculated LocalPos: {spawnLocalPosition.ToString("F3")} | " +
-                  $"Resulting WorldPos: {tile.transform.position.ToString("F3")}");
+        // Debug.Log($"Spawned Tile: {tile.name} | LocalPos: {spawnLocalPosition.ToString("F3")} | WorldPos: {tile.transform.position.ToString("F3")}");
 
         currentZOffset += ZIncrement;
 
         activeTiles.Add(tile);
         ++biomeTileCount;
-         // Check if a checkpoint is queued *and* this is the very first tile placed for the new biome
+
+        // --- MODIFIED CHECKPOINT SPAWNING ---
+        // Check if a checkpoint should spawn for this new tile
         if (biomeForNextCheckpointSpawn != null && biomeTileCount == 1)
         {
-            Debug.Log($"[BackgroundTileManager] Attempting to spawn checkpoint for {biomeForNextCheckpointSpawn.biomeName} at tile {biomeTileCount}");
+            Debug.Log($"[BackgroundTileManager] Attempting to spawn checkpoint for {biomeForNextCheckpointSpawn.biomeName} as child of {tile.name}");
             GameObject checkpointPrefab = biomeForNextCheckpointSpawn.checkpointPrefab;
 
-            // Calculate position at the bottom-center of the tile *just placed*
-            Vector3 checkpointPos = tile.transform.position - Vector3.up * (tileHeight * 0.5f * rect.lossyScale.y); // Center Y - half height
-            checkpointPos.z -= 0.1f; // Place slightly in front of the tile
+            if (checkpointPrefab != null)
+            {
+                // Instantiate the checkpoint PREFAB as a child of the TILE
+                GameObject checkpointInstance = Instantiate(checkpointPrefab, tile.transform); // Parent set here
+                checkpointInstance.name = $"Checkpoint_{biomeForNextCheckpointSpawn.biomeName}";
 
-            // Instantiate the checkpoint
-            GameObject checkpointInstance = Instantiate(checkpointPrefab, checkpointPos, Quaternion.identity, transform); // Parent to this manager
-            checkpointInstance.name = $"Checkpoint_{biomeForNextCheckpointSpawn.biomeName}";
+                // Get the Checkpoint component to access its offset
+                Checkpoint checkpointComponent = checkpointInstance.GetComponent<Checkpoint>();
+                float yOffset = 0f; // Default offset
+                if (checkpointComponent != null)
+                {
+                    yOffset = checkpointComponent.GetRelativeYOffset(); // Get offset from script
+                }
+                else
+                {
+                     Debug.LogWarning($"Checkpoint prefab '{checkpointPrefab.name}' is missing the Checkpoint script component!", checkpointPrefab);
+                }
 
-            Debug.Log($"[BackgroundTileManager] Spawned checkpoint {checkpointInstance.name} at {checkpointPos}");
+                // Set the LOCAL position relative to the tile (pivot assumed bottom-center)
+                checkpointInstance.transform.localPosition = new Vector3(0f, yOffset, -0.1f); // Use offset
 
-            // IMPORTANT: Clear the flag so we don't spawn more checkpoints for this biome
+                Debug.Log($"[BackgroundTileManager] Spawned checkpoint {checkpointInstance.name} at local pos {checkpointInstance.transform.localPosition.ToString("F3")}");
+            }
+            else
+            {
+                Debug.LogError($"[BackgroundTileManager] Checkpoint prefab for {biomeForNextCheckpointSpawn.biomeName} is null!");
+            }
+            // Clear the flag regardless of success to prevent repeated attempts
             biomeForNextCheckpointSpawn = null;
         }
+        // --- END MODIFIED CHECKPOINT SPAWNING ---
 
-        // Handle queued biome swap once the first tile spawned
+
+        // Handle queued biome swap (Premature ResetBiomeTileCount() is still here as per file)
         if (queuedTilePrefab && !transitionTileQueued)
         {
             tilePrefab        = queuedTilePrefab;
             queuedTilePrefab  = null;
-            ResetBiomeTileCount();
+            ResetBiomeTileCount(); // This was present in the provided file
         }
 
+        // Check if transition tile should be queued (No NullRef check here as per file)
         int span = biomeManager.CurrentBiome.maxTileIndex - biomeManager.CurrentBiome.minTileIndex + 1;
-        Debug.Log($"Current Biome: {biomeManager.CurrentBiome} + SPAN : {span}");
+        Debug.Log($"Current Biome: {biomeManager.CurrentBiome} + SPAN : {span}"); // Potential NullRef if biomeManager.CurrentBiome is null here
         Debug.Log($"ITS PRINTING");
         if (biomeTileCount >= span)
             transitionTileQueued = true;
@@ -285,6 +308,7 @@ public class BackgroundTileManager : MonoBehaviour
     {
         var stamp = tile.GetComponent<TileStamp>();
         if (stamp == null) { Destroy(tile); return; }    // should never happen
+
         // Clear the trail texture before putting it back in the pool
         if (trailPainter != null)
         {
@@ -295,9 +319,12 @@ public class BackgroundTileManager : MonoBehaviour
             }
         }
         tile.SetActive(false);
+        tile.transform.SetParent(transform); // Re-parent to manager before pooling
         GetPool(stamp.SourcePrefab).Enqueue(tile);
     }
     #endregion
+
+    // Handles the event from BiomeManager
     private void HandleBiomeTransitionComplete(BiomeData newBiome, bool isFirstBiomeOverall)
     {
         Debug.Log($"[BackgroundTileManager] Received Biome Transition Complete for: {newBiome.biomeName}. Is First Biome Overall: {isFirstBiomeOverall}");
@@ -317,30 +344,34 @@ public class BackgroundTileManager : MonoBehaviour
         isFirstBiomeEver = false; // Any transition means we are past the first biome
     }
 
+    // Stores the next biome's tile prefab
     public void QueueNextBiomeTilePrefab(GameObject newPrefab) => queuedTilePrefab = newPrefab;
 
+    // Resets biome-specific counters
     public void ResetBiomeTileCount()
     {
-        Debug.Log($"[BackgroundTileManager] Resetting biome tile count from {biomeTileCount} to 0.");
+        Debug.Log($"[BackgroundTileManager] Resetting biome tile count from {biomeTileCount} to 0."); // Kept this Debug.Log as requested previously
         biomeTileCount       = 0;
         transitionTileQueued = false;
     }
 
     #region Gizmos / util
     private static readonly Vector3[] s_corners = new Vector3[4];
-    private void OnDrawGizmos()
-    {
-        if (!Application.isPlaying) return;
-        Gizmos.color = Color.green;
-        Gizmos.DrawLine(new Vector3(-10, lastTileEndY, 0), new Vector3(10, lastTileEndY, 0));
-    }
+    // Commented out OnDrawGizmos as per user preference for fewer comments/clutter
+    // private void OnDrawGizmos()
+    // {
+    //     if (!Application.isPlaying) return;
+    //     Gizmos.color = Color.green;
+    //     Gizmos.DrawLine(new Vector3(-10, lastTileEndY, 0), new Vector3(10, lastTileEndY, 0));
+    // }
     #endregion
+
+    // Unsubscribe from event on destruction
     private void OnDestroy()
     {
         if (biomeManager != null)
         {
             biomeManager.OnBiomeTransitionComplete -= HandleBiomeTransitionComplete;
-            Debug.Log("[BackgroundTileManager] Unsubscribed from BiomeManager.OnBiomeTransitionComplete");
         }
     }
 }

@@ -3,6 +3,12 @@ using UnityEngine;
 [RequireComponent(typeof(Collider2D))] // Ensure there's a collider
 public class Checkpoint : MonoBehaviour
 {
+    // --- Added Section ---
+    [Header("Positioning")]
+    [Tooltip("Vertical offset relative to the bottom edge of the parent tile.")]
+    [SerializeField] private float relativeYOffset = 0f; // Inspector field for Y offset
+    // --- End Added Section ---
+
     private bool triggered = false;
     private Collider2D _collider;
 
@@ -47,5 +53,13 @@ public class Checkpoint : MonoBehaviour
         }
     }
 
-    // The ResetTrigger method has been completely removed as per the previous instructions.
+    // --- Added Method ---
+    // Getter for the offset needed by BackgroundTileManager
+    public float GetRelativeYOffset()
+    {
+        return relativeYOffset;
+    }
+    // --- End Added Method ---
+
+    // The ResetTrigger method was already removed in the provided version
 }
