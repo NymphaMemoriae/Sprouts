@@ -29,6 +29,10 @@ public class BiomeData : ScriptableObject
     public List<GameObject> startingClusters;
     public List<GameObject> middleClusters;
     public List<GameObject> endingClusters;
+    
+    [Header("Special First Tile")]
+    [Tooltip("Optional: If assigned, this prefab will be used for the very first tile of this biome and will NOT be recycled. The checkpoint will be its child.")]
+    public GameObject firstTilePrefab = null; // Prefab for the unique, non-recycled first tile
 
     [Header("Difficulty Settings")]
     [Range(0.5f, 2f)]

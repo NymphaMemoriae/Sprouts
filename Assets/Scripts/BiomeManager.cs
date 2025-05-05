@@ -88,7 +88,7 @@ public class BiomeManager : MonoBehaviour
         {
             // ✅ Queue new prefab without replacing visible ones
             backgroundTileManager.QueueNextBiomeTilePrefab(biome.tilePrefab);
-            // backgroundTileManager.ResetBiomeTileCount();
+            
         }
 
         if (obstacleSpawner != null)

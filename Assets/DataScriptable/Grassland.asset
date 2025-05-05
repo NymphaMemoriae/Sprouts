@@ -26,5 +26,6 @@ MonoBehaviour:
   - {fileID: 4355422624127572823, guid: a23cf065d55d88a469f7257829673187, type: 3}
   endingClusters:
   - {fileID: 4355422624127572823, guid: a23cf065d55d88a469f7257829673187, type: 3}
+  firstTilePrefab: {fileID: 4015334938415637551, guid: 5622f39b3e762a842987bba1062606e9, type: 3}
   obstacleSpawnRateMultiplier: 1
   description: 
