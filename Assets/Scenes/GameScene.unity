@@ -9742,6 +9742,8 @@ MonoBehaviour:
   decelerationRate: 0
   horizontalSpeed: 4
   rotationSmoothTime: 0.2
+  screenEdgeMinX: -2
+  screenEdgeMaxX: 2
   plantHead: {fileID: 188981458}
   obstacleLayer:
     serializedVersion: 2
