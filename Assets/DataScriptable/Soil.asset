@@ -18,6 +18,7 @@ MonoBehaviour:
   backgroundMaterial: {fileID: 2100000, guid: d5dfc0b8c1fa6754496037678557dc6d, type: 2}
   tilePrefab: {fileID: 4015334938415637551, guid: 669e3d40b3490db43b12b31f263446c1, type: 3}
   transitionTilePrefab: {fileID: 0}
+  checkpointPrefab: {fileID: 0}
   biomeSideSegments: []
   startingClusters: []
   middleClusters:
@@ -42,6 +43,8 @@ MonoBehaviour:
   - {fileID: 5283057158756367813, guid: 782e2848671822d459a60c7792342857, type: 3}
   - {fileID: 5283057158756367813, guid: 57ef463074fb14c46b33b8c7a729a60e, type: 3}
   - {fileID: 5283057158756367813, guid: b8e42b5bbf7af0c4f81e3d7af71288de, type: 3}
+  - {fileID: 5283057158756367813, guid: 23870d23102a36f48ad349c11f48d7c3, type: 3}
   endingClusters: []
+  firstTilePrefab: {fileID: 0}
   obstacleSpawnRateMultiplier: 1
   description: 
