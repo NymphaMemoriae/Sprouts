@@ -6,6 +6,10 @@ public class PlantController : MonoBehaviour
     [Header("Movement Settings")]
     [Tooltip("Speed when growth begins or resets")]
     [SerializeField] private float initialGrowthSpeed = 2f;
+    public float GetInitialGrowthSpeed()
+    {
+        return initialGrowthSpeed;
+    }
 
     [Tooltip("Maximum vertical speed the plant can reach")]
     [SerializeField] private float maxGrowthSpeed = 7f;

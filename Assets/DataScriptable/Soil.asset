@@ -44,6 +44,7 @@ MonoBehaviour:
   - {fileID: 5283057158756367813, guid: 57ef463074fb14c46b33b8c7a729a60e, type: 3}
   - {fileID: 5283057158756367813, guid: b8e42b5bbf7af0c4f81e3d7af71288de, type: 3}
   - {fileID: 5283057158756367813, guid: 23870d23102a36f48ad349c11f48d7c3, type: 3}
+  - {fileID: 5283057158756367813, guid: c39c69f3f7f4dac47ba748267558224e, type: 3}
   endingClusters: []
   firstTilePrefab: {fileID: 0}
   obstacleSpawnRateMultiplier: 1

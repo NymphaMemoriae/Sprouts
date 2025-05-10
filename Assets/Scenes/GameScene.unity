@@ -7725,6 +7725,9 @@ MonoBehaviour:
   verticalOffset: 0
   smoothTime: 0.1
   recenterDelay: 1
+  stagnationTimeThreshold: 1.5
+  heightStagnationTolerance: 0.5
+  plantOffScreenGameOverDelay: 0.5
 --- !u!1 &794263683
 GameObject:
   m_ObjectHideFlags: 0

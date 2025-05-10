@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour
     [Header("References (Assigned Dynamically)")]
     public PlantController plantController;
     public PlantLife plantLife;
+    public CameraController cameraController;
 
     public event Action<GameState> OnGameStateChanged;
 
@@ -79,6 +80,11 @@ public class GameManager : MonoBehaviour
             plantController = FindObjectOfType<PlantController>(); // Around Line 64
             plantLife = FindObjectOfType<PlantLife>(); 
 
+            if (cameraController == null) // Try to find it if not assigned
+            {
+                cameraController = FindObjectOfType<CameraController>();
+            }
+
 
             if (plantController == null) { Debug.LogError("[GameManager] OnSceneLoaded: Could not find PlantController in GameScene!"); }
             else
@@ -102,6 +108,15 @@ public class GameManager : MonoBehaviour
              {
                  plantLife.ResetLives();
              }
+             if (cameraController != null)
+            {
+                Debug.Log("[GameManager] GameScene loaded, resetting CameraController state.");
+                cameraController.ResetCameraPushState();
+            }
+            else
+            {
+                Debug.LogWarning("[GameManager] CameraController not found in GameScene to reset its state.");
+            }
         }
          else if (scene.name == "MainMenu") // Reset checkpoint when going back to MainMenu
         {
@@ -114,6 +129,7 @@ public class GameManager : MonoBehaviour
         {
             plantController = null;
             plantLife = null;
+            cameraController = null; 
         }
     }
 
