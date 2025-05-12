@@ -7728,6 +7728,7 @@ MonoBehaviour:
   stagnationTimeThreshold: 1.5
   heightStagnationTolerance: 0.5
   plantOffScreenGameOverDelay: 0.5
+  cameraPushLerpFactor: 2
 --- !u!1 &794263683
 GameObject:
   m_ObjectHideFlags: 0

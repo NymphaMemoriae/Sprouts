@@ -27,6 +27,10 @@ public class CameraController : MonoBehaviour
     private float highestYPosition = 0f;
     private bool isRecenteringScheduled = false;
     private Camera mainCamera; 
+    [Header("Camera Lerp Settings")]
+    [SerializeField] private float cameraPushLerpFactor = 5f; // Adjust for smoother/sharper lerp
+    private float currentActualPushSpeed = 0f;
+    private float targetCameraPushSpeed = 0f;
 
     
     private void Start()
@@ -99,7 +103,12 @@ private void LateUpdate()
             if (stagnationTimer >= stagnationTimeThreshold)
             {
                 Debug.Log("[CameraController] Stagnation detected! Camera will start pushing.");
-                currentPushState = CameraPushState.PushingPlayer;
+                if (currentPushState == CameraPushState.Normal) // Ensure we are coming from Normal
+                {
+                    currentPushState = CameraPushState.PushingPlayer; // State changes
+                    targetCameraPushSpeed = plantController.GetInitialGrowthSpeed(); // Set target for lerp
+                    // currentActualPushSpeed will lerp towards this in HandlePushingPlayerCameraMovement
+                }
                 stagnationTimer = 0f; 
                 if(isRecenteringScheduled) { // Cancel any pending recenter
                     StopCoroutine(RecenterAfterDelay());
@@ -116,7 +125,13 @@ private void LateUpdate()
             if (plantController.DisplayHeight > lastPlantHeightForStagnation + heightStagnationTolerance)
             {
                 Debug.Log("[CameraController] Plant has resumed significant upward movement. Reverting to Normal state.");
-                currentPushState = CameraPushState.Normal;
+                if (currentPushState != CameraPushState.Normal) // Only if we were actually pushing or in game over sequence
+                {
+                    currentPushState = CameraPushState.Normal; // State changes
+                    targetCameraPushSpeed = 0f; // Set target for lerp to 0 (camera will slow down)
+                                                // Prime SmoothDamp's velocity for a smoother transition to normal follow
+                    velocity.y = currentActualPushSpeed;
+                }
                 stagnationTimer = 0f;     // Reset stagnation timer to prevent immediate re-stagnation
                 plantOffScreenTimer = 0f; // Reset off-screen timer as it's no longer relevant
                 lastPlantHeightForStagnation = plantController.DisplayHeight; // Update height baseline to current height
@@ -164,6 +179,9 @@ private void LateUpdate()
         currentPushState = CameraPushState.Normal;
         stagnationTimer = 0f;
         plantOffScreenTimer = 0f;
+         currentActualPushSpeed = 0f;
+        targetCameraPushSpeed = 0f; // Ensure target is reset for Normal state
+        velocity = Vector3.zero;    // Reset SmoothDamp's velocity for a clean start
         if (plantController != null && plantController.PlantHead != null) // Added null check for PlantHead
         {
             lastPlantHeightForStagnation = plantController.DisplayHeight;
@@ -219,8 +237,8 @@ private void LateUpdate()
 
     private void HandlePushingPlayerCameraMovement()
     {
-        float pushSpeed = plantController.GetInitialGrowthSpeed(); // Assuming PlantController.GetInitialGrowthSpeed() exists and is public
-        transform.Translate(Vector3.up * pushSpeed * Time.deltaTime, Space.World);
+        currentActualPushSpeed = Mathf.Lerp(currentActualPushSpeed, targetCameraPushSpeed, Time.deltaTime * cameraPushLerpFactor);
+        transform.Translate(Vector3.up * currentActualPushSpeed * Time.deltaTime, Space.World);
     }
 
     private bool IsPlantVisibleDuringPush()
