@@ -1,5 +1,5 @@
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.UI; // Keep this if you use standard UI elements, TMPro usually handles its own.
 using TMPro;
 using UnityEngine.SceneManagement; // Required for loading scenes
 
@@ -33,40 +33,32 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject speedBuffIndicator;
     [SerializeField] private GameObject extraLifeIndicator;
 
-    // References ideally assigned by GameManager or via events
-    // Keeping direct references for now if needed for HUD updates
     private PlantController plantController;
-    private PlantLife plantLife; // Only needed if directly accessing lives here
+    private PlantLife plantLife; 
 
-    // Cached HUD values
     private float lastHeight = -999f;
     private float lastVelocity = -999f;
     private float lastScore = -999f;
 
     private void Start()
     {
-        // Attempt to get references from GameManager if not assigned
         if (GameManager.Instance != null)
         {
             plantController = GameManager.Instance.plantController;
-            plantLife = GameManager.Instance.plantLife; // Get plantLife if needed
+            plantLife = GameManager.Instance.plantLife; 
         }
         else
         {
              Debug.LogError("UIManager Start: GameManager.Instance is null!");
-             // Fallback find if necessary, though GameManager should provide them
              plantController = FindAnyObjectByType<PlantController>();
              plantLife = FindAnyObjectByType<PlantLife>();
         }
 
-
-        // Add listeners with null checks
         if(restartButton) restartButton.onClick.AddListener(OnRestartButtonClicked);
         if(mainMenuButton) mainMenuButton.onClick.AddListener(OnMainMenuButtonClicked);
         if(resumeButton) resumeButton.onClick.AddListener(OnResumeButtonClicked);
         if(quitButton) quitButton.onClick.AddListener(OnQuitButtonClicked);
 
-        // Crucial: Add listener for the gameplay pause button
         if (pauseButton != null)
         {
             pauseButton.onClick.AddListener(OnPauseButtonClicked);
@@ -76,10 +68,6 @@ public class UIManager : MonoBehaviour
             Debug.LogError("UIManager: Pause Button reference is NOT assigned in the Inspector!");
         }
 
-        // Subscribe to game state changes
-         // Moved subscription to OnEnable for robustness
-
-        // Set initial UI state based on GameManager's state when scene loads
         if (GameManager.Instance != null)
         {
             HandleGameStateChanged(GameManager.Instance.CurrentGameState);
@@ -88,13 +76,10 @@ public class UIManager : MonoBehaviour
 
     private void OnEnable()
     {
-        // Subscribe to game state changes when the UI becomes active
         if (GameManager.Instance != null)
         {
             GameManager.Instance.OnGameStateChanged += HandleGameStateChanged;
-            // Ensure UI reflects current state immediately on enable
             HandleGameStateChanged(GameManager.Instance.CurrentGameState);
-             // Refresh references in case they were lost/reloaded
              plantController = GameManager.Instance.plantController;
              plantLife = GameManager.Instance.plantLife;
         }
@@ -106,7 +91,6 @@ public class UIManager : MonoBehaviour
 
     private void OnDisable()
     {
-        // Unsubscribe when the UI is disabled or destroyed
         if (GameManager.Instance != null)
         {
             GameManager.Instance.OnGameStateChanged -= HandleGameStateChanged;
@@ -122,21 +106,79 @@ public class UIManager : MonoBehaviour
         // Update Game Over specific text only when that panel is active
         if (newState == GameState.GameOver)
         {
-             // Refresh controller reference in case it changed
-             if (plantController == null && GameManager.Instance != null) plantController = GameManager.Instance.plantController;
+            // Attempt to refresh plantController reference if it's null
+            if (plantController == null && GameManager.Instance != null)
+            {
+                plantController = GameManager.Instance.plantController;
+            }
 
-             if(plantController != null)
-             {
-                 if(finalScoreText) finalScoreText.text = $"Final Height: {plantController.DisplayHeight:F1}m";
-             }
-             // Add high score display logic here
-             if(highScoreText) highScoreText.text = $"High Score: {LoadHighScore():F1}m"; // Example
+            int currentFinalScoreInt = 0;
+
+            if (plantController != null)
+            {
+                // Use CurrentHeight for score consistency with HUD, and convert to int
+                currentFinalScoreInt = Mathf.FloorToInt(plantController.CurrentHeight);
+
+                if (finalScoreText != null)
+                {
+                    finalScoreText.text = $"{currentFinalScoreInt}"; // Display only the integer value
+                }
+                else
+                {
+                    Debug.LogError("UIManager: finalScoreText is not assigned!");
+                }
+
+                // Handle High Score saving and display
+                if (PlayerPrefsManager.Instance != null)
+                {
+                    float savedHighScoreFloat = PlayerPrefsManager.Instance.LoadHighScore();
+                    int savedHighScoreInt = Mathf.FloorToInt(savedHighScoreFloat);
+
+                    if (currentFinalScoreInt > savedHighScoreInt)
+                    {
+                        PlayerPrefsManager.Instance.SaveHighScore(plantController.CurrentHeight); // Save the raw float value for precision
+                        // Update displayed high score to the new score immediately
+                        if (highScoreText != null)
+                        {
+                            highScoreText.text = $"{currentFinalScoreInt}"; // Display only the integer value
+                        }
+                    }
+                    else
+                    {
+                        // Display existing high score
+                        if (highScoreText != null)
+                        {
+                            highScoreText.text = $"{savedHighScoreInt}"; // Display only the integer value
+                        }
+                    }
+                }
+                else
+                {
+                    Debug.LogError("UIManager: PlayerPrefsManager.Instance is null. Cannot save or load high score.");
+                    if (highScoreText != null) highScoreText.text = "ERR"; // Error placeholder
+                }
+            }
+            else
+            {
+                Debug.LogError("UIManager (GameOver): plantController is null. Cannot display final score or update high score.");
+                if (finalScoreText != null) finalScoreText.text = "0"; // Default/Error placeholder for final score
+                if (highScoreText != null)
+                {
+                    // Try to display existing high score even if plantController is null
+                    if (PlayerPrefsManager.Instance != null)
+                    {
+                        highScoreText.text = $"{Mathf.FloorToInt(PlayerPrefsManager.Instance.LoadHighScore())}"; // Display only integer
+                    }
+                    else
+                    {
+                        highScoreText.text = "ERR"; // Error placeholder
+                    }
+                }
+            }
         }
-    }
+    } // This closing brace for HandleGameStateChanged was likely the issue if it was misplaced or duplicated.
 
     // --- HUD Update Methods ---
-    // These methods are public if other scripts need to trigger updates,
-    // but currently called by internal Update loop. Consider events.
     public void UpdateScore(float score)
     {
         if (scoreText != null && !Mathf.Approximately(score, lastScore))
@@ -164,7 +206,6 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    // Called externally or via events ideally
     public void UpdateBuffIndicators(bool hasGhostBuff, bool hasSpeedBuff, bool hasExtraLife)
     {
          if(ghostBuffIndicator) ghostBuffIndicator.SetActive(hasGhostBuff);
@@ -174,11 +215,10 @@ public class UIManager : MonoBehaviour
 
     // --- Button Click Handlers ---
     private void OnRestartButtonClicked() => GameManager.Instance?.RestartGame();
-    private void OnMainMenuButtonClicked() => GameManager.Instance?.ReturnToMainMenu(); // GameManager handles scene load
+    private void OnMainMenuButtonClicked() => GameManager.Instance?.ReturnToMainMenu(); 
     private void OnResumeButtonClicked() => GameManager.Instance?.ResumeGame();
     private void OnQuitButtonClicked() => GameManager.Instance?.QuitGame();
 
-    // Handler for the gameplay pause button
     private void OnPauseButtonClicked()
     {
         if (GameManager.Instance != null)
@@ -191,14 +231,10 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    // --- Update for Polling HUD values ---
-    // Consider replacing this with event-driven updates for better performance
     private void Update()
     {
-        // Only update HUD if playing and controller is valid
         if (GameManager.Instance != null && GameManager.Instance.CurrentGameState == GameState.Playing)
         {
-             // Ensure controller reference is up-to-date
              if (plantController == null)
              {
                 plantController = GameManager.Instance?.plantController;
@@ -206,17 +242,13 @@ public class UIManager : MonoBehaviour
 
              if (plantController != null)
              {
-                 // Use cached values to avoid unnecessary updates
                  UpdateHeight(plantController.DisplayHeight);
-                 UpdateScore(plantController.CurrentHeight); // Assuming score is based on height
+                 UpdateScore(plantController.CurrentHeight); 
                  UpdateVelocity(plantController.CurrentVelocity);
              }
         }
     }
 
-     // Example High Score Logic - Better placed in GameManager or separate data manager
-    private float LoadHighScore()
-    {
-        return PlayerPrefs.GetFloat("HighScore", 0f); // Replace with your save system if needed
-    }
-}
+    // The local LoadHighScore() method has been removed as PlayerPrefsManager.Instance.LoadHighScore() should be used.
+
+} // This is the final closing brace for the UIManager class.
