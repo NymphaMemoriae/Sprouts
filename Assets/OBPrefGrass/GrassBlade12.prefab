@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 576282696164446694}
   - component: {fileID: -3138683923952295416}
   m_Layer: 9
-  m_Name: GrassBlade11
+  m_Name: GrassBlade12
   m_TagString: Obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -101,7 +101,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -3733245242205200250, guid: 5bb812ddbf0c3e349b164bef217503a0, type: 3}
+  m_Sprite: {fileID: -4448898163949792450, guid: b16b2134c790ff74d8aca5db74b528c8, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -150,7 +150,7 @@ PolygonCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1.63, y: 3.49}
+    oldSize: {x: 1.9, y: 3.84}
     newSize: {x: 1.25, y: 5.12}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
