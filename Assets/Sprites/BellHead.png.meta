@@ -113,7 +113,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: FigHead_0
+      name: BellHead_0
       rect:
         serializedVersion: 2
         x: 49
@@ -148,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      FigHead_0: 8302960601557194349
+      BellHead_0: 8302960601557194349
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

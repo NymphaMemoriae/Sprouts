@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7747e6688a3ab5747b02a04a7fb8df31, type: 3}
-  m_Name: Skin1 2
+  m_Name: Skin2
   m_EditorClassIdentifier: 
   skinName: Skin2
   plantHeadSprite: {fileID: 8302960601557194349, guid: dabca855643f584438479c4d19caf087, type: 3}
-  plantHeadAnimatorController: {fileID: 0}
-  startingLives: 3
+  plantHeadAnimatorController: {fileID: 9100000, guid: 8453ca7817b7bb64aacda8ffb3f5b410, type: 2}
+  startingLives: 4
   maxVelocity: 8
   stemMaterial: {fileID: 2100000, guid: ba6987cd09ebe134e88fe4c46af631e4, type: 2}
