@@ -57,6 +57,14 @@ public class PlantLife : MonoBehaviour
         }
     }
 
+    // Add this public method to PlantLife.cs
+    public void SetStartingLives(int newMaxLives)
+    {
+        maxLives = newMaxLives; // Assuming 'maxLives' is the field storing the maximum lives
+        ResetLives(); // This will set CurrentLives to the new maxLives and invoke OnLivesChanged
+        Debug.Log($"[PlantLife] Max lives set to: {maxLives}");
+    }
+
     public void HandleCollision(DamageObstacle obstacle)
     {
         if (isInvulnerable) return;

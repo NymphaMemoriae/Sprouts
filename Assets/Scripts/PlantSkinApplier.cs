@@ -5,7 +5,7 @@ public class PlantSkinApplier : MonoBehaviour
 {
     [Header("Component References (Assign in Inspector)")]
     [Tooltip("SpriteRenderer or Image component for the plant head.")]
-    public Behaviour plantHeadVisualComponent; // Can be SpriteRenderer or Image
+    public Image plantHeadVisualComponent; // Can be SpriteRenderer or Image
     public Animator plantHeadAnimator;
     public PlantLife plantLife;
     public PlantController plantController;
@@ -17,7 +17,7 @@ public class PlantSkinApplier : MonoBehaviour
     /// Sets the selected plant skin type name to PlayerPrefs and applies it.
     /// Call this from your UI buttons in the Main Menu.
     /// </summary>
-    /// <param name="plantTypeName">The name of the plant skin (should match a PlantSkinData ScriptableObject filename in Resources/PlantSkins/).</param>
+
     public void SetPlantType(string plantTypeName)
     {
         PlayerPrefs.SetString(SelectedSkinPlayerPrefsKey, plantTypeName);
@@ -49,7 +49,6 @@ public class PlantSkinApplier : MonoBehaviour
     /// <summary>
     /// Loads the specified PlantSkinData from Resources and applies its properties.
     /// </summary>
-    /// <param name="skinName">The filename of the PlantSkinData asset (without .asset extension).</param>
     public void LoadAndApplySkin(string skinName)
     {
         string resourcePath = "PlantSkins/" + skinName;
@@ -61,14 +60,9 @@ public class PlantSkinApplier : MonoBehaviour
         // If component references are null, NullReferenceExceptions will also occur.
 
         // Apply Plant Head Visuals
-        if (plantHeadVisualComponent is SpriteRenderer sr)
-        {
-            sr.sprite = skinData.plantHeadSprite;
-        }
-        else if (plantHeadVisualComponent is Image img) // For UI-based previews
-        {
-            img.sprite = skinData.plantHeadSprite;
-        }
+       
+        plantHeadVisualComponent.sprite = skinData.plantHeadSprite;
+        
         plantHeadAnimator.runtimeAnimatorController = skinData.plantHeadAnimatorController;
 
         // Apply Gameplay Stats

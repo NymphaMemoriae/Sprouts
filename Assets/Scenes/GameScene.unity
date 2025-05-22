@@ -10131,6 +10131,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1468978191}
+  - component: {fileID: 1468978193}
   - component: {fileID: 1468978192}
   m_Layer: 0
   m_Name: Plant
@@ -10185,6 +10186,23 @@ MonoBehaviour:
   heightOffset: -500
   sideBumpRecoveryTime: 0.1
   plantLife: {fileID: 1370011431}
+--- !u!114 &1468978193
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1468978189}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 82426ce5a13908a4a9a521b958c37261, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  plantHeadVisualComponent: {fileID: 188981466}
+  plantHeadAnimator: {fileID: 188981470}
+  plantLife: {fileID: 1370011431}
+  plantController: {fileID: 1468978192}
+  proceduralStem: {fileID: 951681111}
 --- !u!1 &1490208202
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI; 
 
 [CreateAssetMenu(fileName = "NewPlantSkin", menuName = "Plant Game/Plant Skin Data")]
 public class PlantSkinData : ScriptableObject

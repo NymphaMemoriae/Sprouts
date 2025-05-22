@@ -179,6 +179,27 @@ public class ProceduralStem : MonoBehaviour
         // Rebuild mesh every frame (you could optimize by only rebuilding when a segment is added/updated)
         UpdateMesh();
     }
+    
+    // Add this public method to ProceduralStem.cs
+    public void SetStemMaterial(Material newMaterial)
+    {
+        stemMaterial = newMaterial; // Assuming 'stemMaterial' is your public field for the stem's material
+        if (meshRenderer != null) // meshRenderer is private, ensure it's assigned in Start/Awake
+        {
+            meshRenderer.material = stemMaterial;
+
+            // Re-apply texture wrap mode if needed, assuming newMaterial might have a different texture
+            if (useTextureClamp && stemMaterial != null && stemMaterial.mainTexture != null)
+            {
+                stemMaterial.mainTexture.wrapMode = TextureWrapMode.Clamp;
+            }
+            else if (stemMaterial != null && stemMaterial.mainTexture != null) // Default to repeat if not clamp
+            {
+                stemMaterial.mainTexture.wrapMode = TextureWrapMode.Repeat;
+            }
+        }
+        Debug.Log($"[ProceduralStem] Stem material set to: {(newMaterial != null ? newMaterial.name : "null")}");
+    }
 
     private void UpdateMesh()
     {
@@ -232,7 +253,7 @@ public class ProceduralStem : MonoBehaviour
 
             // Apply slight overlap to prevent seams
             float overlapFactor = 1.0f;
-            if (i > 0 && i < count - 1) 
+            if (i > 0 && i < count - 1)
             {
                 // Extend vertices slightly to create overlap with adjacent segments
                 overlapFactor = 1.0f + segmentOverlap;
@@ -248,7 +269,7 @@ public class ProceduralStem : MonoBehaviour
             // Apply UV padding to avoid edge sampling artifacts
             float uMin = 0f + uvPadding;
             float uMax = horizontalTiling - uvPadding;
-            
+
             // Use stored UVs with padding applied
             uvs[i * 2] = new Vector2(uMin, fixedUVs[i * 2].y);
             uvs[i * 2 + 1] = new Vector2(uMax, fixedUVs[i * 2 + 1].y);

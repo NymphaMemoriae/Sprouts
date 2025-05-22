@@ -85,6 +85,13 @@ public class PlantController : MonoBehaviour
         }
     }
 
+    // Add this public method to PlantController.cs
+    public void SetMaxVelocity(float newMaxVelocity)
+    {
+        maxGrowthSpeed = newMaxVelocity; // Assuming 'maxGrowthSpeed' is your field for maximum vertical speed
+        Debug.Log($"[PlantController] Max growth speed set to: {maxGrowthSpeed}");
+    }
+
     public void SetGrowing(bool growing)
     {
         if (isGameOver) return;
