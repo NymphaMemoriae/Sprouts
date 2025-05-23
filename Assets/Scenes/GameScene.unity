@@ -10203,6 +10203,7 @@ MonoBehaviour:
   plantLife: {fileID: 1370011431}
   plantController: {fileID: 1468978192}
   proceduralStem: {fileID: 951681111}
+  leafSpawner: {fileID: 951681115}
 --- !u!1 &1490208202
 GameObject:
   m_ObjectHideFlags: 0

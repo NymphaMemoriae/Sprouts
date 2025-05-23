@@ -1,5 +1,5 @@
 using UnityEngine;
-using UnityEngine.UI; 
+using UnityEngine.UI;
 
 [CreateAssetMenu(fileName = "NewPlantSkin", menuName = "Plant Game/Plant Skin Data")]
 public class PlantSkinData : ScriptableObject
@@ -17,4 +17,7 @@ public class PlantSkinData : ScriptableObject
 
     [Header("Stem Visuals")]
     public Material stemMaterial;
+    
+    [Header("Leaf Visuals")] 
+    public GameObject leafPrefab;
 }

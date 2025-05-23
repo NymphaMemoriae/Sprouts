@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4620262994327131894}
   - component: {fileID: 8847356494394220924}
   m_Layer: 0
-  m_Name: Leaf
+  m_Name: Leaf 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -55,7 +55,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: d35cc864b43ce3e44b6ecca5a9f6a6ee, type: 2}
+  - {fileID: 2100000, guid: 5e072ebb9a9547a409c34dfe4ccefba4, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

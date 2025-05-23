@@ -24,7 +24,7 @@ MonoBehaviour:
   collisionEffectPrefab: {fileID: 0}
   effectDuration: 1
   changeColorOnCollision: 0
-  collisionColor: {r: 0.29559743, g: 0, b: 0, a: 1}
+  collisionColor: {r: 0.9547169, g: 0, b: 0, a: 1}
   collisionSound: {fileID: 0}
   volume: 0.7
   spawnWeight: 1

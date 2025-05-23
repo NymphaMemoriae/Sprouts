@@ -12,9 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7747e6688a3ab5747b02a04a7fb8df31, type: 3}
   m_Name: Skin3
   m_EditorClassIdentifier: 
-  skinID: 
-  plantHeadSprite: {fileID: 0}
+  skinName: Skin3
+  plantHeadSprite: {fileID: 8302960601557194349, guid: 5a4b05ba22f2bb64b9d58313860ce787, type: 3}
   plantHeadAnimatorController: {fileID: 9100000, guid: 2d5a177f933d05a499a2e86b374c7b49, type: 2}
-  stemMaterial: {fileID: 2100000, guid: 370408cdbcd27a84b96c47206b484921, type: 2}
   startingLives: 5
   maxVelocity: 10
+  stemMaterial: {fileID: 2100000, guid: 370408cdbcd27a84b96c47206b484921, type: 2}
+  leafPrefab: {fileID: 965134700272625176, guid: 075aef402138cc64eaede15c57dc05b3, type: 3}

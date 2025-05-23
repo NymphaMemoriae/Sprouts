@@ -18,3 +18,4 @@ MonoBehaviour:
   startingLives: 3
   maxVelocity: 6
   stemMaterial: {fileID: 2100000, guid: 108f8d3f2cb1534468e0a0c6bdff8b25, type: 2}
+  leafPrefab: {fileID: 965134700272625176, guid: 4db9e1e0f095e3340b8cd6f38649bdbb, type: 3}

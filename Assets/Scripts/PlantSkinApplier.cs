@@ -10,6 +10,7 @@ public class PlantSkinApplier : MonoBehaviour
     public PlantLife plantLife;
     public PlantController plantController;
     public ProceduralStem proceduralStem;
+    public LeafSpawner leafSpawner;
 
     private const string SelectedSkinPlayerPrefsKey = "CurrentPlantType"; // Using your specified key name
 
@@ -71,6 +72,8 @@ public class PlantSkinApplier : MonoBehaviour
 
         // Apply Stem Visuals
         proceduralStem.SetStemMaterial(skinData.stemMaterial); // Method to be added to ProceduralStem
+        
+        leafSpawner.leafPrefab = skinData.leafPrefab; // <-- Apply the new leaf prefab
 
         Debug.Log($"[PlantSkinApplier] Applied skin: {skinName}");
     }
