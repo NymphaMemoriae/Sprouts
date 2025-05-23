@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skinName: Skin3
   plantHeadSprite: {fileID: 8302960601557194349, guid: 5a4b05ba22f2bb64b9d58313860ce787, type: 3}
-  plantHeadAnimatorController: {fileID: 9100000, guid: 2d5a177f933d05a499a2e86b374c7b49, type: 2}
+  plantHeadAnimatorController: {fileID: 9100000, guid: eecdfebfa114dae4d96458a75a3fbb1c, type: 2}
   startingLives: 5
   maxVelocity: 10
   stemMaterial: {fileID: 2100000, guid: 370408cdbcd27a84b96c47206b484921, type: 2}

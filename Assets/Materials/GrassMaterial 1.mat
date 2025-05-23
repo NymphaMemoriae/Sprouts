@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-2358294682791780529
+--- !u!114 &-4640150044668104168
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}
@@ -20,40 +20,48 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: PlantTrailMaterial2
-  m_Shader: {fileID: -6465566751694194690, guid: e26ebbd67d8c06244b84cac49b36338b, type: 3}
+  m_Name: GrassMaterial 1
+  m_Shader: {fileID: -6465566751694194690, guid: e14fdb3c0b984844d91933607cc83b41, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
-  m_ValidKeywords:
-  - _ALPHATEST_ON
+  m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: 1999
-  stringTagMap:
-    RenderType: TransparentCutout
-  disabledShaderPasses:
-  - MOTIONVECTORS
-  - SHADOWCASTER
+  m_CustomRenderQueue: 1888
+  stringTagMap: {}
+  disabledShaderPasses: []
   m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - _A:
+        m_Texture: {fileID: 2800000, guid: 20b162d0e5b34c74d8d61bd17110fcc3, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _AlphaTex:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _Appearance:
-        m_Texture: {fileID: 2800000, guid: 5c1d001fdebe46448b610b1245851c5b, type: 3}
+    - _B:
+        m_Texture: {fileID: 2800000, guid: 50861f4330709434e8bc3d1461f7e358, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _Appearence:
-        m_Texture: {fileID: 2800000, guid: 0db3d82f53f687042948f64377bec69e, type: 3}
+    - _CleanTexture:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DirtTexture:
+        m_Texture: {fileID: 2800000, guid: 8a19799bb6b816045b5b3be8584e56cc, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DirtTrailTexture:
+        m_Texture: {fileID: 2800000, guid: d66aa88b0c0af8d4485f68c39589f212, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 50861f4330709434e8bc3d1461f7e358, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MaskTex:
@@ -61,6 +69,10 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _NormalMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _T:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -78,30 +90,15 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - PixelSnap: 0
-    - _AlphaClip: 1
-    - _AlphaToMask: 1
-    - _Blend: 0
-    - _BlurIntensity: 2
-    - _CastShadows: 0
-    - _Cull: 1
-    - _DstBlend: 0
     - _EnableExternalAlpha: 0
     - _Offset: 0
     - _QueueControl: 1
-    - _QueueOffset: 6
-    - _Rotation: 0
-    - _SrcBlend: 1
-    - _Surface: 0
-    - _Transparency: 1
-    - _ZTest: 4
-    - _ZWrite: 1
-    - _ZWriteControl: 1
+    - _QueueOffset: 10
+    - _TrailStrenght: 0
+    - _ZWrite: 0
     m_Colors:
-    - _Color: {r: 0.46333528, g: 0.55345905, b: 0.18970756, a: 1}
-    - _Flip: {r: 1, g: 1, b: 1, a: 1}
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
-    - _StemColor: {r: 2.327571, g: 0.39963946, b: 0.6620802, a: 1}
     - _Tiling: {r: 1, g: 1, b: 0, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

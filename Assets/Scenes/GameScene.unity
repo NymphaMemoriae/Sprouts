@@ -8909,7 +8909,7 @@ MonoBehaviour:
   groundAnchor: {fileID: 586876028}
   plantHead: {fileID: 188981458}
   topOffset: -0.05
-  stemWidth: 0.9
+  stemWidth: 0.8
   framesPerSegment: 30
   minMovementThreshold: 0.05
   useSegmentDelay: 1

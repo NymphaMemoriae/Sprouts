@@ -113,7 +113,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: SkyTile1_0
+      name: GrassTile1_0
       rect:
         serializedVersion: 2
         x: 0
@@ -148,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      SkyTile1_0: -8945130648072314925
+      GrassTile1_0: -8945130648072314925
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
