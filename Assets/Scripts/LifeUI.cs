@@ -7,12 +7,14 @@ public class LifeUI : MonoBehaviour
     [Header("Settings")]
     [SerializeField] private Sprite fullHeartSprite;
     [SerializeField] private Sprite emptyHeartSprite;
-    [SerializeField] private int standardLives = 3;
+    [SerializeField] private Sprite extraHeartSprite;
+
 
     [Header("References")]
     [SerializeField] private PlantLife plantLife;
 
     private List<Image> heartImages = new();
+    private int initialMaxLives; 
 
     private void Awake()
     {
@@ -23,7 +25,7 @@ public class LifeUI : MonoBehaviour
                 heartImages.Add(img);
         }
 
-        heartImages.Sort((a, b) => string.Compare(a.name, b.name));
+        heartImages.Sort((a, b) => a.transform.GetSiblingIndex().CompareTo(b.transform.GetSiblingIndex()));
     }
 
     private void Start()
@@ -31,14 +33,10 @@ public class LifeUI : MonoBehaviour
         if (plantLife != null)
         {
             plantLife.OnLivesChanged += UpdateHeartsUI;
+            initialMaxLives = plantLife.CurrentLives;
             UpdateHeartsUI(plantLife.CurrentLives); // Initial setup
         }
 
-        // Hide all extra hearts on start
-        for (int i = standardLives; i < heartImages.Count; i++)
-        {
-            heartImages[i].gameObject.SetActive(false);
-        }
     }
 
     private void OnDestroy()
@@ -49,20 +47,20 @@ public class LifeUI : MonoBehaviour
         }
     }
 
-    private void UpdateHeartsUI(int lives)
+   private void UpdateHeartsUI(int lives)
     {
         for (int i = 0; i < heartImages.Count; i++)
         {
-            if (i < standardLives)
+            // This heart is within the skin's original maximum life count
+            if (i < initialMaxLives) 
             {
-                // Standard lives: swap sprites
                 heartImages[i].sprite = (i < lives) ? fullHeartSprite : emptyHeartSprite;
-                heartImages[i].enabled = true;
                 heartImages[i].gameObject.SetActive(true);
             }
-            else
+            // This heart is an extra life collected in-game
+            else 
             {
-                // Extra lives: toggle entire object visibility
+                heartImages[i].sprite = extraHeartSprite;
                 heartImages[i].gameObject.SetActive(i < lives);
             }
         }
