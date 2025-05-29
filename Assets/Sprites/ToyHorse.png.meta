@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      ToyHorse_0: -1024561427836482582
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

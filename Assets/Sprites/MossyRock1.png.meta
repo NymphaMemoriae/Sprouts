@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      MossyRock1_0: 9106114664540799713
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      OBmossyrock_0: -1200198060928577155
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

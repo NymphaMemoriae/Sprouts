@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      BabyDino_0: -39153198924157677
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

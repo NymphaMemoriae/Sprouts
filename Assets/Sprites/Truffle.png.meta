@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Truffle_0: -7502080806742257152
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

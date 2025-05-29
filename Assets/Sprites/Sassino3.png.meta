@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Sassino3_0: 8159045186410886430
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

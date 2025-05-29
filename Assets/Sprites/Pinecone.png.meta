@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Pinecone_0: 8384142458865905078
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

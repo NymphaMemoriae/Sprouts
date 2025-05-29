@@ -222,7 +222,11 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Bruscolini_0: 8511611289922471326
+      Bruscolini_1: -5797904475981115413
+      Bruscolini_2: -8989265829759419542
+      Bruscolini_3: 1426941324764726101
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

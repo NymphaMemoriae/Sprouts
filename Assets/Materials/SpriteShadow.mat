@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: SpriteShadow
-  m_Shader: {fileID: -6465566751694194690, guid: 50ad699681de8c44a8cb49b1c4feba19, type: 3}
+  m_Shader: {fileID: -6465566751694194690, guid: 493551db9547b854abf7c5bbf72a4a04, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -47,6 +47,10 @@ Material:
         m_Texture: {fileID: 10300, guid: 0000000000000000f000000000000000, type: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _Sprite:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - unity_Lightmaps:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -64,6 +68,7 @@ Material:
     - _BlurAmount: 0.79
     - _BlurSpread: 0
     - _EnableExternalAlpha: 0
+    - _Float: 0
     - _GlowOpacity: 1
     - _GlowScale: 0.82
     - _Pulse: 5
@@ -72,6 +77,7 @@ Material:
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _GlowColor: {r: 513.932, g: 282.01617, b: 235.633, a: 0}
+    - _HDRColor: {r: 1, g: 1, b: 1, a: 0}
     - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      SpicePod_0: -1258430809447301816
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
