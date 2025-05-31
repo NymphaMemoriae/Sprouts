@@ -23,21 +23,41 @@ public class BiomeManager : MonoBehaviour
 
     void Start()
     {
-         if (plantController == null)
-        plantController = FindObjectOfType<PlantController>(); 
+        if (plantController == null)
+            plantController = FindObjectOfType<PlantController>();
 
         if (backgroundTileManager == null)
-            backgroundTileManager = FindObjectOfType<BackgroundTileManager>(); 
+            backgroundTileManager = FindObjectOfType<BackgroundTileManager>();
 
         if (obstacleSpawner == null)
-            obstacleSpawner = FindObjectOfType<ObstacleSpawner>(); 
-        if (defaultBiome != null)
+            obstacleSpawner = FindObjectOfType<ObstacleSpawner>();
+
+        BiomeData initialBiomeToSet = null;
+        // Check GameManager for a pre-selected starting biome
+        if (GameManager.SelectedStartBiomeForNextRun != null)
         {
-            SetCurrentBiome(defaultBiome);
+            initialBiomeToSet = GameManager.SelectedStartBiomeForNextRun;
+            Debug.Log($"[BiomeManager] Starting with pre-selected biome from GameManager: {initialBiomeToSet.biomeName}");
         }
-        else if (biomes.Count > 0)
+        else if (defaultBiome != null) // Fallback to default biome if no level selected
         {
-            SetCurrentBiome(biomes[0]);
+            initialBiomeToSet = defaultBiome;
+        }
+        else if (biomes.Count > 0) // Fallback to the first in the list if no default
+        {
+            initialBiomeToSet = biomes[0];
+        }
+
+        if (initialBiomeToSet != null)
+        {
+            // The plant's height is set by GameManager.OnSceneLoaded using GetRespawnPosition() *before*
+            // BiomeManager.Start() typically runs.
+            // So, when SetCurrentBiome is called, plantController.DisplayHeight should be appropriate.
+            SetCurrentBiome(initialBiomeToSet);
+        }
+        else
+        {
+            Debug.LogError("[BiomeManager] No biome could be determined to start with!");
         }
     }
 

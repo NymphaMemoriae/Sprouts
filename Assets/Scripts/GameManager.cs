@@ -15,7 +15,10 @@ public class GameManager : MonoBehaviour
     public event Action<GameState> OnGameStateChanged;
 
     public GameState CurrentGameState { get; private set; } = GameState.MainMenu;
-    public static Vector3? LastCheckpointPosition { get; private set; } = null;
+    private static Vector3? _lastCheckpointPosition = null; 
+    public static BiomeData SelectedStartBiomeForNextRun { get; private set; } = null;
+    private static float? _forcedInitialHeightForNextRun = null;
+    public const float TILE_VERTICAL_SIZE = 20f; // Define tile height
     public static Vector3 InitialSpawnPosition { get; private set; } = Vector3.zero; // Default, will be set
     private static bool _initialSpawnPositionSet = false;
 
@@ -118,9 +121,9 @@ public class GameManager : MonoBehaviour
                 Debug.LogWarning("[GameManager] CameraController not found in GameScene to reset its state.");
             }
         }
-         else if (scene.name == "MainMenu") // Reset checkpoint when going back to MainMenu
+         else if (scene.name == "MainMenu")
         {
-            ResetCheckpoint();
+            
             SetGameState(GameState.MainMenu); // Ensure state is MainMenu
             plantController = null;
             plantLife = null;
@@ -141,10 +144,22 @@ public class GameManager : MonoBehaviour
         #endif
     }
 
-    public void StartGame()
+    public void StartGame() // Often called from a generic "Start" button in MainMenu if no level is selected
     {
-        ResetCheckpoint(); // Ensure a fresh start from the beginning
+        // If SetNextStartingLevel(null) hasn't been explicitly called by a "Default Start" button
+        // (which would have cleared _lastCheckpointPosition already via SetNextStartingLevel),
+        // and no specific level was selected, then ensure the session is reset for a fresh default start.
+        if (SelectedStartBiomeForNextRun == null && !_forcedInitialHeightForNextRun.HasValue)
+        {
+            ResetSessionForNewGame(); // Ensures a clean slate if StartGame() is for a brand new default session
+        }
+        // If a level *was* selected by StartingBiomeSelection, SetNextStartingLevel already configured
+        // _forcedInitialHeightForNextRun and cleared _lastCheckpointPosition.
+        // If a "Default Start" button called SetNextStartingLevel(null), that also prepared the state.
+
         SetGameState(GameState.Playing);
+        // The actual loading of GameScene (which should happen after this if triggered by UI)
+        // will use GetRespawnPosition() in OnSceneLoaded to place the player.
     }
 
     public void PauseGame()
@@ -185,37 +200,73 @@ public class GameManager : MonoBehaviour
     public void ReturnToMainMenu()
     {
         Time.timeScale = 1f;
-        ResetCheckpoint(); // Reset checkpoint when quitting to menu
+        ResetSessionForNewGame(); // Use the new comprehensive reset method
         SetGameState(GameState.MainMenu);
         // Explicitly use UnityEngine.SceneManagement.SceneManager here
         UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenu");
     }
+    
+    public static void SetNextStartingLevel(BiomeData biome)
+    {
+        SelectedStartBiomeForNextRun = biome;
+        if (biome != null)
+        {
+            // Calculate the starting height based on the biome's minTileIndex.
+            _forcedInitialHeightForNextRun = biome.minTileIndex * TILE_VERTICAL_SIZE;
+            Debug.Log($"[GameManager] Next level set to: {biome.biomeName}. Calculated start height: {_forcedInitialHeightForNextRun.Value}");
+        }
+        else
+        {
+            _forcedInitialHeightForNextRun = null; // Standard start from InitialSpawnPosition
+            Debug.Log($"[GameManager] Next level set to default start (InitialSpawnPosition will be used).");
+        }
+        // Crucially, selecting a new level (or default start) overrides any previous in-game checkpoint for the *next* run.
+        _lastCheckpointPosition = null;
+    }
 
     public void QuitGame()
     {
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
-        #else
+#else
         Application.Quit();
-        #endif
+#endif
     }
     public static void SetCurrentCheckpointPosition(Vector3 position)
     {
-        LastCheckpointPosition = position;
-        Debug.Log($"[GameManager] Checkpoint set to: {position}");
+        _lastCheckpointPosition = position; // Use the private variable
+        // If an in-game checkpoint is hit, it means we are past any "selected level start" for the current run.
+        // These become irrelevant for the current session once an actual checkpoint is saved.
+        SelectedStartBiomeForNextRun = null;
+        _forcedInitialHeightForNextRun = null;
+        Debug.Log($"[GameManager] In-game checkpoint set to: {position}. Selected level start info cleared for this session.");
     }
 
-    // Add this method to get the correct respawn position
     public static Vector3 GetRespawnPosition()
     {
-        return LastCheckpointPosition ?? InitialSpawnPosition;
+        if (_lastCheckpointPosition.HasValue) // Prioritize actual checkpoints hit during gameplay
+        {
+            Debug.Log($"[GameManager] Using last in-game checkpoint: {_lastCheckpointPosition.Value}");
+            return _lastCheckpointPosition.Value;
+        }
+        if (_forcedInitialHeightForNextRun.HasValue) // Then, prioritize selected level start height
+        {
+            // Use the X and Z from InitialSpawnPosition, but Y from the forced height
+            Vector3 forcedStartPos = new Vector3(InitialSpawnPosition.x, _forcedInitialHeightForNextRun.Value, InitialSpawnPosition.z);
+            Debug.Log($"[GameManager] Using forced initial height for selected level: {forcedStartPos}");
+            return forcedStartPos;
+        }
+        Debug.Log($"[GameManager] Using initial spawn position: {InitialSpawnPosition}");
+        return InitialSpawnPosition; // Fallback to absolute initial spawn
     }
 
     // Add this method to reset the checkpoint state
-    public static void ResetCheckpoint()
+    public static void ResetSessionForNewGame()
     {
-        LastCheckpointPosition = null;
-        Debug.Log("[GameManager] Checkpoint reset.");
+        _lastCheckpointPosition = null;
+        SelectedStartBiomeForNextRun = null; // Clear selected level too
+        _forcedInitialHeightForNextRun = null;
+        Debug.Log("[GameManager] Session reset for new game (checkpoints and selected level choice cleared for next run).");
     }
 
     public void SetGameState(GameState newState)
