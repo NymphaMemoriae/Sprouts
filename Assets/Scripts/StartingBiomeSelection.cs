@@ -76,7 +76,15 @@ public class StartingBiomeSelection : MonoBehaviour
         {
             Time.timeScale = 1f; // Ensure time scale is normal
             GameManager.Instance.SetGameState(GameState.Playing); // Set state before loading
-            SceneManager.LoadScene(gameSceneName);
+            if (GameSceneLoader.Instance != null)
+            {
+                GameSceneLoader.Instance.LoadScene(gameSceneName); // Use the loader for fade
+            }
+            else
+            {
+                Debug.LogError("[StartingBiomeSelection] GameSceneLoader.Instance is null. Cannot start game with fade. Loading directly.", this);
+                SceneManager.LoadScene(gameSceneName); // Fallback to direct load
+            }
         }
         else
         {

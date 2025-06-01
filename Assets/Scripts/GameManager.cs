@@ -188,22 +188,45 @@ public class GameManager : MonoBehaviour
     {
         if (CurrentGameState == GameState.GameOver || CurrentGameState == GameState.Paused || CurrentGameState == GameState.Playing)
         {
-             Debug.Log("[GameManager] Restarting Game Scene...");
+             Debug.Log("[GameManager] Initiating scene restart with fade...");
              Time.timeScale = 1f;
-             // Explicitly use UnityEngine.SceneManagement.SceneManager here
-             UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex);
-             // OnSceneLoaded will handle finding references and setting state correctly after reload.
-              SetGameState(GameState.Playing); // Ensure state is Playing after restart
+             // SetGameState(GameState.Playing) will be reaffirmed by OnSceneLoaded when GameScene loads.
+             
+             if (GameSceneLoader.Instance != null)
+             {
+                 // GameSceneLoader.ReloadCurrentScene() already handles getting active scene name
+                 GameSceneLoader.Instance.ReloadCurrentScene(); 
+             }
+             else
+             {
+                 Debug.LogError("[GameManager] GameSceneLoader instance not found! Cannot restart scene with fade. Restarting directly.");
+                 UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex);
+             }
+             // It's generally good to set the intended state *before* the load starts,
+             // and OnSceneLoaded can confirm/adjust if needed.
+             SetGameState(GameState.Playing);
         }
     }
 
     public void ReturnToMainMenu()
     {
         Time.timeScale = 1f;
-        ResetSessionForNewGame(); // Use the new comprehensive reset method
+        ResetSessionForNewGame();
+        // SetGameState(GameState.MainMenu); // Set state *before* calling load. OnSceneLoaded will also ensure it.
+        Debug.Log("[GameManager] Initiating return to MainMenu with fade...");
+
+        if (GameSceneLoader.Instance != null)
+        {
+            GameSceneLoader.Instance.LoadScene("MainMenu");
+        }
+        else
+        {
+            Debug.LogError("[GameManager] GameSceneLoader instance not found! Cannot return to MainMenu with fade. Loading directly.");
+            UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenu");
+        }
+        // Setting the state here is good as it defines the intent before the transition begins.
+        // OnSceneLoaded for "MainMenu" will also confirm this state.
         SetGameState(GameState.MainMenu);
-        // Explicitly use UnityEngine.SceneManagement.SceneManager here
-        UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenu");
     }
     
     public static void SetNextStartingLevel(BiomeData biome)
