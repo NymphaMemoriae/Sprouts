@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 4027342104893777989}
   - component: {fileID: 3903843770492426153}
   - component: {fileID: 1977790703767080701}
+  - component: {fileID: 8184949137535636554}
   m_Layer: 9
   m_Name: Roots4_0
   m_TagString: Obstacle
@@ -134,3 +135,17 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 5.12, y: 2.35}
   m_EdgeRadius: 0
+--- !u!114 &8184949137535636554
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4516824610051218430}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71c8de1cded4b704ba679001b13c5e97, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  obstacleData: {fileID: 11400000, guid: 128822b4815afb34ea448c678687acbe, type: 2}
+  collisionParticles: {fileID: 0}

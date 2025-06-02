@@ -21,7 +21,7 @@ MonoBehaviour:
   checkpointPrefab: {fileID: 269376935000323037, guid: c16537a5ed1dba840a6038a3c43a12f9, type: 3}
   biomeSideSegments: []
   startingClusters:
-  - {fileID: 4355422624127572823, guid: a23cf065d55d88a469f7257829673187, type: 3}
+  - {fileID: 4355422624127572823, guid: 88738058d8e5761438d4ff658edde405, type: 3}
   middleClusters:
   - {fileID: 4355422624127572823, guid: a23cf065d55d88a469f7257829673187, type: 3}
   - {fileID: 5283057158756367813, guid: 98fc0fe9764398d4a83c577124f5c3d9, type: 3}

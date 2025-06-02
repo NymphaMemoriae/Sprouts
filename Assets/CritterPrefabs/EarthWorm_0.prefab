@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5875234550723731114}
   - component: {fileID: 1783854113722380976}
+  - component: {fileID: 6266290256310770309}
   m_Layer: 9
   m_Name: bone_2
   m_TagString: Obstacle
@@ -70,6 +71,20 @@ CapsuleCollider2D:
   m_Offset: {x: 0.000000019849146, y: -0.01}
   m_Size: {x: 0.56, y: 0.35}
   m_Direction: 1
+--- !u!114 &6266290256310770309
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 79451947432552222}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71c8de1cded4b704ba679001b13c5e97, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  obstacleData: {fileID: 11400000, guid: cc71b7cf7b91a754b821ed2bb087dc12, type: 2}
+  collisionParticles: {fileID: 0}
 --- !u!1 &1151446694124703085
 GameObject:
   m_ObjectHideFlags: 0
@@ -236,6 +251,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4922151309621992156}
   - component: {fileID: 6743381528426739215}
+  - component: {fileID: 8739237782252897699}
   m_Layer: 9
   m_Name: bone_10
   m_TagString: Obstacle
@@ -295,6 +311,20 @@ CapsuleCollider2D:
   m_Offset: {x: 0.000000021420782, y: -0.01}
   m_Size: {x: 0.56, y: 0.35}
   m_Direction: 1
+--- !u!114 &8739237782252897699
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2121637324368223222}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71c8de1cded4b704ba679001b13c5e97, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  obstacleData: {fileID: 11400000, guid: cc71b7cf7b91a754b821ed2bb087dc12, type: 2}
+  collisionParticles: {fileID: 0}
 --- !u!1 &3489231382408709176
 GameObject:
   m_ObjectHideFlags: 0
@@ -305,6 +335,7 @@ GameObject:
   m_Component:
   - component: {fileID: 821613635845787167}
   - component: {fileID: 335371832711738590}
+  - component: {fileID: 8201027545363419744}
   m_Layer: 9
   m_Name: bone_7
   m_TagString: Obstacle
@@ -365,6 +396,20 @@ CapsuleCollider2D:
   m_Offset: {x: 0.000000017494173, y: -0.01}
   m_Size: {x: 0.56, y: 0.35}
   m_Direction: 1
+--- !u!114 &8201027545363419744
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3489231382408709176}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71c8de1cded4b704ba679001b13c5e97, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  obstacleData: {fileID: 11400000, guid: cc71b7cf7b91a754b821ed2bb087dc12, type: 2}
+  collisionParticles: {fileID: 0}
 --- !u!1 &5191428049011319264
 GameObject:
   m_ObjectHideFlags: 0
@@ -375,6 +420,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2649811175905212500}
   - component: {fileID: 3010033991386426601}
+  - component: {fileID: 9140415407507306150}
   m_Layer: 9
   m_Name: bone_6
   m_TagString: Obstacle
@@ -435,6 +481,20 @@ CapsuleCollider2D:
   m_Offset: {x: 0.000000017830615, y: -0.01}
   m_Size: {x: 0.56, y: 0.35}
   m_Direction: 1
+--- !u!114 &9140415407507306150
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5191428049011319264}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71c8de1cded4b704ba679001b13c5e97, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  obstacleData: {fileID: 11400000, guid: cc71b7cf7b91a754b821ed2bb087dc12, type: 2}
+  collisionParticles: {fileID: 0}
 --- !u!1 &6203472874007530786
 GameObject:
   m_ObjectHideFlags: 0
@@ -445,6 +505,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8420805340215663744}
   - component: {fileID: 3819227960181641058}
+  - component: {fileID: 8697689256393833647}
   m_Layer: 9
   m_Name: bone_9
   m_TagString: Obstacle
@@ -505,6 +566,20 @@ CapsuleCollider2D:
   m_Offset: {x: 0.000000017241156, y: -0.01}
   m_Size: {x: 0.56, y: 0.35}
   m_Direction: 1
+--- !u!114 &8697689256393833647
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6203472874007530786}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71c8de1cded4b704ba679001b13c5e97, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  obstacleData: {fileID: 11400000, guid: cc71b7cf7b91a754b821ed2bb087dc12, type: 2}
+  collisionParticles: {fileID: 0}
 --- !u!1 &6673535509550441322
 GameObject:
   m_ObjectHideFlags: 0
@@ -515,6 +590,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4292085580688104654}
   - component: {fileID: 1229532171120014229}
+  - component: {fileID: 6319089584940410511}
   m_Layer: 9
   m_Name: bone_3
   m_TagString: Obstacle
@@ -575,6 +651,20 @@ CapsuleCollider2D:
   m_Offset: {x: 0.000000018503442, y: -0.01}
   m_Size: {x: 0.56, y: 0.35}
   m_Direction: 1
+--- !u!114 &6319089584940410511
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6673535509550441322}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71c8de1cded4b704ba679001b13c5e97, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  obstacleData: {fileID: 11400000, guid: cc71b7cf7b91a754b821ed2bb087dc12, type: 2}
+  collisionParticles: {fileID: 0}
 --- !u!1 &7320337747111106575
 GameObject:
   m_ObjectHideFlags: 0
@@ -585,6 +675,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7465879264446027451}
   - component: {fileID: 7001104225121187288}
+  - component: {fileID: 8652479294476698496}
   m_Layer: 9
   m_Name: bone_5
   m_TagString: Obstacle
@@ -645,6 +736,20 @@ CapsuleCollider2D:
   m_Offset: {x: 0.000000018503442, y: -0.01}
   m_Size: {x: 0.56, y: 0.35}
   m_Direction: 1
+--- !u!114 &8652479294476698496
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7320337747111106575}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71c8de1cded4b704ba679001b13c5e97, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  obstacleData: {fileID: 11400000, guid: cc71b7cf7b91a754b821ed2bb087dc12, type: 2}
+  collisionParticles: {fileID: 0}
 --- !u!1 &7718301801643879010
 GameObject:
   m_ObjectHideFlags: 0
@@ -655,6 +760,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6627631452187226093}
   - component: {fileID: 6917080793878580776}
+  - component: {fileID: 4179948057328692331}
   m_Layer: 9
   m_Name: bone_4
   m_TagString: Obstacle
@@ -715,6 +821,20 @@ CapsuleCollider2D:
   m_Offset: {x: 0.000000017830583, y: -0.01}
   m_Size: {x: 0.56, y: 0.35}
   m_Direction: 1
+--- !u!114 &4179948057328692331
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7718301801643879010}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71c8de1cded4b704ba679001b13c5e97, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  obstacleData: {fileID: 11400000, guid: cc71b7cf7b91a754b821ed2bb087dc12, type: 2}
+  collisionParticles: {fileID: 0}
 --- !u!1 &8316315524937949333
 GameObject:
   m_ObjectHideFlags: 0
@@ -757,6 +877,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3989333468492841253}
   - component: {fileID: 3132705259899563124}
+  - component: {fileID: 3945759138688907455}
   m_Layer: 9
   m_Name: bone_8
   m_TagString: Obstacle
@@ -817,3 +938,17 @@ CapsuleCollider2D:
   m_Offset: {x: 0.00000001883988, y: -0.01}
   m_Size: {x: 0.56, y: 0.35}
   m_Direction: 1
+--- !u!114 &3945759138688907455
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8854782275174213360}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71c8de1cded4b704ba679001b13c5e97, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  obstacleData: {fileID: 11400000, guid: cc71b7cf7b91a754b821ed2bb087dc12, type: 2}
+  collisionParticles: {fileID: 0}
