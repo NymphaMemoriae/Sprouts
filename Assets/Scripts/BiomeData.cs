@@ -38,6 +38,12 @@ public class BiomeData : ScriptableObject
     [Range(0.5f, 2f)]
     public float obstacleSpawnRateMultiplier = 1f;
 
+    [Header("Audio Settings")]
+    [Tooltip("Sound effect for the plant moving in this biome. Pitch and volume will adapt to speed.")]
+    public AudioClip plantMovementSound;
+    [Tooltip("Background music/ambience for this biome.")]
+    public AudioClip biomeSoundtrack;
+
     [TextArea(3, 5)]
     public string description;
 }

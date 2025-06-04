@@ -46,7 +46,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71c8de1cded4b704ba679001b13c5e97, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  obstacleData: {fileID: 11400000, guid: cc71b7cf7b91a754b821ed2bb087dc12, type: 2}
+  obstacleData: {fileID: 11400000, guid: c0909f3fe1c67cc42ba4b11979aa9953, type: 2}
+  collisionParticles: {fileID: 0}
 --- !u!212 &7723105416561072955
 SpriteRenderer:
   m_ObjectHideFlags: 0

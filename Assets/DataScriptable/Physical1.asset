@@ -25,7 +25,7 @@ MonoBehaviour:
   effectDuration: 1
   changeColorOnCollision: 0
   collisionColor: {r: 0.094636194, g: 0.19390327, b: 0.5471698, a: 1}
-  collisionSound: {fileID: 0}
+  collisionSound: {fileID: 8300000, guid: 85280c1f2ba5033429ac008acc4bc312, type: 3}
   volume: 0.7
   spawnWeight: 1
   description: 

@@ -13,6 +13,10 @@ public class PlantController : MonoBehaviour
 
     [Tooltip("Maximum vertical speed the plant can reach")]
     [SerializeField] private float maxGrowthSpeed = 7f;
+    public float GetMaxGrowthSpeed()
+    {
+        return maxGrowthSpeed;
+    }
 
     [Tooltip("How fast the plant accelerates upward")]
     [SerializeField] private float accelerationRate = 0.6f;
