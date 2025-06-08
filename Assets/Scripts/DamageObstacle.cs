@@ -88,7 +88,17 @@ public class DamageObstacle : MonoBehaviour
         // 3. Optional sound
         if (obstacleData.collisionSound != null)
         {
-            AudioSource.PlayClipAtPoint(obstacleData.collisionSound, transform.position, obstacleData.volume);
+            // Use the new centralized method
+            if (AudioManager.Instance != null)
+            {
+                AudioManager.Instance.PlaySFX(obstacleData.collisionSound, obstacleData.volume);
+            }
+            else
+            {
+                // Fallback to the old method if AudioManager is not found, ensuring sound still plays
+                AudioSource.PlayClipAtPoint(obstacleData.collisionSound, transform.position, obstacleData.volume);
+                Debug.LogWarning("[DamageObstacle] AudioManager not found. Playing sound without mixer control.");
+            }
         }
 
         // 4. Optional color flash

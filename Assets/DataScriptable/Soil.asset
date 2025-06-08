@@ -48,6 +48,6 @@ MonoBehaviour:
   endingClusters: []
   firstTilePrefab: {fileID: 0}
   obstacleSpawnRateMultiplier: 1
-  plantMovementSound: {fileID: 8300000, guid: e6dfb317d63ca0a4f945c33f0bb07734, type: 3}
+  plantMovementSound: {fileID: 8300000, guid: 6dd5aa0603068ee42965fd4f2380d320, type: 3}
   biomeSoundtrack: {fileID: 0}
   description: 

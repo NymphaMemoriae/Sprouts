@@ -46,16 +46,16 @@ public class PlayerPrefsManager : MonoBehaviour
     // It's good practice to use constants for keys to avoid typos.
     private const string MONEY_KEY = "PlayerMoney";
     private const string HIGHSCORE_KEY = "PlayerHighScore";
-    private const string MASTER_VOLUME_KEY = "Settings_MasterVolume";
-    private const string MUSIC_VOLUME_KEY = "Settings_MusicVolume";
-    private const string SFX_VOLUME_KEY = "Settings_SFXVolume";
+    // private const string MASTER_VOLUME_KEY = "Settings_MasterVolume";
+    // private const string MUSIC_VOLUME_KEY = "Settings_MusicVolume";
+    // private const string SFX_VOLUME_KEY = "Settings_SFXVolume";
     // Prefix for skin unlock status
     private const string SKIN_UNLOCKED_PREFIX = "SkinUnlocked_";
 
     // --- Default Values ---
     private const int DEFAULT_MONEY = 0;
     private const float DEFAULT_HIGHSCORE = 0f;
-    private const float DEFAULT_VOLUME = 0.75f;
+    // private const float DEFAULT_VOLUME = 0.75f;
 
 
     // --- Money ---
@@ -112,42 +112,42 @@ public class PlayerPrefsManager : MonoBehaviour
     // but for a manageable number, individual keys are simpler.
 
     // --- Settings (Example: Volume) ---
-    public void SaveMasterVolume(float volumeLevel)
-    {
-        PlayerPrefs.SetFloat(MASTER_VOLUME_KEY, Mathf.Clamp01(volumeLevel)); // Ensure volume is between 0 and 1
-        PlayerPrefs.Save();
-        // You would typically also apply this volume to your game's AudioMixer here
-        Debug.Log($"Saved Master Volume: {volumeLevel}");
-    }
+    // public void SaveMasterVolume(float volumeLevel)
+    // {
+    //     PlayerPrefs.SetFloat(MASTER_VOLUME_KEY, Mathf.Clamp01(volumeLevel)); // Ensure volume is between 0 and 1
+    //     PlayerPrefs.Save();
+    //     // You would typically also apply this volume to your game's AudioMixer here
+    //     Debug.Log($"Saved Master Volume: {volumeLevel}");
+    // }
 
-    public float LoadMasterVolume()
-    {
-        return PlayerPrefs.GetFloat(MASTER_VOLUME_KEY, DEFAULT_VOLUME);
-    }
+    // public float LoadMasterVolume()
+    // {
+    //     return PlayerPrefs.GetFloat(MASTER_VOLUME_KEY, DEFAULT_VOLUME);
+    // }
     
-    public void SaveMusicVolume(float volumeLevel)
-    {
-        PlayerPrefs.SetFloat(MUSIC_VOLUME_KEY, Mathf.Clamp01(volumeLevel));
-        PlayerPrefs.Save();
-        Debug.Log($"Saved Music Volume: {volumeLevel}");
-    }
+    // public void SaveMusicVolume(float volumeLevel)
+    // {
+    //     PlayerPrefs.SetFloat(MUSIC_VOLUME_KEY, Mathf.Clamp01(volumeLevel));
+    //     PlayerPrefs.Save();
+    //     Debug.Log($"Saved Music Volume: {volumeLevel}");
+    // }
 
-    public float LoadMusicVolume()
-    {
-        return PlayerPrefs.GetFloat(MUSIC_VOLUME_KEY, DEFAULT_VOLUME);
-    }
+    // public float LoadMusicVolume()
+    // {
+    //     return PlayerPrefs.GetFloat(MUSIC_VOLUME_KEY, DEFAULT_VOLUME);
+    // }
 
-    public void SaveSFXVolume(float volumeLevel)
-    {
-        PlayerPrefs.SetFloat(SFX_VOLUME_KEY, Mathf.Clamp01(volumeLevel));
-        PlayerPrefs.Save();
-        Debug.Log($"Saved SFX Volume: {volumeLevel}");
-    }
+    // public void SaveSFXVolume(float volumeLevel)
+    // {
+    //     PlayerPrefs.SetFloat(SFX_VOLUME_KEY, Mathf.Clamp01(volumeLevel));
+    //     PlayerPrefs.Save();
+    //     Debug.Log($"Saved SFX Volume: {volumeLevel}");
+    // }
 
-    public float LoadSFXVolume()
-    {
-        return PlayerPrefs.GetFloat(SFX_VOLUME_KEY, DEFAULT_VOLUME);
-    }
+    // public float LoadSFXVolume()
+    // {
+    //     return PlayerPrefs.GetFloat(SFX_VOLUME_KEY, DEFAULT_VOLUME);
+    // }
 
 
     // --- Utility ---

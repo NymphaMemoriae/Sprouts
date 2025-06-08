@@ -7,6 +7,10 @@ public class AudioManager : MonoBehaviour
     [Tooltip("Assign your main AudioMixer asset here.")]
     [SerializeField] private AudioMixer mainMixer;
 
+    [Header("Audio Sources")]
+    [Tooltip("This AudioSource is used for playing one-shot SFX like collisions.")]
+    [SerializeField] private AudioSource sfxOneShotSource;
+
     [Header("Default Volume Levels (Linear: 0.0 to 1.0)")]
     [Tooltip("Default master volume. 0 is silent, 1 is full volume.")]
     [Range(0.0001f, 1f)]
@@ -80,6 +84,24 @@ public class AudioManager : MonoBehaviour
         PlayerPrefs.SetFloat(SFX_VOLUME_PREF, currentSFX);
         PlayerPrefs.Save();
         Debug.Log($"[AudioManager] Saved volumes: Master={currentMaster:F2}, Music={currentMusic:F2}, SFX={currentSFX:F2}");
+    }
+
+    /// <summary>
+    /// Plays a one-shot sound effect through the dedicated SFX AudioSource.
+    /// Ensures the sound is affected by the SFX mixer group.
+    /// </summary>
+    /// <param name="clip">The AudioClip to play.</param>
+    /// <param name="volume">The relative volume of the clip (0.0 to 1.0).</param>
+    public void PlaySFX(AudioClip clip, float volume = 1.0f)
+    {
+        if (sfxOneShotSource == null || clip == null)
+        {
+            if (sfxOneShotSource == null) Debug.LogWarning("[AudioManager] SFX OneShot Source is not assigned!");
+            return;
+        }
+        // PlayOneShot allows multiple sounds to overlap from the same source.
+        // The volume parameter acts as a scaler, which is then affected by the mixer volume.
+        sfxOneShotSource.PlayOneShot(clip, volume);
     }
 
     // --- Public Methods to Set Volumes (callable from UI sliders, game events, etc.) ---

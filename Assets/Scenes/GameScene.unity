@@ -9677,8 +9677,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   movementAudioSource: {fileID: 1701269056}
   soundtrackAudioSource: {fileID: 19069068}
-  minMovementVolume: 0.2
-  maxMovementVolume: 0.9
+  minMovementVolume: 0.4
+  maxMovementVolume: 0.7
   minMovementPitch: 0.8
   maxMovementPitch: 1.3
   velocityForMaxEffect: 7
