@@ -109,19 +109,31 @@ public class AudioManager : MonoBehaviour
     public void SetMasterVolume(float linearVolume, bool savePreference = true)
     {
         SetMixerVolume(MASTER_VOLUME_KEY, linearVolume);
-        if (savePreference) PlayerPrefs.SetFloat(MASTER_VOLUME_PREF, Mathf.Clamp(linearVolume, 0.0001f, 1f));
+        if (savePreference)
+        {
+            PlayerPrefs.SetFloat(MASTER_VOLUME_PREF, Mathf.Clamp(linearVolume, 0.0001f, 1f));
+            PlayerPrefs.Save(); 
+        }
     }
 
     public void SetMusicVolume(float linearVolume, bool savePreference = true)
     {
         SetMixerVolume(MUSIC_VOLUME_KEY, linearVolume);
-        if (savePreference) PlayerPrefs.SetFloat(MUSIC_VOLUME_PREF, Mathf.Clamp(linearVolume, 0.0001f, 1f));
+        if (savePreference)
+        {
+            PlayerPrefs.SetFloat(MUSIC_VOLUME_PREF, Mathf.Clamp(linearVolume, 0.0001f, 1f));
+            PlayerPrefs.Save(); // <-- ADD THIS LINE
+        }
     }
 
     public void SetSFXVolume(float linearVolume, bool savePreference = true)
     {
         SetMixerVolume(SFX_VOLUME_KEY, linearVolume);
-        if (savePreference) PlayerPrefs.SetFloat(SFX_VOLUME_PREF, Mathf.Clamp(linearVolume, 0.0001f, 1f));
+        if (savePreference)
+        {
+            PlayerPrefs.SetFloat(SFX_VOLUME_PREF, Mathf.Clamp(linearVolume, 0.0001f, 1f));
+            PlayerPrefs.Save(); // <-- ADD THIS LINE
+        }
     }
 
     private void SetMixerVolume(string parameterName, float linearVolume)
