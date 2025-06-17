@@ -41,8 +41,8 @@ public class BiomeData : ScriptableObject
     [Header("Audio Settings")]
     [Tooltip("Sound effect for the plant moving in this biome. Pitch and volume will adapt to speed.")]
     public AudioClip plantMovementSound;
-    [Tooltip("Background music/ambience for this biome.")]
-    public AudioClip biomeSoundtrack;
+    [Tooltip("The default background music for this biome if no other track is equipped.")]
+    public AudioClip defaultSoundtrack;
 
     [TextArea(3, 5)]
     public string description;

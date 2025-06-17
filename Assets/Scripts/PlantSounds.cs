@@ -82,8 +82,35 @@ public class PlantSounds : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// This is called by GameManager once the scene is fully loaded and ready.
+    /// It kick-starts the soundtrack for the initial biome.
+    /// </summary>
+    public void PlayInitialSoundtrack()
+    {
+        // The BiomeManager should have figured out the starting biome by now.
+        if (biomeManager == null)
+        {
+            Debug.LogError("[PlantSounds] Cannot play initial soundtrack, BiomeManager reference is missing!");
+            return;
+        }
+
+        BiomeData initialBiome = biomeManager.CurrentBiome;
+        if (initialBiome != null)
+        {
+            // We can simply call our existing HandleBiomeTransition logic.
+            // The check inside it to not restart the same clip will prevent any issues.
+            HandleBiomeTransition(initialBiome, true);
+        }
+        else
+        {
+            Debug.LogWarning("[PlantSounds] BiomeManager has no current biome when starting. No music will play yet.");
+        }
+    }
+
     private void HandleBiomeTransition(BiomeData newBiome, bool isFirstBiomeOverall)
     {
+        // This script only runs in the GameScene, so no scene check is needed.
         if (newBiome == null)
         {
             Debug.LogWarning("[PlantSounds] Received null BiomeData in HandleBiomeTransition.");
@@ -93,38 +120,50 @@ public class PlantSounds : MonoBehaviour
         Debug.Log($"[PlantSounds] Handling biome transition to: {newBiome.biomeName}");
         currentBiomeData = newBiome;
 
-        // --- Plant Movement Sound ---
+        // --- Plant Movement Sound Logic ---
         if (movementAudioSource.isPlaying)
         {
             movementAudioSource.Stop();
         }
+        movementAudioSource.clip = currentBiomeData.plantMovementSound;
 
-        if (currentBiomeData.plantMovementSound != null)
+
+        // --- Final Soundtrack Logic ---
+        AudioClip clipToPlay = null;
+
+        // 1. Check PlayerPrefs for a custom equipped soundtrack for this biome.
+        string equippedSoundtrackID = PlayerPrefsManager.Instance.GetEquippedSoundtrackForBiome(newBiome.biomeName);
+
+        if (equippedSoundtrackID != null)
         {
-            movementAudioSource.clip = currentBiomeData.plantMovementSound;
-            // Movement sound will be started/stopped in Update based on plant state
-        }
-        else
-        {
-            movementAudioSource.clip = null; // No movement sound for this biome
+            // 2. If a custom track is equipped, load its data from "Resources/Soundtracks".
+            SoundtrackData equippedSoundtrackData = Resources.Load<SoundtrackData>("Soundtracks/" + equippedSoundtrackID);
+            if (equippedSoundtrackData != null)
+            {
+                clipToPlay = equippedSoundtrackData.audioClip;
+            }
         }
 
-        // --- Biome Soundtrack ---
+        // 3. If no custom track was chosen, use the biome's default soundtrack.
+        if (clipToPlay == null)
+        {
+            // This now correctly uses the 'defaultSoundtrack' variable from BiomeData.cs
+            clipToPlay = newBiome.defaultSoundtrack;
+        }
+
+        // 4. Stop the currently playing music (if any) and play the new track.
         if (soundtrackAudioSource.isPlaying)
         {
+            if (soundtrackAudioSource.clip == clipToPlay) return;
             soundtrackAudioSource.Stop();
         }
 
-        if (currentBiomeData.biomeSoundtrack != null)
+        soundtrackAudioSource.clip = clipToPlay;
+
+        if (soundtrackAudioSource.clip != null)
         {
-            soundtrackAudioSource.clip = currentBiomeData.biomeSoundtrack;
             soundtrackAudioSource.Play();
-            Debug.Log($"[PlantSounds] Playing soundtrack: {currentBiomeData.biomeSoundtrack.name}");
-        }
-        else
-        {
-            soundtrackAudioSource.clip = null; // No soundtrack for this biome
-            Debug.Log($"[PlantSounds] No soundtrack for biome: {currentBiomeData.biomeName}");
+            Debug.Log($"[PlantSounds] Now playing: {soundtrackAudioSource.clip.name}");
         }
     }
 

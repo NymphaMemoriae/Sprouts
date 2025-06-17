@@ -51,6 +51,7 @@ public class PlayerPrefsManager : MonoBehaviour
     // private const string SFX_VOLUME_KEY = "Settings_SFXVolume";
     // Prefix for skin unlock status
     private const string SKIN_UNLOCKED_PREFIX = "SkinUnlocked_";
+    private const string EQUIPPED_SOUNDTRACK_PREFIX = "EquippedSoundtrack_";
 
     // --- Default Values ---
     private const int DEFAULT_MONEY = 0;
@@ -149,7 +150,31 @@ public class PlayerPrefsManager : MonoBehaviour
     //     return PlayerPrefs.GetFloat(SFX_VOLUME_KEY, DEFAULT_VOLUME);
     // }
 
+   // --- Soundtracks ---
 
+/// <summary>
+/// Saves the player's choice of soundtrack for a specific biome.
+/// </summary>
+/// <param name="biomeID">The ID of the biome (e.g., from BiomeData.biomeName).</param>
+/// <param name="soundtrackID">The ID of the chosen soundtrack.</param>
+    public void SetEquippedSoundtrackForBiome(string biomeID, string soundtrackID)
+    {
+        PlayerPrefs.SetString(EQUIPPED_SOUNDTRACK_PREFIX + biomeID, soundtrackID);
+        PlayerPrefs.Save();
+        Debug.Log($"[PlayerPrefsManager] Set soundtrack for biome '{biomeID}' to '{soundtrackID}'.");
+    }
+
+    /// <summary>
+    /// Retrieves the ID of the soundtrack the player chose for a specific biome.
+    /// </summary>
+    /// <param name="biomeID">The ID of the biome to check.</param>
+    /// <returns>The chosen soundtrack ID, or null if none is set.</returns>
+    public string GetEquippedSoundtrackForBiome(string biomeID)
+    {
+        // Returns the saved string, or an empty string if no key exists.
+        string equippedID = PlayerPrefs.GetString(EQUIPPED_SOUNDTRACK_PREFIX + biomeID, string.Empty);
+        return string.IsNullOrEmpty(equippedID) ? null : equippedID;
+    }
     // --- Utility ---
     public void DeleteAllPlayerPrefs()
     {

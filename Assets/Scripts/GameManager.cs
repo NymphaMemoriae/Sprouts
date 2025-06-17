@@ -81,7 +81,7 @@ public class GameManager : MonoBehaviour
         if (scene.name == "GameScene")
         {
             plantController = FindObjectOfType<PlantController>(); // Around Line 64
-            plantLife = FindObjectOfType<PlantLife>(); 
+            plantLife = FindObjectOfType<PlantLife>();
 
             if (cameraController == null) // Try to find it if not assigned
             {
@@ -99,19 +99,19 @@ public class GameManager : MonoBehaviour
             }
             if (plantLife == null) { Debug.LogError("[GameManager] OnSceneLoaded: Could not find PlantLife in GameScene!"); }
 
-             if(CurrentGameState != GameState.Playing)
-             {
-                 // If the game is supposed to start immediately upon loading GameScene after clicking "Start"
-                 // Ensure StartGame() was called in the MainMenu before loading the scene.
-                 Debug.LogWarning($"[GameManager] GameScene loaded but state is {CurrentGameState}. Ensure StartGame() was called before loading.");
-                 // Force playing state and reset lives if needed (adjust based on your flow)
-                 SetGameState(GameState.Playing);
-             }
-             else if (plantLife != null) // If already playing (e.g. restart), reset lives
-             {
-                 plantLife.ResetLives();
-             }
-             if (cameraController != null)
+            if (CurrentGameState != GameState.Playing)
+            {
+                // If the game is supposed to start immediately upon loading GameScene after clicking "Start"
+                // Ensure StartGame() was called in the MainMenu before loading the scene.
+                Debug.LogWarning($"[GameManager] GameScene loaded but state is {CurrentGameState}. Ensure StartGame() was called before loading.");
+                // Force playing state and reset lives if needed (adjust based on your flow)
+                SetGameState(GameState.Playing);
+            }
+            else if (plantLife != null) // If already playing (e.g. restart), reset lives
+            {
+                plantLife.ResetLives();
+            }
+            if (cameraController != null)
             {
                 Debug.Log("[GameManager] GameScene loaded, resetting CameraController state.");
                 cameraController.ResetCameraPushState();
@@ -120,10 +120,22 @@ public class GameManager : MonoBehaviour
             {
                 Debug.LogWarning("[GameManager] CameraController not found in GameScene to reset its state.");
             }
-        }
-         else if (scene.name == "MainMenu")
-        {
             
+            PlantSounds plantSounds = FindObjectOfType<PlantSounds>();
+            if (plantSounds != null)
+            {
+                plantSounds.PlayInitialSoundtrack();
+                Debug.Log("[GameManager] Instructed PlantSounds to play initial soundtrack.");
+            }
+            else
+            {
+                Debug.LogError("[GameManager] PlantSounds object not found in GameScene! Cannot start music.");
+            }
+        }
+
+        else if (scene.name == "MainMenu")
+        {
+
             SetGameState(GameState.MainMenu); // Ensure state is MainMenu
             plantController = null;
             plantLife = null;
@@ -132,7 +144,7 @@ public class GameManager : MonoBehaviour
         {
             plantController = null;
             plantLife = null;
-            cameraController = null; 
+            cameraController = null;
         }
     }
 
