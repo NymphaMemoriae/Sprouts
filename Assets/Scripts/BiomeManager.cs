@@ -23,6 +23,7 @@ public class BiomeManager : MonoBehaviour
 
     void Start()
     {
+
         if (plantController == null)
             plantController = FindObjectOfType<PlantController>();
 
@@ -99,6 +100,12 @@ public class BiomeManager : MonoBehaviour
         if (biome == null || biome == currentBiome) return; // Avoid redundant calls
 
         Debug.Log($"Transitioning to biome: {biome.biomeName} at height {displayHeight}m");
+
+        // If this biome has not been unlocked yet, unlock it now.
+        if (!PlayerPrefsManager.Instance.IsBiomeUnlocked(biome.biomeName))
+        {
+            PlayerPrefsManager.Instance.UnlockBiome(biome.biomeName);
+        }
         
         BiomeData previousBiome = currentBiome; // Store previous biome before overwriting
 

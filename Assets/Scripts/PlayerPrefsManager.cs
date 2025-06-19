@@ -52,6 +52,7 @@ public class PlayerPrefsManager : MonoBehaviour
     // Prefix for skin unlock status
     private const string SKIN_UNLOCKED_PREFIX = "SkinUnlocked_";
     private const string EQUIPPED_SOUNDTRACK_PREFIX = "EquippedSoundtrack_";
+    private const string BIOME_UNLOCKED_PREFIX = "BiomeUnlocked_";
 
     // --- Default Values ---
     private const int DEFAULT_MONEY = 0;
@@ -174,6 +175,18 @@ public class PlayerPrefsManager : MonoBehaviour
         // Returns the saved string, or an empty string if no key exists.
         string equippedID = PlayerPrefs.GetString(EQUIPPED_SOUNDTRACK_PREFIX + biomeID, string.Empty);
         return string.IsNullOrEmpty(equippedID) ? null : equippedID;
+    }
+
+     public void UnlockBiome(string biomeName)
+    {
+        PlayerPrefs.SetInt(BIOME_UNLOCKED_PREFIX + biomeName, 1);
+        PlayerPrefs.Save();
+        Debug.Log($"[PlayerPrefsManager] Unlocked Biome: {biomeName}");
+    }
+
+    public bool IsBiomeUnlocked(string biomeName)
+    {
+        return PlayerPrefs.GetInt(BIOME_UNLOCKED_PREFIX + biomeName, 0) == 1;
     }
     // --- Utility ---
     public void DeleteAllPlayerPrefs()

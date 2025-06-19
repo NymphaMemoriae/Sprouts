@@ -7,6 +7,7 @@ public class BiomeData : ScriptableObject
 {
     [Header("Biome Information")]
     public string biomeName = "Default Biome";
+    public bool isUnlockedByDefault = false;
 
     [Header("Biome Range (in tiles)")]
     public int minTileIndex = 0;

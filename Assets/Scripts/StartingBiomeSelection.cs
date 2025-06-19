@@ -23,10 +23,28 @@ public class StartingBiomeSelection : MonoBehaviour
 
     void Start()
     {
+        // First, ensure the very first biome is marked as unlocked if it's the default
+        if (selectableLevels.Count > 0)
+        {
+            var firstLevel = selectableLevels[0];
+            if (firstLevel.biomeData != null && firstLevel.biomeData.isUnlockedByDefault)
+            {
+                if (!PlayerPrefsManager.Instance.IsBiomeUnlocked(firstLevel.biomeData.biomeName))
+                {
+                     PlayerPrefsManager.Instance.UnlockBiome(firstLevel.biomeData.biomeName);
+                }
+            }
+        }
         foreach (var levelEntry in selectableLevels)
         {
             if (levelEntry.uiButton != null && levelEntry.biomeData != null)
             {
+                // Check if the biome is unlocked
+                bool isUnlocked = PlayerPrefsManager.Instance.IsBiomeUnlocked(levelEntry.biomeData.biomeName);
+                
+                // The button is interactable only if the biome is unlocked
+                levelEntry.uiButton.interactable = isUnlocked;
+                
                 // Capture the biomeData for the listener
                 BiomeData currentBiomeData = levelEntry.biomeData;
                 levelEntry.uiButton.onClick.AddListener(() => OnLevelSelected(currentBiomeData));
