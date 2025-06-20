@@ -294,6 +294,23 @@ public class GameManager : MonoBehaviour
         Debug.Log($"[GameManager] Using initial spawn position: {InitialSpawnPosition}");
         return InitialSpawnPosition; // Fallback to absolute initial spawn
     }
+    public void ResetAllPlayerData()
+    {
+        // Call the existing method in the PlayerPrefsManager
+        PlayerPrefsManager.Instance.DeleteAllPlayerPrefs();
+
+        // Use the GameSceneLoader to reload the main menu and show the changes
+        Debug.Log("[GameManager] Player data has been reset. Reloading MainMenu scene.");
+        if (GameSceneLoader.Instance != null)
+        {
+            GameSceneLoader.Instance.LoadScene("MainMenu");
+        }
+        else
+        {
+            // Fallback if the loader isn't found for some reason
+            UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenu");
+        }
+    }
 
     // Add this method to reset the checkpoint state
     public static void ResetSessionForNewGame()

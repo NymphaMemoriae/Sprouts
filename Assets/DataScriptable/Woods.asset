@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81ad8271272fb06488f06dce98df8b79, type: 3}
   m_Name: Woods
   m_EditorClassIdentifier: 
-  biomeName: GrassLand
+  biomeName: Woods
+  isUnlockedByDefault: 0
   minTileIndex: 50
   maxTileIndex: 70
   backgroundMaterial: {fileID: 2100000, guid: 5f0c68829116bba4eb896d8ed3285d9a, type: 2}
@@ -25,6 +26,8 @@ MonoBehaviour:
   middleClusters:
   - {fileID: 5283057158756367813, guid: 03f3975fb9ddaba498ca4c57002cd445, type: 3}
   endingClusters: []
-  firstTilePrefab: {fileID: 0}
+  firstTilePrefab: {fileID: 4015334938415637551, guid: 1e1d49d0ff165ad40ab5739d0140387f, type: 3}
   obstacleSpawnRateMultiplier: 1.15
+  plantMovementSound: {fileID: 0}
+  defaultSoundtrack: {fileID: 0}
   description: 

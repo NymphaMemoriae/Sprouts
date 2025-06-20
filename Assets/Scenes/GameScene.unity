@@ -1092,7 +1092,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   plantController: {fileID: 1468978192}
-  touchSensitivity: 30
+  touchSensitivity: 20
 --- !u!1 &320060471
 GameObject:
   m_ObjectHideFlags: 0
@@ -9633,7 +9633,7 @@ MonoBehaviour:
   maxGrowthSpeed: 8
   accelerationRate: 1.2
   decelerationRate: 0
-  horizontalSpeed: 4
+  horizontalSpeed: 1.8
   rotationSmoothTime: 0.2
   plantHead: {fileID: 188981458}
   obstacleLayer:

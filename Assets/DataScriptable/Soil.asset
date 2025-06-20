@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81ad8271272fb06488f06dce98df8b79, type: 3}
   m_Name: Soil
   m_EditorClassIdentifier: 
-  biomeName: Default Biome
+  biomeName: Soil Biome
+  isUnlockedByDefault: 1
   minTileIndex: 0
   maxTileIndex: 23
   backgroundMaterial: {fileID: 2100000, guid: d5dfc0b8c1fa6754496037678557dc6d, type: 2}
@@ -49,5 +50,5 @@ MonoBehaviour:
   firstTilePrefab: {fileID: 0}
   obstacleSpawnRateMultiplier: 1
   plantMovementSound: {fileID: 8300000, guid: 6dd5aa0603068ee42965fd4f2380d320, type: 3}
-  biomeSoundtrack: {fileID: 0}
+  defaultSoundtrack: {fileID: 0}
   description: 
