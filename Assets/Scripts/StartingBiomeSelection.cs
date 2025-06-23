@@ -23,15 +23,15 @@ public class StartingBiomeSelection : MonoBehaviour
 
     void Start()
     {
-        // First, ensure the very first biome is marked as unlocked if it's the default
-        if (selectableLevels.Count > 0)
+        // Unlock any biomes that are flagged as 'unlocked by default'
+        foreach (var levelEntry in selectableLevels)
         {
-            var firstLevel = selectableLevels[0];
-            if (firstLevel.biomeData != null && firstLevel.biomeData.isUnlockedByDefault)
+            if (levelEntry.biomeData != null && levelEntry.biomeData.isUnlockedByDefault)
             {
-                if (!PlayerPrefsManager.Instance.IsBiomeUnlocked(firstLevel.biomeData.biomeName))
+                // If it's not already marked as unlocked in PlayerPrefs, unlock it now.
+                if (!PlayerPrefsManager.Instance.IsBiomeUnlocked(levelEntry.biomeData.biomeName))
                 {
-                     PlayerPrefsManager.Instance.UnlockBiome(firstLevel.biomeData.biomeName);
+                    PlayerPrefsManager.Instance.UnlockBiome(levelEntry.biomeData.biomeName);
                 }
             }
         }
