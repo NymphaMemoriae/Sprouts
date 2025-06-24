@@ -31,6 +31,17 @@ public class BuffPickup : MonoBehaviour
         {
             plant.plantLife.AddLife(1);
         }
+        // Handle coin-related buffs
+        if (buffData.buffType == BuffType.AddCoins)
+        {
+            plant.AddDirectCoins(buffData.coinAmount);
+        }
+        else if (buffData.buffType == BuffType.DoubleCoins)
+        {
+            plant.ActivateDoubleCoins();
+            // This buff is permanent for the run, so we can just disable the pickup object
+            // after a visual effect or immediately.
+        }
 
         if (animator != null)
         {

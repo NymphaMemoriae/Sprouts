@@ -21,6 +21,9 @@ public class GameManager : MonoBehaviour
     public const float TILE_VERTICAL_SIZE = 20f; // Define tile height
     public static Vector3 InitialSpawnPosition { get; private set; } = Vector3.zero; // Default, will be set
     private static bool _initialSpawnPositionSet = false;
+    [Header("Coin Settings")]
+    [Tooltip("Multiplier to convert the final score (height) into coins at game over.")]
+    [SerializeField] private float scoreToCoinMultiplier = 0.5f;
 
     private void Awake()
     {
@@ -30,7 +33,7 @@ public class GameManager : MonoBehaviour
             DontDestroyOnLoad(gameObject);
             // Explicitly use UnityEngine.SceneManagement.SceneManager here
             UnityEngine.SceneManagement.SceneManager.sceneLoaded += OnSceneLoaded;
- // Find initial spawn point ONLY once when the GameManager is first created
+            // Find initial spawn point ONLY once when the GameManager is first created
             if (!_initialSpawnPositionSet)
             {
                 GameObject spawnPointObject = GameObject.FindGameObjectWithTag("InitialSpawn");
@@ -44,9 +47,9 @@ public class GameManager : MonoBehaviour
                 {
                     Debug.LogWarning("[GameManager] Could not find GameObject with tag 'InitialSpawn'. Using default Vector3.zero.");
                     InitialSpawnPosition = Vector3.zero; // Or a sensible default
-                        _initialSpawnPositionSet = true; // Mark as set even if not found to avoid repeated searches
+                    _initialSpawnPositionSet = true; // Mark as set even if not found to avoid repeated searches
                 }
-            }           
+            }
         }
         else
         {
@@ -328,24 +331,44 @@ public class GameManager : MonoBehaviour
         CurrentGameState = newState;
         Debug.Log($"[GameManager] GameState changed to: {newState}");
         OnGameStateChanged?.Invoke(newState);
+        if (newState == GameState.GameOver)
+        {
+            if (plantController != null && PlayerPrefsManager.Instance != null)
+            {
+                // 1. Get coins collected during the run
+                int runCoins = plantController.CurrentRunCoins;
+
+                // 2. Calculate bonus coins from score (height)
+                float score = plantController.DisplayHeight; // Assuming DisplayHeight is your score
+                int scoreBonusCoins = Mathf.FloorToInt(score * scoreToCoinMultiplier);
+
+                // 3. Load total coins, add new earnings, and save
+                int totalCoinsBeforeRun = PlayerPrefsManager.Instance.LoadMoney();
+                int totalEarnedThisRun = runCoins + scoreBonusCoins;
+                
+                PlayerPrefsManager.Instance.SaveMoney(totalCoinsBeforeRun + totalEarnedThisRun);
+
+                Debug.Log($"[GameManager] GameOver: Run Coins: {runCoins}, Score Bonus: {scoreBonusCoins}. Total earned: {totalEarnedThisRun}.");
+            }
+        }
 
         // Reset lives when entering Playing state if plantLife is available
         // Moved ResetLives logic partially into OnSceneLoaded for restarts,
         // but also keep it here for the initial StartGame call.
         if (newState == GameState.Playing)
         {
-             if (plantLife == null) { plantLife = FindAnyObjectByType<PlantLife>(); }
+            if (plantLife == null) { plantLife = FindAnyObjectByType<PlantLife>(); }
 
-             if (plantLife != null)
-             {
-                 plantLife.ResetLives();
-                 Debug.Log("[GameManager] Player lives reset via SetGameState.");
-             }
-             // Use explicit check for scene name to avoid error when not in game scene
-             else if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "GameScene")
-             {
-                 Debug.LogError("[GameManager] SetGameState(Playing): Cannot reset lives - PlantLife reference is missing!");
-             }
+            if (plantLife != null)
+            {
+                plantLife.ResetLives();
+                Debug.Log("[GameManager] Player lives reset via SetGameState.");
+            }
+            // Use explicit check for scene name to avoid error when not in game scene
+            else if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "GameScene")
+            {
+                Debug.LogError("[GameManager] SetGameState(Playing): Cannot reset lives - PlantLife reference is missing!");
+            }
         }
     }
 }

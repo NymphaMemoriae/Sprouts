@@ -17,6 +17,10 @@ public class BiomeManager : MonoBehaviour
     private float displayHeight = 0f;
     public event Action<BiomeData, bool> OnBiomeTransitionComplete; // Sends BiomeData and a flag indicating if it's the very first biome
     
+    [Header("Coin Settings")]
+    [Tooltip("Coins awarded when entering a new biome for the first time in a run.")]
+    [SerializeField] private int coinsPerBiomeTransition = 25;
+    
 
     // ✅ Public access to current biome
     public BiomeData CurrentBiome => currentBiome;
@@ -98,6 +102,11 @@ public class BiomeManager : MonoBehaviour
     private void SetCurrentBiome(BiomeData biome)
     {
         if (biome == null || biome == currentBiome) return; // Avoid redundant calls
+         // Award coins for the transition, but not for the very first biome the player starts in
+        if (currentBiome != null && plantController != null)
+        {
+            plantController.AddWorldCoins(coinsPerBiomeTransition);
+        }
 
         Debug.Log($"Transitioning to biome: {biome.biomeName} at height {displayHeight}m");
 

@@ -60,6 +60,9 @@ public class PlantController : MonoBehaviour
     private float sideBumpTimer = 0f;
 
     private Dictionary<BuffType, float> activeBuffs = new Dictionary<BuffType, float>();
+    // Coin and Run State Tracking
+    public int CurrentRunCoins { get; private set; }
+    private bool isDoubleCoinsActive = false;
 
     // Exposed Properties
     public bool IsGrowing => isGrowing;
@@ -88,6 +91,48 @@ public class PlantController : MonoBehaviour
             Debug.Log("Plant teleported 100 meters up!");
         }
     }
+     #region Coin Management
+    /// <summary>
+    /// Resets coin and buff states for the start of a new run.
+    /// </summary>
+    public void ResetRunState()
+    {
+        CurrentRunCoins = 0;
+        isDoubleCoinsActive = false;
+        Debug.Log("[PlantController] Run state (coins, buffs) has been reset.");
+    }
+
+    /// <summary>
+    /// Adds coins from world events (biome changes, score). Affected by the DoubleCoins buff.
+    /// </summary>
+    public void AddWorldCoins(int baseAmount)
+    {
+        int amountToAdd = isDoubleCoinsActive ? baseAmount * 2 : baseAmount;
+        CurrentRunCoins += amountToAdd;
+        Debug.Log($"[PlantController] Added {amountToAdd} world coins (Base: {baseAmount}, Double Active: {isDoubleCoinsActive}). Total run coins: {CurrentRunCoins}");
+    }
+
+    /// <summary>
+    /// Adds a fixed amount of coins directly from a pickup. NOT affected by the DoubleCoins buff.
+    /// </summary>
+    public void AddDirectCoins(int amount)
+    {
+        CurrentRunCoins += amount;
+        Debug.Log($"[PlantController] Added {amount} direct coins. Total run coins: {CurrentRunCoins}");
+    }
+    
+    /// <summary>
+    /// Activates the Double Coins buff for the remainder of the run.
+    /// </summary>
+    public void ActivateDoubleCoins()
+    {
+        if (!isDoubleCoinsActive)
+        {
+            isDoubleCoinsActive = true;
+            Debug.Log("[PlantController] Double Coins buff activated for this run!");
+        }
+    }
+    #endregion
 
     // Add this public method to PlantController.cs
     public void SetMaxVelocity(float newMaxVelocity)
@@ -222,6 +267,7 @@ public class PlantController : MonoBehaviour
         // Optionally reset activeBuffs if they shouldn't persist after death
         // activeBuffs.Clear();
         lastPosition = spawnPosition;
+        ResetRunState(); // Reset run-specific coin data
         Debug.Log($"[PlantController] State reset at position {spawnPosition}");
     }
 
@@ -291,5 +337,7 @@ public enum BuffType
 {
     ExtraLife,
     Speed,
-    Ghost
+    Ghost,
+    AddCoins,
+    DoubleCoins
 }
