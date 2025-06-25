@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Skin2
   m_EditorClassIdentifier: 
   skinName: Skin2
+  price: 100
   plantHeadSprite: {fileID: 8302960601557194349, guid: dabca855643f584438479c4d19caf087, type: 3}
   plantHeadAnimatorController: {fileID: 9100000, guid: 8453ca7817b7bb64aacda8ffb3f5b410, type: 2}
   startingLives: 4
