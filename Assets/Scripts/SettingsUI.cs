@@ -82,6 +82,24 @@ public class SettingsUI : MonoBehaviour
     }
 
     /// <summary>
+    /// Public method to be linked to the OnClick event of a 'Reset Data' button.
+    /// It calls the central reset logic in the GameManager.
+    /// </summary>
+    public void HandleResetPlayerData()
+    {
+        if (GameManager.Instance != null)
+        {
+            // It's good practice to show a confirmation dialog to the user before this call.
+            Debug.LogWarning("[SettingsUI] Reset button clicked. Calling GameManager.ResetAllPlayerData().");
+            GameManager.Instance.ResetAllPlayerData();
+        }
+        else
+        {
+            Debug.LogError("[SettingsUI] GameManager instance not found. Cannot reset player data.");
+        }
+    }
+
+    /// <summary>
     // OnDisable is called when the panel is hidden. It's good practice to remove listeners
     // to prevent potential memory leaks or unintended behavior.
     /// </summary>

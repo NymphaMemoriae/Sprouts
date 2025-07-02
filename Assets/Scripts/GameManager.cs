@@ -338,10 +338,12 @@ public class GameManager : MonoBehaviour
                 // 1. Get coins collected during the run
                 int runCoins = plantController.CurrentRunCoins;
 
-                // 2. Calculate bonus coins from score (height)
-                float score = plantController.DisplayHeight; // Assuming DisplayHeight is your score
-                int scoreBonusCoins = Mathf.FloorToInt(score * scoreToCoinMultiplier);
-
+                // 2. Calculate bonus coins from score, ensuring score is not negative
+                float score = plantController.DisplayHeight;
+                // CLAMP THE SCORE: If score is less than 0, use 0 instead.
+                float scoreForCoinCalc = Mathf.Max(0f, score); 
+                int scoreBonusCoins = Mathf.FloorToInt(scoreForCoinCalc * scoreToCoinMultiplier);
+                
                 // 3. Load total coins, add new earnings, and save
                 int totalCoinsBeforeRun = PlayerPrefsManager.Instance.LoadMoney();
                 int totalEarnedThisRun = runCoins + scoreBonusCoins;

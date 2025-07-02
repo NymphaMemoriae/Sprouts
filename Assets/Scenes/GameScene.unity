@@ -8444,6 +8444,7 @@ MonoBehaviour:
   plantController: {fileID: 1468978192}
   backgroundTileManager: {fileID: 557054657}
   obstacleSpawner: {fileID: 1245832016}
+  coinsPerBiomeTransition: 25
 --- !u!1 &874764016
 GameObject:
   m_ObjectHideFlags: 0
