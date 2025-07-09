@@ -5,23 +5,11 @@ using TMPro;
 [RequireComponent(typeof(Button))]
 public class ShopButton : MonoBehaviour
 {
-    // Enum to define what kind of item this button represents
-    public enum ShopItemType { PlantSkin, Soundtrack }
-
     [Header("Item Configuration")]
-    [Tooltip("Select the type of item this button sells.")]
-    [SerializeField] private ShopItemType itemType;
-
-    [Tooltip("Assign the PlantSkinData asset here if Item Type is PlantSkin.")]
     [SerializeField] private PlantSkinData skinData;
-    
-    // [Tooltip("Assign the SoundtrackData asset here if Item Type is Soundtrack.")]
-    // [SerializeField] private SoundtrackData soundtrackData; // Example for the future
 
     [Header("Scene References")]
-    [Tooltip("Assign the MenuUIManager from your scene.")]
     [SerializeField] private MenuUIManager menuUIManager;
-    [Tooltip("Assign the PlantSkinApplier from your scene.")]
     [SerializeField] private PlantSkinApplier plantSkinApplier;
 
     [Header("Button UI Elements")]
@@ -35,91 +23,97 @@ public class ShopButton : MonoBehaviour
 
     private void OnEnable()
     {
+        // OnEnable is a good place to initialize and refresh
+        if (skinData == null)
+        {
+            Debug.LogError($"[ShopButton] CRITICAL ERROR on {gameObject.name}: The 'Skin Data' asset is NOT ASSIGNED in the Inspector!", gameObject);
+            return;
+        }
+
+        itemID = skinData.skinName;
+        itemPrice = skinData.price;
+        Debug.Log($"[ShopButton] OnEnable: Button '{gameObject.name}' is for item '{itemID}' with price '{itemPrice}'.", gameObject);
         RefreshButtonState();
     }
 
-    public void RefreshButtonState()
+    public void OnButtonClick()
     {
-        bool isUnlocked = false;
-        bool isEquipped = false;
-        
-        // Configure button based on item type
-        switch (itemType)
-        {
-            case ShopItemType.PlantSkin:
-                if (skinData == null) return;
-                itemID = skinData.skinName;
-                itemPrice = skinData.price;
-                isUnlocked = PlayerPrefsManager.Instance.IsSkinUnlocked(itemID);
-                isEquipped = PlayerPrefs.GetString("CurrentPlantType", "DefaultSkin") == itemID;
-                break;
+        Debug.LogWarning($"\n--- CLICK DETECTED on button '{gameObject.name}' for skin '{itemID}' ---");
+        HandleSkinPurchaseOrEquip();
+    }
 
-            case ShopItemType.Soundtrack:
-                // Future logic for soundtracks would go here.
-                // For example:
-                // itemID = soundtrackData.soundtrackName;
-                // itemPrice = soundtrackData.price;
-                // isUnlocked = PlayerPrefsManager.Instance.IsSoundtrackUnlocked(itemID);
-                // isEquipped = PlayerPrefsManager.Instance.GetEquippedSoundtrackForBiome("someBiome") == itemID;
-                break;
+    private void HandleSkinPurchaseOrEquip()
+    {
+        bool isUnlocked = itemID == "DefaultSkin" || PlayerPrefsManager.Instance.IsSkinUnlocked(itemID);
+        Debug.Log($"[ShopButton - Handle] 1. Is '{itemID}' unlocked? -> {isUnlocked}");
+
+        if (isUnlocked)
+        {
+            Debug.Log($"[ShopButton - Handle] 2. Path: EQUIP. Equipping skin '{itemID}'.");
+            plantSkinApplier.SetPlantType(itemID);
+        }
+        else
+        {
+            Debug.Log($"[ShopButton - Handle] 2. Path: PURCHASE. Checking if player can afford it.");
+            int playerCoins = PlayerPrefsManager.Instance.LoadMoney();
+            Debug.Log($"[ShopButton - Handle] 3. Player has {playerCoins} coins. Item costs {itemPrice}.");
+
+            if (playerCoins >= itemPrice)
+            {
+                Debug.Log($"[ShopButton - Handle] 4. Player CAN afford it. Proceeding with purchase.");
+                //----_____----_____----_____----
+                // MODIFICATION: ADDED LOGS AND THE EQUIP CALL AFTER PURCHASE
+                //----_____----_____----_____----
+                PlayerPrefsManager.Instance.SaveMoney(playerCoins - itemPrice);
+                PlayerPrefsManager.Instance.SaveSkinUnlocked(itemID, true);
+                Debug.Log($"[ShopButton - Handle] 5. PURCHASE COMPLETE. Unlocked '{itemID}' and saved new coin balance.");
+                
+                // EQUIP THE ITEM IMMEDIATELY AFTER BUYING IT
+                plantSkinApplier.SetPlantType(itemID); 
+                Debug.Log($"[ShopButton - Handle] 6. AUTO-EQUIPPING '{itemID}' right after purchase.");
+            }
+            else
+            {
+                Debug.Log($"[ShopButton - Handle] 4. Player CANNOT afford it. Purchase blocked.");
+            }
         }
 
-        // Update UI visuals
+        Debug.LogWarning($"--- REFRESHING ALL BUTTONS after click on '{itemID}' ---");
+        RefreshAllShopButtons();
+    }
+    
+    public void RefreshButtonState()
+    {
+        if (string.IsNullOrEmpty(itemID)) return; // Don't refresh if not initialized
+
+        Debug.Log($"[ShopButton - Refresh] Refreshing visuals for '{itemID}':");
+
+        // Step A: Determine state
+        bool isUnlocked = itemID == "DefaultSkin" || PlayerPrefsManager.Instance.IsSkinUnlocked(itemID);
+        string equippedSkin = PlayerPrefs.GetString("CurrentPlantType", "DefaultSkin");
+        bool isEquipped = equippedSkin == itemID;
+        int playerCoins = PlayerPrefsManager.Instance.LoadMoney();
+
+        Debug.Log($"[ShopButton - Refresh]   - IsUnlocked check: {isUnlocked}");
+        Debug.Log($"[ShopButton - Refresh]   - IsEquipped check: {isEquipped} (Currently equipped: '{equippedSkin}')");
+        Debug.Log($"[ShopButton - Refresh]   - Player coins: {playerCoins}");
+
+        // Step B: Apply visuals based on state
         if (isUnlocked)
         {
             lockedStateObject.SetActive(false);
-            button.interactable = true;
             equippedStateObject.SetActive(isEquipped);
+            button.interactable = true;
+            Debug.Log($"[ShopButton - Refresh]   - RESULT: Set '{itemID}' to UNLOCKED state. Equipped: {isEquipped}.");
         }
         else // Item is locked
         {
             lockedStateObject.SetActive(true);
             equippedStateObject.SetActive(false);
             priceText.text = itemPrice.ToString();
-            
-            int playerCoins = PlayerPrefsManager.Instance.LoadMoney();
             button.interactable = playerCoins >= itemPrice;
+            Debug.Log($"[ShopButton - Refresh]   - RESULT: Set '{itemID}' to LOCKED state. Button interactable: {button.interactable}.");
         }
-    }
-
-    public void OnButtonClick()
-    {
-        // The logic inside the switch block handles the specific action
-        switch (itemType)
-        {
-            case ShopItemType.PlantSkin:
-                HandleSkinPurchaseOrEquip();
-                break;
-            case ShopItemType.Soundtrack:
-                // HandleSoundtrackPurchaseOrEquip();
-                break;
-        }
-        
-        // Refresh all buttons in the shop to show updated states (e.g., new coin total, equipped status)
-        // FindObjectOfType<ShopUIContainer>()?.RefreshAllButtons(); // We can use a simple container
-    }
-
-    private void HandleSkinPurchaseOrEquip()
-    {
-        bool isUnlocked = PlayerPrefsManager.Instance.IsSkinUnlocked(skinData.skinName);
-
-        if (isUnlocked)
-        {
-            // Equip the skin
-            plantSkinApplier.SetPlantType(skinData.skinName);
-        }
-        else
-        {
-            // Buy the skin
-            int playerCoins = PlayerPrefsManager.Instance.LoadMoney();
-            if (playerCoins >= skinData.price)
-            {
-                PlayerPrefsManager.Instance.SaveMoney(playerCoins - skinData.price);
-                PlayerPrefsManager.Instance.SaveSkinUnlocked(skinData.skinName, true);
-                menuUIManager.UpdateDisplay(); // Refresh coin display
-            }
-        }
-        RefreshAllShopButtons();
     }
 
     private void RefreshAllShopButtons()
@@ -129,6 +123,12 @@ public class ShopButton : MonoBehaviour
         foreach (var btn in allButtons)
         {
             btn.RefreshButtonState();
+        }
+
+        // Also refresh the main coin display
+        if (menuUIManager != null)
+        {
+            menuUIManager.UpdateDisplay();
         }
     }
 }

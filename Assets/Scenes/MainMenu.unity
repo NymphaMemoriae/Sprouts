@@ -8429,18 +8429,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 972118974}
-        m_TargetAssemblyTypeName: PlantSkinApplier, Assembly-CSharp
-        m_MethodName: SetPlantType
-        m_Mode: 5
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: Skin2
-          m_BoolArgument: 0
-        m_CallState: 2
       - m_Target: {fileID: 548055174}
         m_TargetAssemblyTypeName: ShopButton, Assembly-CSharp
         m_MethodName: OnButtonClick
@@ -8503,7 +8491,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c0410e262227ad24e9bd3b00e72a4bcf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemType: 0
   skinData: {fileID: 11400000, guid: 33efa99c626c71b4b952733a3964c61b, type: 2}
   menuUIManager: {fileID: 1101095124}
   plantSkinApplier: {fileID: 972118974}
@@ -10190,18 +10177,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 972118974}
-        m_TargetAssemblyTypeName: PlantSkinApplier, Assembly-CSharp
-        m_MethodName: SetPlantType
-        m_Mode: 5
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: Skin3
-          m_BoolArgument: 0
-        m_CallState: 2
       - m_Target: {fileID: 693870038}
         m_TargetAssemblyTypeName: ShopButton, Assembly-CSharp
         m_MethodName: OnButtonClick
@@ -10264,7 +10239,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c0410e262227ad24e9bd3b00e72a4bcf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemType: 0
   skinData: {fileID: 11400000, guid: 6feb00ac51f9d124db21e55905ebfa41, type: 2}
   menuUIManager: {fileID: 1101095124}
   plantSkinApplier: {fileID: 972118974}
@@ -13206,18 +13180,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 972118974}
-        m_TargetAssemblyTypeName: PlantSkinApplier, Assembly-CSharp
-        m_MethodName: SetPlantType
-        m_Mode: 5
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: Skin1
-          m_BoolArgument: 0
-        m_CallState: 2
       - m_Target: {fileID: 859474072}
         m_TargetAssemblyTypeName: ShopButton, Assembly-CSharp
         m_MethodName: OnButtonClick
@@ -13280,7 +13242,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c0410e262227ad24e9bd3b00e72a4bcf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemType: 0
   skinData: {fileID: 11400000, guid: 01b81499badf81744b5790bc7a210178, type: 2}
   menuUIManager: {fileID: 1101095124}
   plantSkinApplier: {fileID: 972118974}
