@@ -48,12 +48,21 @@ public class PlantSkinApplier : MonoBehaviour
         }
 
         // Apply visuals and stats from the ScriptableObject
+        try
+        {
+            plantLife.SetStartingLives(skinData.startingLives);
+            plantHeadAnimator.runtimeAnimatorController = skinData.plantHeadAnimatorController;
+            plantController.SetMaxVelocity(skinData.maxVelocity);
+            proceduralStem.SetStemMaterial(skinData.stemMaterial);
+            leafSpawner.leafPrefab = skinData.leafPrefab;
+        }
+        catch (System.Exception ex)
+        {
+            Debug.Log($"[PlantSkinApplier] Error applying skin data: {ex.Message}");
+
+        }
+        
         plantHeadVisualComponent.sprite = skinData.plantHeadSprite;
-        plantHeadAnimator.runtimeAnimatorController = skinData.plantHeadAnimatorController;
-        plantLife.SetStartingLives(skinData.startingLives);
-        plantController.SetMaxVelocity(skinData.maxVelocity);
-        proceduralStem.SetStemMaterial(skinData.stemMaterial);
-        leafSpawner.leafPrefab = skinData.leafPrefab;
 
         Debug.Log($"[PlantSkinApplier] Applied skin: {skinData.skinName}");
     }

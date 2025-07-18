@@ -37,6 +37,9 @@ public class ShopItemUI : MonoBehaviour
     public void OnButtonPressed()
     {
         shopManager.AttemptPurchaseOrEquip(skinData);
+        Debug.Log($"[ShopItemUI] Button pressed for skin: {skinData.skinName}");
+        ShopManager.OnShopStateChanged += RefreshVisuals;
+        
     }
 
     /// <summary>
@@ -55,6 +58,7 @@ public class ShopItemUI : MonoBehaviour
             lockedStateObject.SetActive(false);
             equippedStateObject.SetActive(isEquipped);
             button.interactable = true;
+            Debug.Log($"[ShopItemUI] Skin '{skinData.skinName}' is unlocked. Equipped: {isEquipped}");
         }
         else // Locked
         {
@@ -64,6 +68,7 @@ public class ShopItemUI : MonoBehaviour
             priceText.text = skinData.price.ToString();
             // Button is interactable only if the player can afford it.
             button.interactable = playerCoins >= skinData.price;
+            Debug.Log($"[ShopItemUI] Skin '{skinData.skinName}' is locked. Price: {skinData.price}, Player Coins: {playerCoins}");
         }
     }
 }
