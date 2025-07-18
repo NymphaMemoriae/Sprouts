@@ -83,12 +83,12 @@ public class GameManager : MonoBehaviour
 
         if (scene.name == "GameScene")
         {
-            plantController = FindObjectOfType<PlantController>(); // Around Line 64
-            plantLife = FindObjectOfType<PlantLife>();
+            plantController = FindFirstObjectByType<PlantController>(); // Around Line 64
+            plantLife = FindFirstObjectByType<PlantLife>();
 
             if (cameraController == null) // Try to find it if not assigned
             {
-                cameraController = FindObjectOfType<CameraController>();
+                cameraController = FindFirstObjectByType<CameraController>();
             }
 
 
@@ -124,7 +124,7 @@ public class GameManager : MonoBehaviour
                 Debug.LogWarning("[GameManager] CameraController not found in GameScene to reset its state.");
             }
             
-            PlantSounds plantSounds = FindObjectOfType<PlantSounds>();
+            PlantSounds plantSounds = FindFirstObjectByType<PlantSounds>();
             if (plantSounds != null)
             {
                 plantSounds.PlayInitialSoundtrack();

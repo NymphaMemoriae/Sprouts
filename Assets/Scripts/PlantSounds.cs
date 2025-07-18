@@ -53,7 +53,7 @@ public class PlantSounds : MonoBehaviour
     {
         // It's crucial BiomeManager is found and its event can be subscribed to.
         // BiomeManager might initialize its first biome in its own Start method.
-        biomeManager = FindObjectOfType<BiomeManager>();
+        biomeManager = FindFirstObjectByType<BiomeManager>();
         if (biomeManager != null)
         {
             biomeManager.OnBiomeTransitionComplete += HandleBiomeTransition;

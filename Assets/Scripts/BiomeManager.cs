@@ -29,13 +29,13 @@ public class BiomeManager : MonoBehaviour
     {
 
         if (plantController == null)
-            plantController = FindObjectOfType<PlantController>();
+            plantController = FindFirstObjectByType<PlantController>();
 
         if (backgroundTileManager == null)
-            backgroundTileManager = FindObjectOfType<BackgroundTileManager>();
+            backgroundTileManager = FindFirstObjectByType<BackgroundTileManager>();
 
         if (obstacleSpawner == null)
-            obstacleSpawner = FindObjectOfType<ObstacleSpawner>();
+            obstacleSpawner = FindFirstObjectByType<ObstacleSpawner>();
 
         BiomeData initialBiomeToSet = null;
         // Check GameManager for a pre-selected starting biome

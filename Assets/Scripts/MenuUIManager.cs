@@ -1,25 +1,29 @@
+// MenuUIManager.cs (Refactored)
 using UnityEngine;
-using TMPro; // Use TextMeshPro for modern, scalable text
+using TMPro;
 
 public class MenuUIManager : MonoBehaviour
 {
     [Header("UI References")]
-    [Tooltip("Assign the TextMeshPro UI element that displays the total coins.")]
     [SerializeField] private TextMeshProUGUI totalCoinsText;
-
-    [Tooltip("Assign the TextMeshPro UI element that displays the high score.")]
     [SerializeField] private TextMeshProUGUI highScoreText;
 
-    // OnEnable is called every time the menu becomes active.
-    // This is more efficient than using Update().
     private void OnEnable()
     {
+        // Subscribe to the shop state change event to keep the coin display updated.
+        ShopManager.OnShopStateChanged += UpdateDisplay;
+        // Also call it once when the menu becomes active.
         UpdateDisplay();
     }
 
+    private void OnDisable()
+    {
+        // Unsubscribe from the event.
+        ShopManager.OnShopStateChanged -= UpdateDisplay;
+    }
+
     /// <summary>
-    /// Updates the coin and high score text from saved data.
-    /// Can be called from other scripts (like a shop button) to force a refresh.
+    /// Updates the coin and high score text from saved data. Now called by event.
     /// </summary>
     public void UpdateDisplay()
     {
@@ -36,7 +40,6 @@ public class MenuUIManager : MonoBehaviour
         float currentHighScore = PlayerPrefsManager.Instance.LoadHighScore();
         if (highScoreText != null)
         {
-            // "F0" formats the float as a whole number without decimals
             highScoreText.text = $"High Score: {currentHighScore:F0}m";
         }
     }

@@ -14,7 +14,7 @@ public class PlayerPrefsManager : MonoBehaviour
             if (_instance == null)
             {
                 // Look for an existing instance in the scene
-                _instance = FindObjectOfType<PlayerPrefsManager>();
+                _instance = FindFirstObjectByType<PlayerPrefsManager>();
 
                 // If no instance exists, create a new GameObject and add the script
                 if (_instance == null)

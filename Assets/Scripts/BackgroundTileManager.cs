@@ -44,9 +44,9 @@ public class BackgroundTileManager : MonoBehaviour
     private void Start()
     {
         mainCamera   ??= Camera.main;
-        playerHead   ??= FindObjectOfType<PlantController>()?.PlantHead;
-        biomeManager ??= FindObjectOfType<BiomeManager>();
-        trailPainter  =  FindObjectOfType<TrailPainter>();
+        playerHead   ??= FindFirstObjectByType<PlantController>()?.PlantHead;
+        biomeManager ??= FindFirstObjectByType<BiomeManager>();
+        trailPainter  =  FindFirstObjectByType<TrailPainter>();
 
         if (biomeManager != null)
         {
