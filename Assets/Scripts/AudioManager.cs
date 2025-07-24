@@ -29,69 +29,49 @@ public class AudioManager : MonoBehaviour
     public const string MUSIC_VOLUME_KEY = "MusicVolume";
     public const string SFX_VOLUME_KEY = "SFXVolume";
 
-    // PlayerPrefs keys for saving/loading settings (optional, but good for persistence)
-    public const string MASTER_VOLUME_PREF = "MasterVolumePreference";
-    public const string MUSIC_VOLUME_PREF  = "MusicVolumePreference";
-    public const string SFX_VOLUME_PREF    = "SFXVolumePreference";
+   
 
-    public static AudioManager Instance { get; private set; }
+   public static AudioManager Instance { get; private set; }
 
     void Awake()
     {
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject); // Makes AudioManager persist across scene loads
+            DontDestroyOnLoad(gameObject);
         }
         else
         {
-            Destroy(gameObject); // Destroy duplicate if one already exists
+            Destroy(gameObject);
             return;
         }
-
-        // Load saved volumes or apply inspector defaults
+        
         LoadVolumeSettings();
     }
 
     /// <summary>
-    /// Loads volume settings from PlayerPrefs or applies Inspector defaults if none are saved.
+    /// Loads volume settings from PlayerPrefsManager or applies Inspector defaults.
     /// </summary>
     public void LoadVolumeSettings()
     {
-        float masterVol = PlayerPrefs.GetFloat(MASTER_VOLUME_PREF, defaultMasterVolume);
-        float musicVol  = PlayerPrefs.GetFloat(MUSIC_VOLUME_PREF, defaultMusicVolume);
-        float sfxVol    = PlayerPrefs.GetFloat(SFX_VOLUME_PREF, defaultSFXVolume);
+        // Delegate loading to the central PlayerPrefsManager
+        float masterVol = PlayerPrefsManager.Instance.LoadVolume(PlayerPrefsManager.MASTER_VOLUME_KEY, defaultMasterVolume);
+        float musicVol  = PlayerPrefsManager.Instance.LoadVolume(PlayerPrefsManager.MUSIC_VOLUME_KEY, defaultMusicVolume);
+        float sfxVol    = PlayerPrefsManager.Instance.LoadVolume(PlayerPrefsManager.SFX_VOLUME_KEY, defaultSFXVolume);
 
-        SetMasterVolume(masterVol, false); // Don't save when just loading
+        // Apply the loaded values to the mixer without re-saving them.
+        SetMasterVolume(masterVol, false);
         SetMusicVolume(musicVol, false);
         SetSFXVolume(sfxVol, false);
 
-        Debug.Log($"[AudioManager] Loaded volumes: Master={masterVol:F2}, Music={musicVol:F2}, SFX={sfxVol:F2}");
+        Debug.Log($"[AudioManager] Loaded volumes via PlayerPrefsManager: Master={masterVol:F2}, Music={musicVol:F2}, SFX={sfxVol:F2}");
     }
 
-    /// <summary>
-    /// Saves the current volume settings to PlayerPrefs.
-    /// </summary>
-    public void SaveCurrentVolumeSettings()
-    {
-        // Retrieve current linear volumes from mixer (or store them if you update them from UI)
-        float currentMaster = GetVolume(MASTER_VOLUME_KEY, defaultMasterVolume);
-        float currentMusic = GetVolume(MUSIC_VOLUME_KEY, defaultMusicVolume);
-        float currentSFX = GetVolume(SFX_VOLUME_KEY, defaultSFXVolume);
-
-        PlayerPrefs.SetFloat(MASTER_VOLUME_PREF, currentMaster);
-        PlayerPrefs.SetFloat(MUSIC_VOLUME_PREF, currentMusic);
-        PlayerPrefs.SetFloat(SFX_VOLUME_PREF, currentSFX);
-        PlayerPrefs.Save();
-        Debug.Log($"[AudioManager] Saved volumes: Master={currentMaster:F2}, Music={currentMusic:F2}, SFX={currentSFX:F2}");
-    }
+    
 
     /// <summary>
     /// Plays a one-shot sound effect through the dedicated SFX AudioSource.
-    /// Ensures the sound is affected by the SFX mixer group.
     /// </summary>
-    /// <param name="clip">The AudioClip to play.</param>
-    /// <param name="volume">The relative volume of the clip (0.0 to 1.0).</param>
     public void PlaySFX(AudioClip clip, float volume = 1.0f)
     {
         if (sfxOneShotSource == null || clip == null)
@@ -99,20 +79,18 @@ public class AudioManager : MonoBehaviour
             if (sfxOneShotSource == null) Debug.LogWarning("[AudioManager] SFX OneShot Source is not assigned!");
             return;
         }
-        // PlayOneShot allows multiple sounds to overlap from the same source.
-        // The volume parameter acts as a scaler, which is then affected by the mixer volume.
-        sfxOneShotSource.PlayOneShot(clip, volume);
+        sfxOneShotSource.PlayOneShot(clip, volume);     
     }
 
-    // --- Public Methods to Set Volumes (callable from UI sliders, game events, etc.) ---
+     // --- Public Methods to Set Volumes ---
+    // These methods now delegate the saving responsibility to the PlayerPrefsManager.
 
     public void SetMasterVolume(float linearVolume, bool savePreference = true)
     {
         SetMixerVolume(MASTER_VOLUME_KEY, linearVolume);
         if (savePreference)
         {
-            PlayerPrefs.SetFloat(MASTER_VOLUME_PREF, Mathf.Clamp(linearVolume, 0.0001f, 1f));
-            PlayerPrefs.Save(); 
+            PlayerPrefsManager.Instance.SaveVolume(PlayerPrefsManager.MASTER_VOLUME_KEY, linearVolume);
         }
     }
 
@@ -121,8 +99,7 @@ public class AudioManager : MonoBehaviour
         SetMixerVolume(MUSIC_VOLUME_KEY, linearVolume);
         if (savePreference)
         {
-            PlayerPrefs.SetFloat(MUSIC_VOLUME_PREF, Mathf.Clamp(linearVolume, 0.0001f, 1f));
-            PlayerPrefs.Save(); // <-- ADD THIS LINE
+            PlayerPrefsManager.Instance.SaveVolume(PlayerPrefsManager.MUSIC_VOLUME_KEY, linearVolume);
         }
     }
 
@@ -131,8 +108,7 @@ public class AudioManager : MonoBehaviour
         SetMixerVolume(SFX_VOLUME_KEY, linearVolume);
         if (savePreference)
         {
-            PlayerPrefs.SetFloat(SFX_VOLUME_PREF, Mathf.Clamp(linearVolume, 0.0001f, 1f));
-            PlayerPrefs.Save(); // <-- ADD THIS LINE
+            PlayerPrefsManager.Instance.SaveVolume(PlayerPrefsManager.SFX_VOLUME_KEY, linearVolume);
         }
     }
 

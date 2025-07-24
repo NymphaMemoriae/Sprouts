@@ -175,9 +175,15 @@ public class PlantSounds : MonoBehaviour
             return;
         }
 
+        // First, get the plant's current speed.
+        float currentSpeed = plantController.CurrentVelocity;
+
+        // The condition to play the sound is now based on actual movement (speed > 0.1f)
+        // and not being stuck. The check for 'IsGrowing' has been removed.
+        // We use 0.1f as a small threshold to avoid playing sounds for negligible movement.
         bool canPlayMovementSound = movementAudioSource.clip != null &&
-                                   plantController.IsGrowing &&
-                                   !plantController.IsStuck;
+                                (currentSpeed > 0.1f) &&
+                                !plantController.IsStuck;
 
         if (canPlayMovementSound)
         {
@@ -186,19 +192,19 @@ public class PlantSounds : MonoBehaviour
                 movementAudioSource.Play();
             }
 
-            float currentSpeed = plantController.CurrentVelocity;
-            // Use GetMaxGrowthSpeed() from PlantController if you want velocityForMaxEffect to be dynamic
-            // For now, using the serialized 'velocityForMaxEffect' for more control from the inspector.
+            // Calculate a 0-1 value based on how fast the plant is moving.
             float normalizedSpeed = Mathf.Clamp01(currentSpeed / velocityForMaxEffect);
 
+            // Adjust pitch and volume based on the normalized speed.
             movementAudioSource.pitch = Mathf.Lerp(minMovementPitch, maxMovementPitch, normalizedSpeed);
             movementAudioSource.volume = Mathf.Lerp(minMovementVolume, maxMovementVolume, normalizedSpeed);
         }
         else
         {
+            // If the conditions are not met (e.g., the plant stopped), stop the sound.
             if (movementAudioSource.isPlaying)
             {
-                movementAudioSource.Stop(); // Or you could implement a fade out
+                movementAudioSource.Stop();
             }
         }
     }

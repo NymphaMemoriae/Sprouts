@@ -53,6 +53,10 @@ public class PlayerPrefsManager : MonoBehaviour
     private const string SKIN_UNLOCKED_PREFIX = "SkinUnlocked_";
     private const string EQUIPPED_SOUNDTRACK_PREFIX = "EquippedSoundtrack_";
     private const string BIOME_UNLOCKED_PREFIX = "BiomeUnlocked_";
+    // Centralized keys for volume settings
+    public const string MASTER_VOLUME_KEY = "Settings_MasterVolume";
+    public const string MUSIC_VOLUME_KEY = "Settings_MusicVolume";
+    public const string SFX_VOLUME_KEY = "Settings_SFXVolume";
 
     // --- Default Values ---
     private const int DEFAULT_MONEY = 0;
@@ -108,48 +112,19 @@ public class PlayerPrefsManager : MonoBehaviour
         return PlayerPrefs.GetInt(SKIN_UNLOCKED_PREFIX + skinID, 0) == 1;
     }
 
-    // Example: To get all unlocked skins, you'd need a predefined list of all possible skin IDs
-    // and then check each one using IsSkinUnlocked.
-    // For a very large number of skins, a more complex approach like JSON serialization might be better,
-    // but for a manageable number, individual keys are simpler.
+    // --- Centralized Volume Settings ---
+    public void SaveVolume(string key, float volumeLevel)
+    {
 
-    // --- Settings (Example: Volume) ---
-    // public void SaveMasterVolume(float volumeLevel)
-    // {
-    //     PlayerPrefs.SetFloat(MASTER_VOLUME_KEY, Mathf.Clamp01(volumeLevel)); // Ensure volume is between 0 and 1
-    //     PlayerPrefs.Save();
-    //     // You would typically also apply this volume to your game's AudioMixer here
-    //     Debug.Log($"Saved Master Volume: {volumeLevel}");
-    // }
+        PlayerPrefs.SetFloat(key, Mathf.Clamp01(volumeLevel));
+        PlayerPrefs.Save(); // Ensure data is written to disk immediately
+         Debug.Log($"--- SAVING VOLUME TO PLAYERPREFS --- Key: {key}, Value: {volumeLevel}");
+    }
 
-    // public float LoadMasterVolume()
-    // {
-    //     return PlayerPrefs.GetFloat(MASTER_VOLUME_KEY, DEFAULT_VOLUME);
-    // }
-    
-    // public void SaveMusicVolume(float volumeLevel)
-    // {
-    //     PlayerPrefs.SetFloat(MUSIC_VOLUME_KEY, Mathf.Clamp01(volumeLevel));
-    //     PlayerPrefs.Save();
-    //     Debug.Log($"Saved Music Volume: {volumeLevel}");
-    // }
-
-    // public float LoadMusicVolume()
-    // {
-    //     return PlayerPrefs.GetFloat(MUSIC_VOLUME_KEY, DEFAULT_VOLUME);
-    // }
-
-    // public void SaveSFXVolume(float volumeLevel)
-    // {
-    //     PlayerPrefs.SetFloat(SFX_VOLUME_KEY, Mathf.Clamp01(volumeLevel));
-    //     PlayerPrefs.Save();
-    //     Debug.Log($"Saved SFX Volume: {volumeLevel}");
-    // }
-
-    // public float LoadSFXVolume()
-    // {
-    //     return PlayerPrefs.GetFloat(SFX_VOLUME_KEY, DEFAULT_VOLUME);
-    // }
+    public float LoadVolume(string key, float defaultVolume)
+    {
+        return PlayerPrefs.GetFloat(key, defaultVolume);
+    }
 
    // --- Soundtracks ---
 
