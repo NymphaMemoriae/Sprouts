@@ -111,6 +111,7 @@ GameObject:
   - component: {fileID: 7385964526535655144}
   - component: {fileID: 4441474434436053112}
   - component: {fileID: 8738117814393699203}
+  - component: {fileID: 2241792534146903275}
   m_Layer: 0
   m_Name: GhostBuff_0
   m_TagString: Untagged
@@ -147,7 +148,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   buffData: {fileID: 11400000, guid: ced24f54c0a6a154a8c7d5c3b3019fcd, type: 2}
-  animator: {fileID: 0}
+  animator: {fileID: 4441474434436053112}
 --- !u!212 &7385964526535655144
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -253,6 +254,42 @@ MonoBehaviour:
     m_Extent: {x: 0.7630141, y: 1.2791996, z: 0}
   m_AlwaysUpdate: 1
   m_AutoRebind: 0
+--- !u!58 &2241792534146903275
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4306545893955823533}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0.07870545, y: 0.15917856}
+  m_Radius: 0.624401
 --- !u!1 &4497830706840195653
 GameObject:
   m_ObjectHideFlags: 0
