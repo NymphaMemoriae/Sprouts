@@ -42,33 +42,40 @@ public class ShopItemUI : MonoBehaviour
         
     }
 
-    /// <summary>
-    /// Reads the global state from PlayerPrefs and updates just this button's visuals.
-    /// </summary>
-    private void RefreshVisuals()
+   /// <summary>
+/// Reads the global state and updates this button's visuals in a clean, sequential manner.
+/// </summary>
+private void RefreshVisuals()
     {
         if (skinData == null) return;
 
+       
         bool isUnlocked = PlayerPrefsManager.Instance.IsSkinUnlocked(skinData.skinName);
-        string equippedSkinName = PlayerPrefs.GetString("CurrentPlantType", "DefaultSkin");
-        bool isEquipped = (equippedSkinName == skinData.skinName);
+     
+        bool isEquipped = isUnlocked && (PlayerPrefs.GetString("CurrentPlantType", "DefaultSkin") == skinData.skinName);
 
-        if (isUnlocked)
+        
+        if (lockedStateObject != null)
         {
-            lockedStateObject.SetActive(false);
+            lockedStateObject.SetActive(!isUnlocked);
+        }
+        if (equippedStateObject != null)
+        {
             equippedStateObject.SetActive(isEquipped);
-            button.interactable = true;
-            Debug.Log($"[ShopItemUI] Skin '{skinData.skinName}' is unlocked. Equipped: {isEquipped}");
         }
-        else // Locked
+
+
+        if (priceText != null)
         {
-            int playerCoins = PlayerPrefsManager.Instance.LoadMoney();
-            lockedStateObject.SetActive(true);
-            equippedStateObject.SetActive(false);
-            priceText.text = skinData.price.ToString();
-            // Button is interactable only if the player can afford it.
-            button.interactable = playerCoins >= skinData.price;
-            Debug.Log($"[ShopItemUI] Skin '{skinData.skinName}' is locked. Price: {skinData.price}, Player Coins: {playerCoins}");
+            priceText.gameObject.SetActive(!isUnlocked);
+            if (!isUnlocked)
+            {
+                priceText.text = skinData.price.ToString();
+            }
         }
+
+      
+        int playerCoins = PlayerPrefsManager.Instance.LoadMoney();
+        button.interactable = isUnlocked || (playerCoins >= skinData.price);
     }
 }

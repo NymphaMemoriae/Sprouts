@@ -30045,7 +30045,7 @@ MonoBehaviour:
   plantController: {fileID: 0}
   plantLife: {fileID: 0}
   cameraController: {fileID: 0}
-  scoreToCoinMultiplier: 1
+  scoreToCoinMultiplier: 5
 --- !u!4 &2110641597
 Transform:
   m_ObjectHideFlags: 0
