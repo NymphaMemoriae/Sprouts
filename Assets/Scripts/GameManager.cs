@@ -339,7 +339,7 @@ public class GameManager : MonoBehaviour
                 int runCoins = plantController.CurrentRunCoins;
 
                 // 2. Calculate bonus coins from score, ensuring score is not negative
-                float score = plantController.DisplayHeight;
+                float score = plantController.CurrentHeight;
                 // CLAMP THE SCORE: If score is less than 0, use 0 instead.
                 float scoreForCoinCalc = Mathf.Max(0f, score); 
                 int scoreBonusCoins = Mathf.FloorToInt(scoreForCoinCalc * scoreToCoinMultiplier);

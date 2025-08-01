@@ -217,7 +217,7 @@ public class UIManager : MonoBehaviour
     private void OnRestartButtonClicked() => GameManager.Instance?.RestartGame();
     private void OnMainMenuButtonClicked() => GameManager.Instance?.ReturnToMainMenu(); 
     private void OnResumeButtonClicked() => GameManager.Instance?.ResumeGame();
-    private void OnQuitButtonClicked() => GameManager.Instance?.ReturnToMainMenu();
+    private void OnQuitButtonClicked() => GameManager.Instance?.SetGameState(GameState.GameOver);
 
     private void OnPauseButtonClicked()
     {

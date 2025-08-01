@@ -8493,7 +8493,7 @@ MonoBehaviour:
   skinData: {fileID: 11400000, guid: 01b81499badf81744b5790bc7a210178, type: 2}
   shopManager: {fileID: 565162913}
   button: {fileID: 548055171}
-  lockedStateObject: {fileID: 6713774764571536627}
+  lockedStateObject: {fileID: 0}
   priceText: {fileID: 1363721691}
   equippedStateObject: {fileID: 1835248792342409348}
 --- !u!1 &561533907
@@ -30045,7 +30045,7 @@ MonoBehaviour:
   plantController: {fileID: 0}
   plantLife: {fileID: 0}
   cameraController: {fileID: 0}
-  scoreToCoinMultiplier: 5
+  scoreToCoinMultiplier: 0.5
 --- !u!4 &2110641597
 Transform:
   m_ObjectHideFlags: 0
