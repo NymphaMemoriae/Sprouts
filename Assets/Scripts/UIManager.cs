@@ -98,87 +98,57 @@ public class UIManager : MonoBehaviour
     }
 
     // Updates UI panels based on GameState
-    private void HandleGameStateChanged(GameState newState)
+   private void HandleGameStateChanged(GameState newState)
+{
+    if(gameOverPanel) gameOverPanel.SetActive(newState == GameState.GameOver);
+    if(pausePanel) pausePanel.SetActive(newState == GameState.Paused);
+
+    // Update Game Over specific text only when that panel is active
+    if (newState == GameState.GameOver)
     {
-        if(gameOverPanel) gameOverPanel.SetActive(newState == GameState.GameOver);
-        if(pausePanel) pausePanel.SetActive(newState == GameState.Paused);
+        // Get the final score ONCE from the correct source (GameManager).
+        int currentFinalScoreInt = Mathf.FloorToInt(GameManager.Instance.DisplayScore);
 
-        // Update Game Over specific text only when that panel is active
-        if (newState == GameState.GameOver)
+        if (finalScoreText != null)
         {
-            // Attempt to refresh plantController reference if it's null
-            if (plantController == null && GameManager.Instance != null)
+            finalScoreText.text = $"{currentFinalScoreInt}"; // Display only the integer value
+        }
+        else
+        {
+            Debug.LogError("UIManager: finalScoreText is not assigned!");
+        }
+
+        // Handle High Score saving and display
+        if (PlayerPrefsManager.Instance != null)
+        {
+            float savedHighScoreFloat = PlayerPrefsManager.Instance.LoadHighScore();
+            int savedHighScoreInt = Mathf.FloorToInt(savedHighScoreFloat);
+
+            if (currentFinalScoreInt > savedHighScoreInt)
             {
-                plantController = GameManager.Instance.plantController;
-            }
-
-            int currentFinalScoreInt = 0;
-
-            if (plantController != null)
-            {
-                // Use CurrentHeight for score consistency with HUD, and convert to int
-                currentFinalScoreInt = Mathf.FloorToInt(plantController.CurrentHeight);
-
-                if (finalScoreText != null)
+                // Save the new relative high score
+                PlayerPrefsManager.Instance.SaveHighScore(currentFinalScoreInt);
+                if (highScoreText != null)
                 {
-                    finalScoreText.text = $"{currentFinalScoreInt}"; // Display only the integer value
-                }
-                else
-                {
-                    Debug.LogError("UIManager: finalScoreText is not assigned!");
-                }
-
-                // Handle High Score saving and display
-                if (PlayerPrefsManager.Instance != null)
-                {
-                    float savedHighScoreFloat = PlayerPrefsManager.Instance.LoadHighScore();
-                    int savedHighScoreInt = Mathf.FloorToInt(savedHighScoreFloat);
-
-                    if (currentFinalScoreInt > savedHighScoreInt)
-                    {
-                        PlayerPrefsManager.Instance.SaveHighScore(plantController.CurrentHeight); // Save the raw float value for precision
-                        // Update displayed high score to the new score immediately
-                        if (highScoreText != null)
-                        {
-                            highScoreText.text = $"{currentFinalScoreInt}"; // Display only the integer value
-                        }
-                    }
-                    else
-                    {
-                        // Display existing high score
-                        if (highScoreText != null)
-                        {
-                            highScoreText.text = $"{savedHighScoreInt}"; // Display only the integer value
-                        }
-                    }
-                }
-                else
-                {
-                    Debug.LogError("UIManager: PlayerPrefsManager.Instance is null. Cannot save or load high score.");
-                    if (highScoreText != null) highScoreText.text = "ERR"; // Error placeholder
+                    highScoreText.text = $"{currentFinalScoreInt}"; // Display only the integer value
                 }
             }
             else
             {
-                Debug.LogError("UIManager (GameOver): plantController is null. Cannot display final score or update high score.");
-                if (finalScoreText != null) finalScoreText.text = "0"; // Default/Error placeholder for final score
+                // Display existing high score
                 if (highScoreText != null)
                 {
-                    // Try to display existing high score even if plantController is null
-                    if (PlayerPrefsManager.Instance != null)
-                    {
-                        highScoreText.text = $"{Mathf.FloorToInt(PlayerPrefsManager.Instance.LoadHighScore())}"; // Display only integer
-                    }
-                    else
-                    {
-                        highScoreText.text = "ERR"; // Error placeholder
-                    }
+                    highScoreText.text = $"{savedHighScoreInt}"; // Display only the integer value
                 }
             }
         }
-    } // This closing brace for HandleGameStateChanged was likely the issue if it was misplaced or duplicated.
-
-    // --- HUD Update Methods ---
+        else
+        {
+            Debug.LogError("UIManager: PlayerPrefsManager.Instance is null. Cannot save or load high score.");
+            if (highScoreText != null) highScoreText.text = "ERR"; // Error placeholder
+        }
+    }
+}
     public void UpdateScore(float score)
     {
         if (scoreText != null && !Mathf.Approximately(score, lastScore))
@@ -243,7 +213,7 @@ public class UIManager : MonoBehaviour
              if (plantController != null)
              {
                  UpdateHeight(plantController.DisplayHeight);
-                 UpdateScore(plantController.CurrentHeight); 
+                 UpdateScore(GameManager.Instance.DisplayScore); 
                  UpdateVelocity(plantController.CurrentVelocity);
              }
         }

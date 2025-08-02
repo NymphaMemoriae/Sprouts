@@ -1399,7 +1399,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Game Over!
+  m_text: Yielded.Wilted
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 93c2ccfb9d4949341bd672b22fd6fdf0, type: 2}
   m_sharedMaterial: {fileID: 6478928780780803982, guid: 93c2ccfb9d4949341bd672b22fd6fdf0, type: 2}

@@ -15,6 +15,9 @@ public class GameManager : MonoBehaviour
     public event Action<GameState> OnGameStateChanged;
 
     public GameState CurrentGameState { get; private set; } = GameState.MainMenu;
+    [Header("Scoring")]
+    public float DisplayScore { get; private set; }
+    private float _startingHeightForRun;
     private static Vector3? _lastCheckpointPosition = null; 
     public static BiomeData SelectedStartBiomeForNextRun { get; private set; } = null;
     private static float? _forcedInitialHeightForNextRun = null;
@@ -95,9 +98,12 @@ public class GameManager : MonoBehaviour
             if (plantController == null) { Debug.LogError("[GameManager] OnSceneLoaded: Could not find PlantController in GameScene!"); }
             else
             {
-                // *** THIS IS THE KEY RESPAWN LOGIC ***
+              
                 Vector3 respawnPos = GetRespawnPosition();
-                plantController.ResetState(respawnPos); // Reset position and state
+                plantController.ResetState(respawnPos); 
+                 _startingHeightForRun = plantController.CurrentHeight;
+                DisplayScore = 0f; // Explicitly set score to 0 at the start
+                Debug.Log($"[GameManager] Starting height for run captured: {_startingHeightForRun}");
                 Debug.Log($"[GameManager] Plant positioned at {respawnPos}");
             }
             if (plantLife == null) { Debug.LogError("[GameManager] OnSceneLoaded: Could not find PlantLife in GameScene!"); }
@@ -157,6 +163,11 @@ public class GameManager : MonoBehaviour
         if (CurrentGameState == GameState.Playing && Input.GetKeyDown(KeyCode.Escape)) { PauseGame(); }
         else if (CurrentGameState == GameState.Paused && Input.GetKeyDown(KeyCode.Escape)) { ResumeGame(); }
         #endif
+        if (CurrentGameState == GameState.Playing && plantController != null)
+        {
+            float score = plantController.CurrentHeight - _startingHeightForRun;
+            DisplayScore = Mathf.Max(0f, score); // Ensure score doesn't go below zero
+        }
     }
 
     public void StartGame() // Often called from a generic "Start" button in MainMenu if no level is selected
@@ -335,16 +346,14 @@ public class GameManager : MonoBehaviour
         {
             if (plantController != null && PlayerPrefsManager.Instance != null)
             {
-                // 1. Get coins collected during the run
+                
                 int runCoins = plantController.CurrentRunCoins;
 
-                // 2. Calculate bonus coins from score, ensuring score is not negative
-                float score = plantController.CurrentHeight;
-                // CLAMP THE SCORE: If score is less than 0, use 0 instead.
-                float scoreForCoinCalc = Mathf.Max(0f, score); 
+                
+                float scoreForCoinCalc = DisplayScore; 
                 int scoreBonusCoins = Mathf.FloorToInt(scoreForCoinCalc * scoreToCoinMultiplier);
                 
-                // 3. Load total coins, add new earnings, and save
+              
                 int totalCoinsBeforeRun = PlayerPrefsManager.Instance.LoadMoney();
                 int totalEarnedThisRun = runCoins + scoreBonusCoins;
                 
