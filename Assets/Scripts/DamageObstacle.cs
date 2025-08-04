@@ -10,6 +10,7 @@ public class DamageObstacle : MonoBehaviour
 
     private SpriteRenderer spriteRenderer;
     private Color originalColor;
+    private float lastSoundTime = -1f; // Tracks when the sound was last played for this instance
 
     private void Awake()
     {
@@ -48,6 +49,7 @@ public class DamageObstacle : MonoBehaviour
         {
             collisionParticles.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
         }
+         lastSoundTime = -1f;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -62,6 +64,7 @@ public class DamageObstacle : MonoBehaviour
 
     private void HandlePlantContact(GameObject other, Vector3 contactPoint)
     {
+
         if (!other.CompareTag("PlantHead")) return;
 
         if (obstacleData == null)
@@ -72,50 +75,54 @@ public class DamageObstacle : MonoBehaviour
 
         Debug.Log($"Plant contacted obstacle: {gameObject.name}, type: {(obstacleData.isSideObstacle ? "Side" : "Regular")}", this);
 
-        // 1. Optional prefab-based VFX (still supported)
+
         if (obstacleData.collisionEffectPrefab != null)
         {
             GameObject effect = Instantiate(obstacleData.collisionEffectPrefab, contactPoint, Quaternion.identity);
             Destroy(effect, obstacleData.effectDuration);
         }
 
-        // 2. Optional built-in particle burst (like spikes)
         if (collisionParticles != null)
         {
             collisionParticles.Play();
         }
 
-        // 3. Optional sound
+    
         if (obstacleData.collisionSound != null)
         {
-            // Use the new centralized method
-            if (AudioManager.Instance != null)
+            if (Time.time >= lastSoundTime + obstacleData.soundCooldown)
             {
-                AudioManager.Instance.PlaySFX(obstacleData.collisionSound, obstacleData.volume);
-            }
-            else
-            {
-                // Fallback to the old method if AudioManager is not found, ensuring sound still plays
-                AudioSource.PlayClipAtPoint(obstacleData.collisionSound, transform.position, obstacleData.volume);
-                Debug.LogWarning("[DamageObstacle] AudioManager not found. Playing sound without mixer control.");
+                
+                lastSoundTime = Time.time; 
+                
+            
+                if (AudioManager.Instance != null)
+                {
+                    AudioManager.Instance.PlaySFX(obstacleData.collisionSound, obstacleData.volume);
+                }
+                else
+                {
+                    AudioSource.PlayClipAtPoint(obstacleData.collisionSound, transform.position, obstacleData.volume);
+                    Debug.LogWarning("[DamageObstacle] AudioManager not found. Playing sound without mixer control.");
+                }
             }
         }
 
-        // 4. Optional color flash
+   
         if (obstacleData.changeColorOnCollision && spriteRenderer != null)
         {
             spriteRenderer.color = obstacleData.collisionColor;
             Invoke(nameof(RestoreColor), 0.5f);
         }
 
-        // 5. Notify plant for damage
+        // Gameplay, tells the PlantLife script to handle the damage.
         PlantLife plantLife = other.GetComponentInParent<PlantLife>();
         if (plantLife != null)
         {
             plantLife.HandleCollision(this);
         }
 
-        // 6. Notify plant for physics behavior
+        
         if (obstacleData.isPhysical)
         {
             PlantController plantController = other.GetComponentInParent<PlantController>();

@@ -88,6 +88,15 @@ public class GameManager : MonoBehaviour
         {
             plantController = FindFirstObjectByType<PlantController>(); // Around Line 64
             plantLife = FindFirstObjectByType<PlantLife>();
+            if (plantLife != null)
+            {
+                plantLife.ResetLives();
+                Debug.Log("[GameManager] Player lives reset on GameScene load.");
+            }
+            else
+            {
+                Debug.LogError("[GameManager] OnSceneLoaded: Could not find PlantLife in GameScene!");
+            }
 
             if (cameraController == null) // Try to find it if not assigned
             {
@@ -363,24 +372,6 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        // Reset lives when entering Playing state if plantLife is available
-        // Moved ResetLives logic partially into OnSceneLoaded for restarts,
-        // but also keep it here for the initial StartGame call.
-        if (newState == GameState.Playing)
-        {
-            if (plantLife == null) { plantLife = FindAnyObjectByType<PlantLife>(); }
-
-            if (plantLife != null)
-            {
-                plantLife.ResetLives();
-                Debug.Log("[GameManager] Player lives reset via SetGameState.");
-            }
-            // Use explicit check for scene name to avoid error when not in game scene
-            else if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "GameScene")
-            {
-                Debug.LogError("[GameManager] SetGameState(Playing): Cannot reset lives - PlantLife reference is missing!");
-            }
-        }
     }
 }
 

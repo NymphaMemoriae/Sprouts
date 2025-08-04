@@ -38,6 +38,7 @@ public class ObstacleData : ScriptableObject
     public AudioClip collisionSound;
     [Range(0f, 1f)]
     public float volume = 0.7f;
+    public float soundCooldown = 1.0f;
 
     [Header("Spawn Settings")]
     [Range(0f, 1f)]

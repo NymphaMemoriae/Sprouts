@@ -6,17 +6,13 @@ using System.Collections.Generic;
 public class ShopManager : MonoBehaviour
 {
     // --- EVENTS ---
-    // ShopItemUI and MenuUIManager will subscribe to this to refresh their visuals.
     public static event Action OnShopStateChanged;
-    // PlantSkinApplier will subscribe to this to update the preview model.
     public static event Action<PlantSkinData> OnSkinEquipped;
+    [SerializeField] private ConfirmationPanelUI confirmationPanel;
+
+    private PlantSkinData pendingPurchaseItem;
 
     // --- PUBLIC METHODS (called by ShopItemUI) ---
-
-    /// <summary>
-    /// This is the main entry point for a button press. It handles both
-    /// purchasing a locked item or equipping an unlocked one.
-    /// </summary>
     public void AttemptPurchaseOrEquip(PlantSkinData skin)
     {
         if (skin == null) return;
@@ -26,14 +22,41 @@ public class ShopManager : MonoBehaviour
         if (isUnlocked)
         {
             EquipSkin(skin);
+            OnShopStateChanged?.Invoke();
         }
         else
         {
-            TryPurchaseSkin(skin);
+            RequestPurchaseConfirmation(skin);
         }
 
-        // After any action, notify all listeners that the shop state has changed
-        // so they can update their visuals (coin display, button states, etc).
+       
+        
+    }
+
+    private void RequestPurchaseConfirmation(PlantSkinData skin)
+    {
+        if (skin == null) return;
+
+        pendingPurchaseItem = skin;
+        string message = $"Purchase {skin.skinName} for {skin.price} coins?";
+        
+        
+        confirmationPanel.Show(message, HandlePurchaseConfirmation);
+    }
+
+    
+    private void HandlePurchaseConfirmation(bool wasConfirmed)
+    {
+        if (wasConfirmed && pendingPurchaseItem != null)
+        {
+           
+            TryPurchaseSkin(pendingPurchaseItem);
+        }
+
+        
+        pendingPurchaseItem = null;
+
+        
         OnShopStateChanged?.Invoke();
     }
 

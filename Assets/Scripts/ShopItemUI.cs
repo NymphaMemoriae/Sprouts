@@ -37,8 +37,8 @@ public class ShopItemUI : MonoBehaviour
     public void OnButtonPressed()
     {
         shopManager.AttemptPurchaseOrEquip(skinData);
-        Debug.Log($"[ShopItemUI] Button pressed for skin: {skinData.skinName}");
-        ShopManager.OnShopStateChanged += RefreshVisuals;
+       
+        // ShopManager.OnShopStateChanged += RefreshVisuals;
         
     }
 
