@@ -17,12 +17,32 @@ public class StartingBiomeSelection : MonoBehaviour
     [Header("Level Setup")]
     public List<LevelEntry> selectableLevels = new List<LevelEntry>();
     public string gameSceneName = "GameScene"; // Ensure this matches your game scene's name
-
-    [Header("Optional Default Start Button")]
-    public Button defaultStartButton; // Assign if you have a "Start from Beginning" button
-
+    [Header("UI References")]
+     public Button defaultStartButton; 
+    public TextMeshProUGUI newBiomeUnlockMessageText;
     void Start()
     {
+         if (PlayerPrefs.HasKey("JustUnlockedBiomeName"))
+        {
+            string unlockedBiomeName = PlayerPrefs.GetString("JustUnlockedBiomeName");
+            if (newBiomeUnlockMessageText != null)
+            {
+                // Format and display the message
+                newBiomeUnlockMessageText.text = $"You unlocked {unlockedBiomeName}! You can now start from there.";
+                newBiomeUnlockMessageText.gameObject.SetActive(true);
+            }
+
+            //Clear the key so the message doesn't show again
+            PlayerPrefs.DeleteKey("JustUnlockedBiomeName");
+        }
+        else
+        {
+            // If no new biome was unlocked, make sure the message text is hidden
+            if (newBiomeUnlockMessageText != null)
+            {
+                newBiomeUnlockMessageText.gameObject.SetActive(false);
+            }
+        }
         // Unlock any biomes that are flagged as 'unlocked by default'
         foreach (var levelEntry in selectableLevels)
         {

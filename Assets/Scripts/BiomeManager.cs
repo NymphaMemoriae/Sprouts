@@ -114,6 +114,8 @@ public class BiomeManager : MonoBehaviour
         if (!PlayerPrefsManager.Instance.IsBiomeUnlocked(biome.biomeName))
         {
             PlayerPrefsManager.Instance.UnlockBiome(biome.biomeName);
+            // Save the name of the newly unlocked biome to show a message in the main menu.
+             PlayerPrefs.SetString("JustUnlockedBiomeName", biome.biomeName);
         }
         
         BiomeData previousBiome = currentBiome; // Store previous biome before overwriting
