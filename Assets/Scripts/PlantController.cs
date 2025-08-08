@@ -49,6 +49,8 @@ public class PlantController : MonoBehaviour
 
     [Header("References")]
     [SerializeField] public PlantLife plantLife;
+    [Header("Physics References")]
+    [SerializeField] private Rigidbody2D plantHeadRigidbody;
 
     private float currentGrowthSpeed;
     private bool isGrowing = false;
@@ -91,7 +93,7 @@ public class PlantController : MonoBehaviour
             Debug.Log("Plant teleported 100 meters up!");
         }
     }
-     #region Coin Management
+    #region Coin Management
     /// <summary>
     /// Resets coin and buff states for the start of a new run.
     /// </summary>
@@ -120,7 +122,7 @@ public class PlantController : MonoBehaviour
         CurrentRunCoins += amount;
         Debug.Log($"[PlantController] Added {amount} direct coins. Total run coins: {CurrentRunCoins}");
     }
-    
+
     /// <summary>
     /// Activates the Double Coins buff for the remainder of the run.
     /// </summary>
@@ -151,7 +153,7 @@ public class PlantController : MonoBehaviour
     {
         if (isGameOver) return;
 
-        if (Mathf.Approximately(direction, 0f)) return;
+      
 
         bool blocked = Physics2D.CircleCast(
             plantHead.position,
@@ -168,10 +170,10 @@ public class PlantController : MonoBehaviour
         }
         else
         {
-            // Apply minor upward slowdown on side bump
             sideBumpTimer = sideBumpRecoveryTime;
         }
 
+        //set the targetRotation to 0 when there's no input
         targetRotation = Mathf.Abs(direction) > 0.01f ? Mathf.Clamp(-direction * 45f, -45f, 45f) : 0f;
     }
 
@@ -316,10 +318,9 @@ public class PlantController : MonoBehaviour
 
     private void UpdatePlantHeadRotation()
     {
-        if (plantHead != null)
+        if (plantHeadRigidbody != null)
         {
-            float currentAngle = plantHead.rotation.eulerAngles.z;
-            if (currentAngle > 180f) currentAngle -= 360f;
+            float currentAngle = plantHeadRigidbody.rotation;
 
             float smoothedAngle = Mathf.SmoothDampAngle(
                 currentAngle,
@@ -328,9 +329,12 @@ public class PlantController : MonoBehaviour
                 rotationSmoothTime
             );
 
-            plantHead.rotation = Quaternion.Euler(0f, 0f, smoothedAngle);
+            // works WITH the physics engine
+            plantHeadRigidbody.MoveRotation(smoothedAngle);
         }
     }
+    
+    
 }
 
 public enum BuffType

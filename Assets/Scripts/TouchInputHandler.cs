@@ -6,7 +6,7 @@ public class TouchInputHandler : MonoBehaviour
     [SerializeField] private float touchSensitivity = 1f;
     
     private Vector2 lastTouchPosition;
-    private bool isTouching = false;
+    // private bool isTouching = false;
     
     private void Start()
     {
@@ -16,69 +16,63 @@ public class TouchInputHandler : MonoBehaviour
     
     private void Update()
     {
-    
-        // Debug the game state
-        if (GameManager.Instance == null)
+        // --- Pre-computation Checks ---
+        if (plantController == null || (GameManager.Instance != null && GameManager.Instance.CurrentGameState != GameState.Playing && !Application.isEditor))
         {
-            Debug.LogError("GameManager.Instance is null! Make sure GameManager exists in the scene.");
             return;
         }
-        
-        // Always process input in editor mode for testing, or when game is playing
-        bool shouldProcessInput = Application.isEditor || GameManager.Instance.CurrentGameState == GameState.Playing;
-        
-        if (!shouldProcessInput)
-        {
-            Debug.Log("Not processing input because game state is: " + GameManager.Instance.CurrentGameState);
-            return;
-        }
-        
-        if (plantController == null)
-        {
-            Debug.LogError("PlantController reference is missing!");
-            return;
-        }
-            
-        // MODIFIED: Always handle both input types for testing
-        // This ensures input works on all platforms
-        HandleMouseInput();
-        
+
+        // --- Check for Active Input ---
+
+        // Is there a touch on the screen?
         if (Input.touchCount > 0)
         {
             HandleTouchInput();
         }
-    }
-    
-    private void HandleMouseInput()
-    {
-        if (Input.GetMouseButtonDown(0))
+        // Is the mouse button being held down?
+        else if (Input.GetMouseButton(0))
         {
-            Debug.Log("Mouse button down detected");
-            isTouching = true;
-            lastTouchPosition = Input.mousePosition;
-            plantController.SetGrowing(true);
+            HandleMouseInput();
         }
-        else if (Input.GetMouseButtonUp(0))
-        {
-            Debug.Log("Mouse button up detected");
-            isTouching = false;
-            plantController.SetGrowing(false);
-        }
-        
-        if (isTouching)
-        {
-            Vector2 currentMousePosition = Input.mousePosition;
-            float horizontalDelta = (currentMousePosition.x - lastTouchPosition.x) / Screen.width;
-            
-            // Apply horizontal movement
-            plantController.SetHorizontalMovement(horizontalDelta * touchSensitivity);
-            
-            // Update last position
-            lastTouchPosition = currentMousePosition;
-        }
+        // If there is NO active input:
         else
         {
-            // When not touching, gradually return to neutral position
+            // Stop growing and force the head to be straight.
+            plantController.SetGrowing(false);
+            plantController.SetHorizontalMovement(0); 
+        }
+    }
+    
+   private void HandleMouseInput()
+    {
+        
+        if (Input.GetMouseButton(0))
+        {
+            
+            if (Input.GetMouseButtonDown(0))
+            {
+                lastTouchPosition = Input.mousePosition;
+                plantController.SetGrowing(true);
+            }
+
+            
+            Vector2 currentMousePosition = Input.mousePosition;
+            float horizontalDelta = (currentMousePosition.x - lastTouchPosition.x) / Screen.width;
+            plantController.SetHorizontalMovement(horizontalDelta * touchSensitivity);
+
+         
+            lastTouchPosition = currentMousePosition;
+        }
+       
+        else
+        {
+            
+            if (Input.GetMouseButtonUp(0))
+            {
+                plantController.SetGrowing(false);
+            }
+
+           
             plantController.SetHorizontalMovement(0);
         }
     }
@@ -88,35 +82,31 @@ public class TouchInputHandler : MonoBehaviour
         if (Input.touchCount > 0)
         {
             Touch touch = Input.GetTouch(0);
-            
+
             switch (touch.phase)
             {
                 case TouchPhase.Began:
-                    Debug.Log("Touch began detected");
-                    isTouching = true;
+                  
                     lastTouchPosition = touch.position;
                     plantController.SetGrowing(true);
+                    plantController.SetHorizontalMovement(0); 
                     break;
-                    
+
                 case TouchPhase.Moved:
                 case TouchPhase.Stationary:
+                    
                     float horizontalDelta = (touch.position.x - lastTouchPosition.x) / Screen.width;
                     plantController.SetHorizontalMovement(horizontalDelta * touchSensitivity);
                     lastTouchPosition = touch.position;
                     break;
+
+                
+                default:
                     
-                case TouchPhase.Ended:
-                case TouchPhase.Canceled:
-                    Debug.Log("Touch ended detected");
-                    isTouching = false;
                     plantController.SetGrowing(false);
+                    plantController.SetHorizontalMovement(0);
                     break;
             }
-        }
-        else if (!isTouching)
-        {
-            // When not touching, gradually return to neutral position
-            plantController.SetHorizontalMovement(0);
         }
     }
 }

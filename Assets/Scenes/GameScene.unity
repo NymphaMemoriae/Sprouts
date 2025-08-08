@@ -9941,6 +9941,7 @@ MonoBehaviour:
   heightOffset: -500
   sideBumpRecoveryTime: 0.3
   plantLife: {fileID: 1370011431}
+  plantHeadRigidbody: {fileID: 188981464}
 --- !u!114 &1468978193
 MonoBehaviour:
   m_ObjectHideFlags: 0
