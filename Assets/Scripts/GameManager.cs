@@ -179,22 +179,17 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void StartGame() // Often called from a generic "Start" button in MainMenu if no level is selected
+    public void StartGame()
     {
-        // If SetNextStartingLevel(null) hasn't been explicitly called by a "Default Start" button
-        // (which would have cleared _lastCheckpointPosition already via SetNextStartingLevel),
-        // and no specific level was selected, then ensure the session is reset for a fresh default start.
+        
         if (SelectedStartBiomeForNextRun == null && !_forcedInitialHeightForNextRun.HasValue)
         {
-            ResetSessionForNewGame(); // Ensures a clean slate if StartGame() is for a brand new default session
+            ResetSessionForNewGame(); 
         }
-        // If a level *was* selected by StartingBiomeSelection, SetNextStartingLevel already configured
-        // _forcedInitialHeightForNextRun and cleared _lastCheckpointPosition.
-        // If a "Default Start" button called SetNextStartingLevel(null), that also prepared the state.
+        
 
         SetGameState(GameState.Playing);
-        // The actual loading of GameScene (which should happen after this if triggered by UI)
-        // will use GetRespawnPosition() in OnSceneLoaded to place the player.
+        
     }
 
     public void PauseGame()
@@ -225,11 +220,11 @@ public class GameManager : MonoBehaviour
         {
              Debug.Log("[GameManager] Initiating scene restart with fade...");
              Time.timeScale = 1f;
-             // SetGameState(GameState.Playing) will be reaffirmed by OnSceneLoaded when GameScene loads.
+             
              
              if (GameSceneLoader.Instance != null)
              {
-                 // GameSceneLoader.ReloadCurrentScene() already handles getting active scene name
+                 
                  GameSceneLoader.Instance.ReloadCurrentScene(); 
              }
              else
@@ -237,8 +232,7 @@ public class GameManager : MonoBehaviour
                  Debug.LogError("[GameManager] GameSceneLoader instance not found! Cannot restart scene with fade. Restarting directly.");
                  UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex);
              }
-             // It's generally good to set the intended state *before* the load starts,
-             // and OnSceneLoaded can confirm/adjust if needed.
+             
              SetGameState(GameState.Playing);
         }
     }
@@ -247,7 +241,7 @@ public class GameManager : MonoBehaviour
     {
         Time.timeScale = 1f;
         ResetSessionForNewGame();
-        // SetGameState(GameState.MainMenu); // Set state *before* calling load. OnSceneLoaded will also ensure it.
+        
         Debug.Log("[GameManager] Initiating return to MainMenu with fade...");
 
         if (GameSceneLoader.Instance != null)
@@ -259,8 +253,7 @@ public class GameManager : MonoBehaviour
             Debug.LogError("[GameManager] GameSceneLoader instance not found! Cannot return to MainMenu with fade. Loading directly.");
             UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenu");
         }
-        // Setting the state here is good as it defines the intent before the transition begins.
-        // OnSceneLoaded for "MainMenu" will also confirm this state.
+       
         SetGameState(GameState.MainMenu);
     }
     
@@ -278,7 +271,7 @@ public class GameManager : MonoBehaviour
             _forcedInitialHeightForNextRun = null; // Standard start from InitialSpawnPosition
             Debug.Log($"[GameManager] Next level set to default start (InitialSpawnPosition will be used).");
         }
-        // Crucially, selecting a new level (or default start) overrides any previous in-game checkpoint for the *next* run.
+        
         _lastCheckpointPosition = null;
     }
 

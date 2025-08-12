@@ -9,6 +9,7 @@ public class ShopManager : MonoBehaviour
     public static event Action OnShopStateChanged;
     public static event Action<PlantSkinData> OnSkinEquipped;
     [SerializeField] private ConfirmationPanelUI confirmationPanel;
+    [SerializeField] private NotificationPanelUI notificationPanel;
 
     private PlantSkinData pendingPurchaseItem;
 
@@ -26,6 +27,26 @@ public class ShopManager : MonoBehaviour
         }
         else
         {
+            int playerCoins = PlayerPrefsManager.Instance.LoadMoney();
+            Debug.Log($"[ShopManager] Checking affordability for '{skin.skinName}'. Item Price: {skin.price}, Player Coins: {playerCoins}");
+
+        if (playerCoins < skin.price)
+            {
+                Debug.Log("[ShopManager] Player cannot afford item. Attempting to show notification panel...");
+
+                // Check if the panel reference is missing
+                if (notificationPanel == null)
+                {
+                    Debug.LogError("[ShopManager] NotificationPanel is NOT ASSIGNED in the Inspector!");
+                    return;
+                }
+
+                // If the code reaches here, it will try to show the panel.
+                int difference = skin.price - playerCoins;
+                notificationPanel.Show($"This is {difference} coins out of budget...");
+                Debug.Log("[ShopManager] Show() command sent to notification panel.");
+                return;
+            }
             RequestPurchaseConfirmation(skin);
         }
 

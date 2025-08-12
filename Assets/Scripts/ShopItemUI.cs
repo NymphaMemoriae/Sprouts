@@ -75,7 +75,6 @@ private void RefreshVisuals()
         }
 
       
-        int playerCoins = PlayerPrefsManager.Instance.LoadMoney();
-        button.interactable = isUnlocked || (playerCoins >= skinData.price);
+        button.interactable = !isEquipped;
     }
 }
