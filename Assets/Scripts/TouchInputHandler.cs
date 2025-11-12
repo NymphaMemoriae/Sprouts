@@ -1,16 +1,20 @@
 using UnityEngine;
+using UnityEngine.EventSystems; // Required for UI check
 
 public class TouchInputHandler : MonoBehaviour
 {
     [SerializeField] private PlantController plantController;
     [SerializeField] private float touchSensitivity = 1f;
+    [Header("Vertical Sensitivity")]
+    [Tooltip("Vertical drag (normalized) needed to accelerate.")]
+    [SerializeField] [Range(0.001f, 0.1f)] private float verticalGrowthThreshold = 0.01f;
+    [Tooltip("Vertical drag (normalized) needed to decelerate.")]
+    [SerializeField] [Range(-0.1f, -0.001f)] private float verticalDecelThreshold = -0.01f;
     
     private Vector2 lastTouchPosition;
-    // private bool isTouching = false;
     
     private void Start()
     {
-        // Debug log to verify references
         Debug.Log("TouchInputHandler initialized. PlantController reference: " + (plantController != null));
     }
     
@@ -23,90 +27,127 @@ public class TouchInputHandler : MonoBehaviour
         }
 
         // --- Check for Active Input ---
-
-        // Is there a touch on the screen?
         if (Input.touchCount > 0)
         {
-            HandleTouchInput();
+            Touch touch = Input.GetTouch(0);
+            if (touch.phase == TouchPhase.Began && EventSystem.current.IsPointerOverGameObject(touch.fingerId))
+            {
+                return;
+            }
+            
+            if (!EventSystem.current.IsPointerOverGameObject(touch.fingerId))
+            {
+                HandleTouchInput(touch);
+            }
         }
-        // Is the mouse button being held down?
+        else if (Input.GetMouseButtonDown(0))
+        {
+            if (EventSystem.current.IsPointerOverGameObject())
+            {
+                return;
+            }
+            HandleMouseInput();
+        }
         else if (Input.GetMouseButton(0))
         {
             HandleMouseInput();
         }
-        // If there is NO active input:
-        else
+        else // If there is NO active input:
         {
-            // Stop growing and force the head to be straight.
             plantController.SetGrowing(false);
+            plantController.SetDecelerating(false); // --- ADD THIS LINE ---
             plantController.SetHorizontalMovement(0); 
         }
     }
     
    private void HandleMouseInput()
     {
+        if (Input.GetMouseButtonDown(0))
+        {
+            lastTouchPosition = Input.mousePosition;
+            plantController.SetGrowing(true); // Start growing on click
+            plantController.SetDecelerating(false);
+        }
         
         if (Input.GetMouseButton(0))
         {
-            
-            if (Input.GetMouseButtonDown(0))
-            {
-                lastTouchPosition = Input.mousePosition;
-                plantController.SetGrowing(true);
-            }
-
-            
             Vector2 currentMousePosition = Input.mousePosition;
+            
+            // --- Horizontal ---
             float horizontalDelta = (currentMousePosition.x - lastTouchPosition.x) / Screen.width;
             plantController.SetHorizontalMovement(horizontalDelta * touchSensitivity);
-
-         
-            lastTouchPosition = currentMousePosition;
-        }
-       
-        else
-        {
             
-            if (Input.GetMouseButtonUp(0))
-            {
-                plantController.SetGrowing(false);
-            }
+            // --- NEW: Vertical ---
+            float verticalDelta = (currentMousePosition.y - lastTouchPosition.y) / Screen.height;
 
-           
-            plantController.SetHorizontalMovement(0);
+            if (verticalDelta > verticalGrowthThreshold)
+            {
+                // Dragging up
+                plantController.SetGrowing(true);
+            }
+            else if (verticalDelta < verticalDecelThreshold)
+            {
+                // Dragging down
+                plantController.SetDecelerating(true);
+            }
+            else
+            {
+                // Coasting (moving sideways or still)
+                plantController.SetGrowing(false);
+                plantController.SetDecelerating(false);
+            }
+            
+            lastTouchPosition = currentMousePosition;
         }
     }
     
-    private void HandleTouchInput()
+    // Modified to accept a Touch parameter
+   private void HandleTouchInput(Touch touch)
     {
-        if (Input.touchCount > 0)
+        switch (touch.phase)
         {
-            Touch touch = Input.GetTouch(0);
+            case TouchPhase.Began:
+                lastTouchPosition = touch.position;
+                plantController.SetGrowing(true);
+                plantController.SetDecelerating(false);
+                plantController.SetHorizontalMovement(0); 
+                break;
 
-            switch (touch.phase)
-            {
-                case TouchPhase.Began:
-                  
-                    lastTouchPosition = touch.position;
-                    plantController.SetGrowing(true);
-                    plantController.SetHorizontalMovement(0); 
-                    break;
-
-                case TouchPhase.Moved:
-                case TouchPhase.Stationary:
-                    
-                    float horizontalDelta = (touch.position.x - lastTouchPosition.x) / Screen.width;
-                    plantController.SetHorizontalMovement(horizontalDelta * touchSensitivity);
-                    lastTouchPosition = touch.position;
-                    break;
-
+            case TouchPhase.Moved:
+            case TouchPhase.Stationary:
                 
-                default:
-                    
+                // --- Horizontal ---
+                float horizontalDelta = (touch.position.x - lastTouchPosition.x) / Screen.width;
+                plantController.SetHorizontalMovement(horizontalDelta * touchSensitivity);
+                
+                // --- NEW: Vertical ---
+                float verticalDelta = (touch.position.y - lastTouchPosition.y) / Screen.height;
+
+                if (verticalDelta > verticalGrowthThreshold)
+                {
+                    // Dragging up
+                    plantController.SetGrowing(true);
+                }
+                else if (verticalDelta < verticalDecelThreshold)
+                {
+                    // Dragging down
+                    plantController.SetDecelerating(true);
+                }
+                else
+                {
+                    // Coasting (moving sideways or still)
                     plantController.SetGrowing(false);
-                    plantController.SetHorizontalMovement(0);
-                    break;
-            }
+                    plantController.SetDecelerating(false);
+                }
+
+                lastTouchPosition = touch.position;
+                break;
+
+            default:
+                plantController.SetGrowing(false);
+                plantController.SetDecelerating(false); // Also stop decelerating
+                plantController.SetHorizontalMovement(0);
+                break;
         }
     }
 }

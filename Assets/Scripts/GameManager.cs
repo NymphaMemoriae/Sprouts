@@ -102,6 +102,27 @@ public class GameManager : MonoBehaviour
             {
                 cameraController = FindFirstObjectByType<CameraController>();
             }
+            VirtualJoystickInputHandler joystickHandler = FindFirstObjectByType<VirtualJoystickInputHandler>();
+            TouchInputHandler touchHandler = FindFirstObjectByType<TouchInputHandler>();
+
+            if (joystickHandler != null && touchHandler != null)
+            {
+                // Load the saved settings
+                bool joystickEnabled = PlayerPrefs.GetInt(PlayerPrefsManager.JOYSTICK_ENABLED_KEY, 1) == 1;
+                bool touchEnabled = PlayerPrefs.GetInt(PlayerPrefsManager.TOUCH_ENABLED_KEY, 1) == 1;
+                
+                Debug.Log($"[GameManager] Loaded Input Settings: Joystick={joystickEnabled}, Touch={touchEnabled}");
+
+                // Apply settings by enabling/disabling their GameObjects
+                joystickHandler.gameObject.SetActive(joystickEnabled);
+                touchHandler.gameObject.SetActive(touchEnabled);
+            }
+            else
+            {
+                Debug.LogError("[GameManager] OnSceneLoaded: Could not find one or both Input Handlers!");
+                if (joystickHandler == null) Debug.LogError("--> VirtualJoystickInputHandler not found.");
+                if (touchHandler == null) Debug.LogError("--> TouchInputHandler not found.");
+            }
 
 
             if (plantController == null) { Debug.LogError("[GameManager] OnSceneLoaded: Could not find PlantController in GameScene!"); }
@@ -165,13 +186,23 @@ public class GameManager : MonoBehaviour
             cameraController = null;
         }
     }
+    
+    public void StartTutorial()
+    {
+        // Set the state to Playing so scripts like TouchInputHandler work correctly
+        SetGameState(GameState.Playing); 
+
+        // Use your scene loader to go to the tutorial
+        // This ensures the persistent GameManager carries over.
+        GameSceneLoader.Instance.LoadScene("TutorialScene"); 
+    }
 
     private void Update()
     {
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
         if (CurrentGameState == GameState.Playing && Input.GetKeyDown(KeyCode.Escape)) { PauseGame(); }
         else if (CurrentGameState == GameState.Paused && Input.GetKeyDown(KeyCode.Escape)) { ResumeGame(); }
-        #endif
+#endif
         if (CurrentGameState == GameState.Playing && plantController != null)
         {
             float score = plantController.CurrentHeight - _startingHeightForRun;

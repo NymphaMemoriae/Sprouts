@@ -57,6 +57,8 @@ public class PlayerPrefsManager : MonoBehaviour
     public const string MASTER_VOLUME_KEY = "Settings_MasterVolume";
     public const string MUSIC_VOLUME_KEY = "Settings_MusicVolume";
     public const string SFX_VOLUME_KEY = "Settings_SFXVolume";
+    public const string JOYSTICK_ENABLED_KEY = "Input.JoystickEnabled";
+    public const string TOUCH_ENABLED_KEY = "Input.TouchEnabled";
 
     // --- Default Values ---
     private const int DEFAULT_MONEY = 0;

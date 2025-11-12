@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: Grassland
   m_EditorClassIdentifier: 
   biomeName: GrassLand
-  minTileIndex: 24
+  isUnlockedByDefault: 0
+  minTileIndex: 25
   maxTileIndex: 49
   backgroundMaterial: {fileID: 2100000, guid: 28b6b2fe25c476b4ba1a6e8637d79d93, type: 2}
   tilePrefab: {fileID: 4015334938415637551, guid: 5622f39b3e762a842987bba1062606e9, type: 3}
@@ -32,4 +33,6 @@ MonoBehaviour:
   - {fileID: 4355422624127572823, guid: a23cf065d55d88a469f7257829673187, type: 3}
   firstTilePrefab: {fileID: 4015334938415637551, guid: 5622f39b3e762a842987bba1062606e9, type: 3}
   obstacleSpawnRateMultiplier: 1
+  plantMovementSound: {fileID: 0}
+  defaultSoundtrack: {fileID: 0}
   description: 

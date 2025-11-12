@@ -59,6 +59,7 @@ public class PlantController : MonoBehaviour
     private float targetRotation = 0f;
     private float currentRotationVelocity;
     private bool isVerticallyBlocked = false;
+    private bool isDecelerating = false;
     private float sideBumpTimer = 0f;
 
     private Dictionary<BuffType, float> activeBuffs = new Dictionary<BuffType, float>();
@@ -143,10 +144,24 @@ public class PlantController : MonoBehaviour
         Debug.Log($"[PlantController] Max growth speed set to: {maxGrowthSpeed}");
     }
 
-    public void SetGrowing(bool growing)
+   public void SetGrowing(bool growing)
     {
         if (isGameOver) return;
         isGrowing = growing;
+        if (isGrowing) // If we start growing, stop decelerating
+        {
+            isDecelerating = false;
+        }
+    }
+
+    public void SetDecelerating(bool decelerating)
+    {
+        if (isGameOver) return;
+        isDecelerating = decelerating;
+        if (isDecelerating) // If we start decelerating, stop growing
+        {
+            isGrowing = false;
+        }
     }
 
     public void SetHorizontalMovement(float direction)
@@ -186,6 +201,19 @@ public class PlantController : MonoBehaviour
         {
             currentGrowthSpeed = Mathf.MoveTowards(currentGrowthSpeed, maxGrowthSpeed, accelerationRate * Time.deltaTime);
         }
+        // Handle manual deceleration (input down)
+        else if (isDecelerating && !isVerticallyBlocked)
+        {
+            currentGrowthSpeed = Mathf.MoveTowards(currentGrowthSpeed, initialGrowthSpeed, decelerationRate * Time.deltaTime);
+        }
+        // --- THIS IS THE FIX ---
+        // Handle "coasting" (input neutral)
+        else if (!isVerticallyBlocked && currentGrowthSpeed > initialGrowthSpeed)
+        {
+            // If not accelerating or decelerating, but speed is high, gradually slow down.
+            currentGrowthSpeed = Mathf.MoveTowards(currentGrowthSpeed, initialGrowthSpeed, decelerationRate * Time.deltaTime);
+        }
+        // --- END FIX ---
 
         // Side bump deceleration
         if (sideBumpTimer > 0f)
